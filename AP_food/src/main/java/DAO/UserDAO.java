@@ -5,53 +5,70 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 
 public class UserDAO {
+    private static final UserDAO instance = new UserDAO();  // singletone object
     private final SessionFactory sessionFactory;
 
-    public UserDAO() {
+    private UserDAO() {
         try {
             this.sessionFactory = new Configuration()
                     .configure() // loads hibernate.cfg.xml
                     .addAnnotatedClass(User.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
-            System.err.println("Failed to create SessionFactory: " + ex);
-            throw new ExceptionInInitializerError(ex);
+            throw new DataAccessException("Failed to initialize Hibernate SessionFactory", ex);
+        }
+    }
+
+    public static UserDAO getInstance() {
+        return instance;
+    }
+
+    // Helper method for transactions
+    private void executeInTransaction(Consumer<Session> operation) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            operation.accept(session);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Database operation failed", e);
+        }
+    }
+
+    // Helper method for queries
+    private <T> T executeQuery(Function<Session, T> operation) {
+        try (Session session = sessionFactory.openSession()) {
+            return operation.apply(session);
+        } catch (Exception e) {
+            throw new DataAccessException("Database query failed", e);
         }
     }
 
     public void saveUser(User user) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.persist(user);
-            transaction.commit();
-            if(getUserByPhone(user.getPhone()) != null) {
-                throw new ExceptionInInitializerError("Phone number already exists");
-            }
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw new RuntimeException("Failed to save user", e);
+        // Check if user exists first
+        if (getUserByPhone(user.getPhone()).isPresent()) {
+            throw new DataAccessException("Phone number " + user.getPhone() + " already exists");
         }
+
+        executeInTransaction(session -> session.persist(user));
     }
 
-    public User getUserByPhone(String phone) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(User.class, phone);
-        }
+    public Optional<User> getUserByPhone(String phone) {
+        return executeQuery(session -> Optional.ofNullable(session.get(User.class, phone)));
     }
 
+    // it creates a new user if it doesn't exist
     public void updateUser(User user) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.merge(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw new RuntimeException("Failed to update user", e);
-        }
+        executeInTransaction(session -> session.merge(user));
     }
 
     public void deleteUser(String phone) {
@@ -59,19 +76,35 @@ public class UserDAO {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, phone);
-            if (user != null) {
-                session.remove(user);
+
+            if (user == null) {
+                throw new DataAccessException("User with phone " + phone + " not found");
             }
+
+            session.remove(user);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw new RuntimeException("Failed to delete user", e);
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to delete user", e);
         }
     }
 
     public void close() {
-        if (sessionFactory != null) {
+        if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
+        }
+    }
+
+    // Custom exception for better error handling
+    public static class DataAccessException extends RuntimeException {
+        public DataAccessException(String message) {
+            super(message);
+        }
+
+        public DataAccessException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 }
