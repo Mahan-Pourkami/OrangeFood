@@ -1,26 +1,33 @@
 
 package org.example;
-import DAO.UserDAO;
-import Model.User;
+import DAO.*;
+import Model.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Optional;
 
 
 public class Main {
     public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
+        UserDAO userDAO = UserDAO.getInstance();
+        BuyerDAO buyerDAO = new BuyerDAO();
 
         try {
-            // Create and save new use
-//            User mahan = new User("0910*******","Mahan","Pourkami","mahi1385","mahanpourkai@aut.ac.ir",0);
-//            userDAO.saveUser(mahan);
 
-            // Retrieve user
-            User retrieved = userDAO.getUserByPhone("0910*******");
-            System.out.println("Retrieved: " + retrieved.getFirstname());
+//            Buyer b1 = new Buyer("09104554331","Ahmad","Akbari","AK","A8k@gmail.com",10,"" +
+//                    "Tehran");
+//
+//            buyerDAO.deleteBuyer("09104254331");
+
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }
+
+        finally {
             userDAO.close();
         }
+        
     }
 }

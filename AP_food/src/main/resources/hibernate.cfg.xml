@@ -24,4 +24,6 @@
     <!-- Modern metadata access setting -->
     <property name="hibernate.boot.allow_jdbc_metadata_access">true</property>
   </session-factory>
+
+
 </hibernate-configuration>
