@@ -1,7 +1,6 @@
 package Model;
 
 import jakarta.persistence.*;
-import org.hibernate.boot.internal.Abstract;
 
 import java.util.regex.*;
 
@@ -43,7 +42,7 @@ class validator {
 @Table(name = "users")
 abstract public class User {
     @Id
-    @Column(name = "phone", length = 20)
+    @Column(name = "phone", unique = true ,length = 20)
     private String phone;  // Primary key
 
     @Column(name = "firstname", nullable = false, length = 50)
@@ -61,6 +60,9 @@ abstract public class User {
     @Column(name = "token", nullable = false)
     private Integer token;
 
+    @Column(name = "prof" , nullable = true)
+    private String profile;
+
 
     // Constructors
     public User() {
@@ -70,7 +72,7 @@ abstract public class User {
     // Your existing constructors
 
 
-    public User(String phone, String firstname, String lastname, String password, String email, Integer token) {
+    public User(String phone, String firstname, String lastname, String password, String email, Integer token , String profile) {
 
 
         if(!validator.validatePhone(phone))
@@ -85,6 +87,7 @@ abstract public class User {
         this.password = password;
         this.email = email;
         this.token = token;
+        this.profile = profile;
 
     }
 
@@ -128,5 +131,12 @@ abstract public class User {
         this.token = token;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
 }
 
