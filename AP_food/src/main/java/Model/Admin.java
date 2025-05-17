@@ -1,12 +1,11 @@
 package Model;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
 
 public class Admin{
-    private String id;
-    private String password;
+    private final String id;
+    private final String password;
     private HashSet<User> users;
     private HashSet<Restaurant> restaurants;
     private HashSet<Restaurant> waitingRestaurants;
