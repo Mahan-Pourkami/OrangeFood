@@ -1,10 +1,16 @@
 package DAO;
 
+import Model.Buyer;
 import Model.User;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -91,6 +97,30 @@ public class UserDAO {
         }
     }
 
+    public List<User> getAllUsers() {
+
+            Transaction transaction = null;
+            try (Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
+
+                CriteriaBuilder cb = session.getCriteriaBuilder();
+                CriteriaQuery<User> cq = cb.createQuery(User.class);
+                Root<User> root = cq.from(User.class);
+                cq.select(root);
+
+                List<User> users = session.createQuery(cq).getResultList();
+                transaction.commit();
+                return users;
+
+            } catch (Exception e) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw new DataAccessException("Failed to retrieve users", e);
+            }
+            }
+
+
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
@@ -107,4 +137,5 @@ public class UserDAO {
             super(message, cause);
         }
     }
+
 }

@@ -20,8 +20,8 @@ public class Buyer extends User{
 
     }
 
-    public Buyer(String phone, String firstname, String lastname, String password, String email, Integer token,String Address) {
-        super(phone, firstname, lastname, password, email, token);
+    public Buyer(String phone, String firstname, String lastname, String password, String email, Integer token,String prof,String Address) {
+        super(phone, firstname, lastname, password, email, token,prof);
 
         if(Address == null || Address.isEmpty()){
 

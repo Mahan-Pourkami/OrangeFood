@@ -1,12 +1,15 @@
-
-
 package DAO;
 
 import Model.Buyer;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.List;
 
 /**
  * @author : Mahan Pourkami
@@ -22,7 +25,7 @@ public class BuyerDAO {
     public BuyerDAO() {
         this.sessionFactory = new Configuration()
                 .configure()
-                .addAnnotatedClass(Buyer.class)
+                 .addAnnotatedClass(Buyer.class)
                 .buildSessionFactory();
     }
 
@@ -96,6 +99,32 @@ public class BuyerDAO {
         return buyer != null;
     }
 
+    public Buyer getBuyer(String phone) {
+        Buyer buyer = sessionFactory.getCurrentSession().get(Buyer.class, phone);
+        return buyer;
+    }
+
+    public List<Buyer> getAllBuyers() {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Buyer> cq = cb.createQuery(Buyer.class);
+            Root<Buyer> root = cq.from(Buyer.class);
+            cq.select(root);
+
+            List<Buyer> buyers = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return buyers;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new UserDAO.DataAccessException("Failed to retrieve all buyers", e);
+        }
+    }
 
     /**
      * @operation : close the object that we have made from DAO
