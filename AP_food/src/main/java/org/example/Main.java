@@ -3,9 +3,6 @@ package org.example;
 import DAO.*;
 import Model.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Optional;
 
 
 public class Main {
@@ -16,17 +13,16 @@ public class Main {
 
         try {
 
-            Buyer b1 = new Buyer("09104659331","Ahmad","Akbari","AK","A8k1il@aut.com",10,
-                    "prof.jpg","Tehran");
 
-
-            Seller s1 = new Seller("09114679831","Ahmad","Majid","zamani","A8k81il@aputp.com",10,
+            Seller s1 = new Seller("09128888888","Ahmad","Majid","zamani","A8k918978@aputp.com",10,
                     "prof.jpg","Tehran","salam","hello");
 
+            Bankinfo b1 = new Bankinfo(s1,"melli","4","6");
+            System.out.println(b1.getPhone());
+            s1.setbankinfo(b1);
             sellerDAO.saveSeller(s1);
 
-
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

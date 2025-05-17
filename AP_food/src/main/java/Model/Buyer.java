@@ -2,7 +2,6 @@ package Model;
 
 import jakarta.persistence.*;
 
-
 /**
  * @author Mahan Pourkami
  * @date : 11:52am ~ 16/05/2025
