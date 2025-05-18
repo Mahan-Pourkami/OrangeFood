@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 public class Restaurant {
+    private boolean confirmed;
     private String name;
     private String address;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
@@ -16,6 +17,7 @@ public class Restaurant {
         if (isNullOrEmpty(name) || isNullOrEmpty(address) || workingHour == null) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
+        this.confirmed = false;
         this.name = name;
         this.address = address;
         this.workingHour = workingHour;
@@ -29,6 +31,10 @@ public class Restaurant {
     }
 
     // Getters
+    public String getFormattedWorkingHour() {
+        return workingHour.format(dateFormatter);
+    }
+
     public String getName() {
         return name;
     }
@@ -47,6 +53,9 @@ public class Restaurant {
 
     public HashSet<Food> getFoodList() {
         return new HashSet<>(foodList); // Return a copy to avoid external modification
+    }
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
     // Setters
@@ -75,6 +84,10 @@ public class Restaurant {
         this.logoUrl = logoUrl;
     }
 
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
     // Food-related methods
     public void addFood(Food food) {
         if (food == null) {
@@ -82,6 +95,7 @@ public class Restaurant {
         }
         foodList.add(food);
     }
+
 
     public boolean removeFood(Food food) {
         return foodList.remove(food);
@@ -95,10 +109,6 @@ public class Restaurant {
             }
         }
         return null; // not found
-    }
-
-    public String getFormattedWorkingHour() {
-        return workingHour.format(dateFormatter);
     }
 
     public String getMenuString() {
