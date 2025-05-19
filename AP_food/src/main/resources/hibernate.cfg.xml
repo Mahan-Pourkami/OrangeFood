@@ -7,7 +7,7 @@
     <property name="jakarta.persistence.jdbc.driver">org.postgresql.Driver</property>
     <property name="jakarta.persistence.jdbc.url">jdbc:postgresql://localhost:5432/postgres</property>
     <property name="jakarta.persistence.jdbc.user">postgres</property>
-    <property name="jakarta.persistence.jdbc.password">mahi1385</property>
+    <property name="jakarta.persistence.jdbc.password">P100p200</property>
 
     <!-- Explicit dialect for Hibernate 7 -->
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
@@ -23,7 +23,8 @@
 
     <!-- Modern metadata access setting -->
     <property name="hibernate.boot.allow_jdbc_metadata_access">true</property>
-  </session-factory>
 
+
+  </session-factory>
 
 </hibernate-configuration>

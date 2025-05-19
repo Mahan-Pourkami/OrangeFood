@@ -4,27 +4,30 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-
+@Entity
+@Table(name = "foods")
 public class Food {
 
+
+    @Id
+    @Column(name = "id" , nullable = false)
+    private String id ;
+    @Column(name = "name" , nullable = false)
     private String name;
-
+    @Column(name = "pictureUrl" , nullable = true)
     private String pictureUrl;
-
+    @Column(name = "price" , nullable = false)
     private int price;
-
+    @Column(name = "restaurantName" , nullable = true)
     private String restaurantName;
-
+    @Column(name = "stockQuantity" , nullable = false)
     private int stockQuantity;
-
+    @Column(name = "category" , nullable = true)
     private String category;
-
+    @Column(name = "keyWords" , nullable = true)
     private String keyWords;
-
+    @Column(name = "description" , nullable = true)
     private String description;
-
-    // Default constructor required for Hibernate
-    public Food() {}
 
     public Food(String name,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, List<String> keyWords, String description) {
         if (price <= 0) {
@@ -36,6 +39,8 @@ public class Food {
         if (name == null || name.trim().isEmpty() || restaurantName == null || restaurantName.trim().isEmpty()) {
             throw new IllegalArgumentException("name or restaurantName cannot be null");
         }
+
+        this.id = restaurantName + name ;
 
         this.name = name;
         this.pictureUrl = pictureUrl;
@@ -99,6 +104,7 @@ public class Food {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public String getDetail(){
         String detail = "";
         detail = detail + name + "," + pictureUrl + "," + price + "," + restaurantName + "," + stockQuantity + "," + category + "," + keyWords + "," + description;

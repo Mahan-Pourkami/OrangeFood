@@ -3,6 +3,8 @@ package org.example;
 import DAO.*;
 import Model.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
@@ -10,25 +12,17 @@ public class Main {
         UserDAO userDAO = UserDAO.getInstance();
         BuyerDAO buyerDAO = new BuyerDAO();
         SellerDAO sellerDAO = new SellerDAO();
-
+        FoodDAO foodDAO = new FoodDAO();
+        BasketDAO basketDAO = new BasketDAO();
         try {
-
-
-            Seller s1 = new Seller("09128888888","Ahmad","Majid","zamani","A8k918978@aputp.com",10,
-                    "prof.jpg","Tehran","salam","hello");
-
-            Bankinfo b1 = new Bankinfo(s1,"melli","4","6");
-            System.out.println(b1.getPhone());
-            s1.setbankinfo(b1);
-            sellerDAO.saveSeller(s1);
-
-            
+            Basket basket = new Basket("09120287349","parsa","address");
+            basketDAO.saveBasket(basket);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         finally {
-            userDAO.close();
+            basketDAO.close();
         }
         
     }
