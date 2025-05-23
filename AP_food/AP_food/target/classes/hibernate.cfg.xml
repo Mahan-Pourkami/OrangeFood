@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!-- Required PostgreSQL connection settings -->
+    <property name="jakarta.persistence.jdbc.driver">org.postgresql.Driver</property>
+    <property name="jakarta.persistence.jdbc.url">jdbc:postgresql://localhost:5432/postgres</property>
+    <property name="jakarta.persistence.jdbc.user">postgres</property>
+    <property name="jakarta.persistence.jdbc.password">mahi1385</property>
+
+    <!-- Explicit dialect for Hibernate 7 -->
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+    <!-- Connection pool settings -->
+    <property name="hibernate.connection.pool_size">5</property>
+
+    <!-- Show SQL -->
+    <property name="hibernate.show_sql">true</property>
+
+    <!-- Schema management -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+
+    <!-- Modern metadata access setting -->
+    <property name="hibernate.boot.allow_jdbc_metadata_access">true</property>
+
+
+  </session-factory>
+
+</hibernate-configuration>

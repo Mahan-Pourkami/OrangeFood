@@ -1,0 +1,137 @@
+package DAO;
+
+import Model.Bankinfo;
+import Model.Food;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import java.util.List;
+
+public class FoodDAO {
+
+    final private  SessionFactory sessionFactory;
+    public FoodDAO() {
+        sessionFactory = new Configuration().configure().addAnnotatedClass(Food.class).buildSessionFactory();
+    }
+
+
+    public void saveFood(Food food) {
+
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(food);
+            transaction.commit();
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to save food",e);
+        }
+    }
+
+    public void updateFood(Food food) {
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(food);
+            transaction.commit();
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to update food",e);
+        }
+    }
+
+    public void deleteFood(String id) {
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Food food = session.get(Food.class, id);
+            if(food!=null) {
+                session.remove(food);
+                transaction.commit();
+            }
+            else {
+                throw new RuntimeException("food not found");
+            }
+        }
+
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to delete food",e);
+        }
+    }
+
+    public boolean existFood(String id) {
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Food food = session.get(Food.class, id);
+            if(food!=null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to find exist food",e);
+        }
+    }
+
+    public Food getFood(String id) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Food food = session.get(Food.class, id);
+            if (food != null) {
+                return food;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get food",e);
+        }
+    }
+
+
+    public List<Food> getAllFoods(){
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Food> cq = cb.createQuery(Food.class);
+            Root<Food> root = cq.from(Food.class);
+            cq.select(root);
+
+            List<Food> foods = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return foods;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new UserDAO.DataAccessException("Failed to retrieve all foods", e);
+        }
+    }
+
+    public void close() {
+        if (sessionFactory != null && !sessionFactory.isClosed()) {
+            sessionFactory.close();
+        }
+    }
+
+
+
+}
