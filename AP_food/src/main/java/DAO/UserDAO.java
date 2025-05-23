@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.Bankinfo;
 import Model.Buyer;
 import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -25,6 +26,7 @@ public class UserDAO {
             this.sessionFactory = new Configuration()
                     .configure() // loads hibernate.cfg.xml
                     .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Bankinfo.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             throw new DataAccessException("Failed to initialize Hibernate SessionFactory", ex);

@@ -1,6 +1,9 @@
 package DAO;
 
+import Model.Bankinfo;
+import Model.Basket;
 import Model.Buyer;
+import Model.Food;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -26,6 +29,9 @@ public class BuyerDAO {
         this.sessionFactory = new Configuration()
                 .configure()
                  .addAnnotatedClass(Buyer.class)
+                .addAnnotatedClass(Food.class)
+                .addAnnotatedClass(Basket.class)
+                .addAnnotatedClass(Bankinfo.class)
                 .buildSessionFactory();
     }
 

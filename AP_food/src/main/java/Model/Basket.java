@@ -1,13 +1,16 @@
 package Model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Objects;
 
+import java.util.*;
+
+@Entity
+@Table
 public class Basket {
     @Id
     @Column(name = "id", nullable = false)
@@ -19,24 +22,30 @@ public class Basket {
     @Column(name = "buyer_name", nullable = false)
     private String buyerName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private Buyer buyer;
+
     @ElementCollection(fetch = FetchType.EAGER) // Try EAGER for now
     @CollectionTable(name = "basket_foods", joinColumns = @JoinColumn(name = "basket_id"))
     @MapKeyColumn(name = "food_name")
     @Column(name = "quantity")
-    private HashMap<String, Integer> foods = new HashMap<>();
+    private Map<String,Food> foods = new HashMap<>();
 
     public Basket() {}
 
-    public Basket(String phone, String buyerName, String address) {
-        if (isNullOrEmpty(phone) || isNullOrEmpty(buyerName) || isNullOrEmpty(address)) {
+    public Basket(Buyer buyer) {
+        if (buyer == null)
             throw new IllegalArgumentException("None of the parameters can be null or empty.");
-        }
+
         LocalDateTime dateTime = LocalDateTime.now();
-        this.id = phone + dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"));
-        this.address = address;
-        this.buyerPhone = phone;
-        this.buyerName = buyerName;
-        //this.foods = new HashMap<>();
+        this.buyer = buyer;
+        this.id = buyer.getPhone() + dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"));
+        this.address = buyer.getAddress();
+        this.buyerPhone = buyer.getPhone();
+        this.buyerName = buyer.getfullname();
+        this.buyer.addCart(this);
+
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -80,34 +89,29 @@ public class Basket {
         this.buyerName = buyerName;
     }
 
-    public HashMap<String, Integer> getFoods() {
+    public Map<String, Food> getFoods() {
         return foods;
     }
 
 
-    public void addFood(String foodName,String restaurantName, int quantity) {
-        if (isNullOrEmpty(foodName)|| isNullOrEmpty(restaurantName) || quantity <= 0) {
+    public void addFood(Food food) {
+        if (food == null || food.getStockQuantity()==0) {
             throw new IllegalArgumentException("Food name or restaurant name cannot be null or empty, and quantity must be greater than zero.");
         }
-        foods.put(foodName, foods.getOrDefault(foodName, 0) + quantity);
+        foods.put(food.getId(),food);
     }
 
-    public void addFood(String foodId){
-        if (isNullOrEmpty(foodId)) {
-            throw new IllegalArgumentException("Food id cannot be null or empty.");
-        }
-        foods.put(foodId, foods.getOrDefault(foodId, 0) + 1);
-    }
+//    public void addFood(String foodId){
+//        if (isNullOrEmpty(foodId)) {
+//            throw new IllegalArgumentException("Food id cannot be null or empty.");
+//        }
+//        foods.put(foodId, foods.getOrDefault(foodId, 0) + 1);
+//    }
 
     public void removeFood(String foodId) {
-        if (isNullOrEmpty(foodId)) {
+        if (isNullOrEmpty(foodId) || !foods.containsKey(foodId)) {
             throw new IllegalArgumentException("Food id cannot be null or empty.");
         }
-        foods.put(foodId, foods.getOrDefault(foodId, 0) - 1);
-        if(foods.getOrDefault(foodId, 0) == 0) {
-            foods.remove(foodId);
-        }
+        foods.remove(foodId);
     }
-
-
 }
