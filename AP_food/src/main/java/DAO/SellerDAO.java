@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.Bankinfo;
+import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -16,7 +17,7 @@ public class SellerDAO {
 
    final private  SessionFactory sessionFactory;
    public SellerDAO() {
-       sessionFactory = new Configuration().configure().addAnnotatedClass(Seller.class).addAnnotatedClass(Bankinfo.class).buildSessionFactory();
+       sessionFactory = new Configuration().configure().addAnnotatedClass(Seller.class).addAnnotatedClass(Bankinfo.class).addAnnotatedClass(User.class).buildSessionFactory();
    }
 
 

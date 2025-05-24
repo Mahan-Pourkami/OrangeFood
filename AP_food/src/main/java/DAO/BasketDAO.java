@@ -1,8 +1,6 @@
 package DAO;
 
-import Model.Bankinfo;
-import Model.Basket;
-import Model.Food;
+import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -17,7 +15,7 @@ public class BasketDAO {
 
     final private  SessionFactory sessionFactory;
     public BasketDAO() {
-        sessionFactory = new Configuration().configure().addAnnotatedClass(Basket.class).buildSessionFactory();
+        sessionFactory = new Configuration().configure().addAnnotatedClass(Basket.class).addAnnotatedClass(Buyer.class).addAnnotatedClass(Bankinfo.class).addAnnotatedClass(Food.class).addAnnotatedClass(User.class).buildSessionFactory();
     }
 
 
