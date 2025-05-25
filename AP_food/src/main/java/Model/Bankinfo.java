@@ -1,49 +1,42 @@
 package Model;
 
 import jakarta.persistence.*;
-import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "bankinfo")
 public class Bankinfo {
 
     @Id
-    @Column(name = "phone")
-    private String phone;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
 
     @Column(name = "bank_name")
     private String bankName;
 
-    @Column(name = "sheba")
-    private String sheba;
+    @Column(name = "account_number")
+    private String accountNumber;
 
-    @Column(name = "card")
-    private String card;
+    @OneToOne(mappedBy = "bankinfo")
+    private User user;
 
 
-
-    @OneToOne
-    @JoinColumn(name = "phone")
-    private Seller seller;
 
     public Bankinfo() {}
 
-    public Bankinfo(@NotNull Seller seller, String bankName, String sheba, String card) {
-        this.phone = seller.getPhone();
-        this.bankName = bankName;
-        this.sheba = sheba;
-        this.card = card;
-        this.seller = seller;
+
+    public Bankinfo(String bankName, String accountNumber) {
+
+        if(bankName.length()<3)
+            throw new IllegalArgumentException("Bank name must be at least 3 characters");
+
+        if(accountNumber.length()!=16)
+            throw new IllegalArgumentException("Account number must be 16 characters");
+
+        this.setBankName(bankName);
+        this.setAccountNumber(accountNumber);
     }
 
-    // متدهای getter و setter
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getBankName() {
         return bankName;
@@ -53,30 +46,19 @@ public class Bankinfo {
         this.bankName = bankName;
     }
 
-    public String getSheba() {
-        return sheba;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setSheba(String sheba) {
-        this.sheba = sheba;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
-    public String getCard() {
-        return card;
+    public User getUser() {
+        return user;
     }
 
-    public void setCard(String card) {
-        this.card = card;
-    }
-
-    public Seller getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-        if (seller != null) {
-            this.phone = seller.getPhone();
-        }
+    public void setUser(User user) {
+        this.user = user;
     }
 }

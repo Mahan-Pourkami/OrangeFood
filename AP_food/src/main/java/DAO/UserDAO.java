@@ -1,6 +1,8 @@
 package DAO;
 
+import Model.Bankinfo;
 import Model.Buyer;
+import Model.Seller;
 import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -25,6 +27,7 @@ public class UserDAO {
             this.sessionFactory = new Configuration()
                     .configure() // loads hibernate.cfg.xml
                     .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Bankinfo.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             throw new DataAccessException("Failed to initialize Hibernate SessionFactory", ex);
@@ -61,15 +64,29 @@ public class UserDAO {
 
     public void saveUser(User user) {
         // Check if user exists first
-        if (getUserByPhone(user.getPhone()).isPresent()) {
+        if (getUserByPhone(user.getId()) != null ){
             throw new DataAccessException("Phone number " + user.getPhone() + " already exists");
         }
 
         executeInTransaction(session -> session.persist(user));
     }
 
-    public Optional<User> getUserByPhone(String phone) {
-        return executeQuery(session -> Optional.ofNullable(session.get(User.class, phone)));
+    public User getUserByPhone(Long phone) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, phone);
+            if (user != null) {
+                return user;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get user",e);
+        }
     }
 
     // it creates a new user if it doesn't exist

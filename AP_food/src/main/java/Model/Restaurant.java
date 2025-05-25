@@ -5,9 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 public class Restaurant {
+
     private boolean confirmed;
+
     private String name;
+
     private String address;
+
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
     private LocalDateTime workingHour;
     private String logoUrl;
