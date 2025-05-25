@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Buyer;
+import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -26,6 +26,10 @@ public class BuyerDAO {
         this.sessionFactory = new Configuration()
                 .configure()
                  .addAnnotatedClass(Buyer.class)
+                .addAnnotatedClass(Food.class)
+                .addAnnotatedClass(Basket.class)
+                .addAnnotatedClass(Bankinfo.class)
+                .addAnnotatedClass(User.class)
                 .buildSessionFactory();
     }
 
@@ -99,11 +103,13 @@ public class BuyerDAO {
         return buyer != null;
     }
 
-    public Buyer getBuyer(String phone) {
-        Buyer buyer = sessionFactory.getCurrentSession().get(Buyer.class, phone);
-        return buyer;
+    public Buyer getBuyer(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Buyer.class,id);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get buyer", e);
+        }
     }
-
     public List<Buyer> getAllBuyers() {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

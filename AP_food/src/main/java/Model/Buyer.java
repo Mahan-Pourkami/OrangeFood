@@ -2,6 +2,9 @@ package Model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Mahan Pourkami
  * @date : 11:52am ~ 16/05/2025
@@ -11,38 +14,40 @@ import jakarta.persistence.*;
 
 public class Buyer extends User{
 
+    @Column(name = "wallet" )
+    private  Integer Token ;
 
-    @Column(nullable = false)
-    String address;
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Basket> carts ;
 
-    public Buyer(){
+    public Buyer(){}
 
+    public Buyer(String phone, String fullname, String password, String email,String prof,String address) {
+
+        super(phone,fullname,password,email,Role.Buyer,address,prof);
+        carts = new ArrayList<Basket>();
+        Token  =  0;
     }
 
-    public Buyer(String phone, String firstname, String lastname, String password, String email, Integer token,String prof,String Address) {
-        super(phone, firstname, lastname, password, email, token,prof);
-
-        if(Address == null || Address.isEmpty()){
-
-            throw new IllegalArgumentException("Address can't be null");
-        }
-        this.address = Address;
-
-    }
-    public String getAddress() {
-        return address;
-    }
-    public void setAddress(String address) {
-        if(address == null || address.isEmpty()){
-
-            throw new IllegalArgumentException("Address can't be null");
-        }
-        this.address = address;
+    public Integer getchargevalue() {
+        return Token;
     }
 
-    @Override
-    public String toString() {
-        return this.getFirstname() + " " + this.getLastname() + " " + this.getPhone() + "buyer ";
+    public void charge(Integer charge) {
+        Token += charge;
+    }
+
+    public void discharge(Integer discharge) {
+        Token -= discharge;
+        if(Token < -100)
+            throw new ArithmeticException("Not enough money");
+    }
+
+    public List<Basket> getcarts() {
+        return carts;
+    }
+    public void addCart(Basket cart) {
+        carts.add(cart);
     }
 
 }
