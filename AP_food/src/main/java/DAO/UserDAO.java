@@ -64,14 +64,14 @@ public class UserDAO {
 
     public void saveUser(User user) {
         // Check if user exists first
-        if (getUserByPhone(user.getId()) != null ){
+        if (getUserByPhone(user.getPhone()) != null ){
             throw new DataAccessException("Phone number " + user.getPhone() + " already exists");
         }
 
         executeInTransaction(session -> session.persist(user));
     }
 
-    public User getUserByPhone(Long phone) {
+    public User getUserByPhone(String phone) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

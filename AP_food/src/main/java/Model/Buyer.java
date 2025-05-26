@@ -17,15 +17,14 @@ public class Buyer extends User{
     @Column(name = "wallet" )
     private  Integer Token ;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Basket> carts ;
+//    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    private List<Basket> carts ;
 
     public Buyer(){}
 
     public Buyer(String phone, String fullname, String password, String email,String prof,String address) {
 
         super(phone,fullname,password,email,Role.Buyer,address,prof);
-        carts = new ArrayList<Basket>();
         Token  =  0;
     }
 
@@ -43,11 +42,11 @@ public class Buyer extends User{
             throw new ArithmeticException("Not enough money");
     }
 
-    public List<Basket> getcarts() {
-        return carts;
-    }
-    public void addCart(Basket cart) {
-        carts.add(cart);
-    }
+//    public List<Basket> getcarts() {
+//        return carts;
+//    }
+//    public void addCart(Basket cart) {
+//        carts.add(cart);
+//    }
 
 }
