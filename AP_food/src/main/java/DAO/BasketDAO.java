@@ -8,107 +8,132 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Objects;
 
-public class BasketDAO {
+public class BasketDAO implements AutoCloseable {
 
-    final private  SessionFactory sessionFactory;
-    public BasketDAO() {
-        sessionFactory = new Configuration().configure().addAnnotatedClass(Basket.class).addAnnotatedClass(Buyer.class).addAnnotatedClass(Bankinfo.class).addAnnotatedClass(Food.class).addAnnotatedClass(User.class).buildSessionFactory();
+    private final SessionFactory sessionFactory;
+
+    public static class DataAccessException extends RuntimeException {
+        public DataAccessException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public DataAccessException(String message) {
+            super(message);
+        }
     }
 
+    public BasketDAO() {
+        try {
+            sessionFactory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Basket.class)
+                    .addAnnotatedClass(Food.class)
+                    .buildSessionFactory();
+        } catch (Exception e) {
+            System.err.println("Error initializing SessionFactory: " + e.getMessage());
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     public void saveBasket(Basket basket) {
+        Objects.requireNonNull(basket, "Basket to save cannot be null.");
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(basket);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to save basket",e);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to save basket: " + e.getMessage(), e);
         }
     }
 
-
     public void updateBasket(Basket basket) {
-        Transaction transaction = null ;
+        Objects.requireNonNull(basket, "Basket to update cannot be null.");
+        Objects.requireNonNull(basket.getId(), "Basket ID must not be null for update operation.");
+
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(basket);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to update basket",e);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to update basket: " + e.getMessage(), e);
         }
     }
 
+    public void deleteBasket(Long id) {
+        Objects.requireNonNull(id, "Basket ID to delete cannot be null.");
 
-    public void deleteBasket(String id) {
-        Transaction transaction = null ;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            Basket basket = session.get(Basket.class, id);
-            if(basket!=null) {
-                session.remove(basket);
-                transaction.commit();
-            }
-            else {
-                throw new RuntimeException("basket not found");
-            }
-        }
-
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to delete basket",e);
-        }
-    }
-
-
-    public boolean existBasket(String id) {
-        Transaction transaction = null ;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            Basket basket = session.get(Basket.class, id);
-            if(basket!=null) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to find exist basket",e);
-        }
-    }
-
-
-
-    public Basket getBasket(String id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Basket basket = session.get(Basket.class, id);
             if (basket != null) {
-                return basket;
+                session.remove(basket);
+                transaction.commit();
+            } else {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw new DataAccessException("Basket with ID " + id + " not found for deletion.");
             }
-            else {
-                return null;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get basket",e);
+            throw new DataAccessException("Failed to delete basket with ID " + id + ": " + e.getMessage(), e);
         }
     }
 
+    public boolean existBasket(Long id) {
+        Objects.requireNonNull(id, "Basket ID to check existence cannot be null.");
 
-    public List<Basket> getAllBasket(){
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Query<Long> query = session.createQuery("SELECT COUNT(b.id) FROM Basket b WHERE b.id = :basketId", Long.class);
+            query.setParameter("basketId", id);
+            Long count = query.uniqueResult();
+            transaction.commit();
+            return count != null && count > 0;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to check existence of basket with ID " + id + ": " + e.getMessage(), e);
+        }
+    }
+
+    public Basket getBasket(Long id) {
+        Objects.requireNonNull(id, "Basket ID to retrieve cannot be null.");
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Basket basket = session.get(Basket.class, id);
+            transaction.commit();
+            return basket;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to retrieve basket with ID " + id + ": " + e.getMessage(), e);
+        }
+    }
+
+    public List<Basket> getAllBasket() {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -126,17 +151,15 @@ public class BasketDAO {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new UserDAO.DataAccessException("Failed to retrieve all baskets", e);
+            throw new DataAccessException("Failed to retrieve all baskets: " + e.getMessage(), e);
         }
     }
+
+    @Override
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
+            System.out.println("SessionFactory closed.");
         }
     }
-
-
-
-
-
 }

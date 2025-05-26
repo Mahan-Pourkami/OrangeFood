@@ -9,11 +9,9 @@ import java.util.regex.*;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "phone", unique = true ,length = 20)
+    @Id
+    @Column(name = "phone" ,length = 11)
     private String phone;
 
     @Column(name = "fullname" , nullable = false)
@@ -57,6 +55,7 @@ public class User {
         this.setProfile(profile);
         this.fullname=fullname;
         this.role = role;
+        this.address = address;
 
     }
 
@@ -90,9 +89,6 @@ public class User {
         this.profile = profile;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getfullname() {
         return fullname;

@@ -9,8 +9,8 @@ import java.util.List;
 public class Food {
 
     @Id
-    @Column(name = "id")
-    private String id ;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id ;
 
     @Column(name = "name" , nullable = false)
     private String name;
@@ -31,6 +31,9 @@ public class Food {
     @Column(name = "description" , nullable = true)
     private String description;
 
+    @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY) // 'mappedBy' points to the 'foods' field in Basket
+    private List<Basket> baskets;
+
 
 
     public Food() {}
@@ -47,7 +50,6 @@ public class Food {
         }
 
 
-        this.id = name+restaurantName;
         this.name = name;
         this.pictureUrl = pictureUrl;
         this.price = price;
@@ -116,7 +118,4 @@ public class Food {
         return detail;
     }
 
-    public String getId() {
-        return id;
-    }
 }
