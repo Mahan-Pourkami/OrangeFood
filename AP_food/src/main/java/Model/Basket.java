@@ -24,6 +24,11 @@ public class Basket {
     @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
+    @ManyToOne
+    @JoinColumn(name = "buyer_id")
+    private Buyer buyer;
+
+
     @ManyToMany(fetch = FetchType.LAZY) // Many Baskets to Many Foods
     @JoinTable(
             name = "basket_foods_join", // Name of the join table (e.g., basket_foods_join)
@@ -36,7 +41,7 @@ public class Basket {
     }
 
     public Basket(Buyer buyer) {
-
+        this.buyer = buyer;
         this.address = buyer.getAddress();
         this.buyerPhone = buyer.getPhone();
         this.buyerName = buyer.getfullname();
@@ -76,6 +81,10 @@ public class Basket {
 
     public String getBuyerName() {
         return buyerName;
+    }
+
+    public void setBuyer(Buyer buyer) {
+        this.buyer = buyer;
     }
 
     public void setBuyerName(String buyerName) {

@@ -9,7 +9,6 @@ import java.util.regex.*;
 @Table(name = "users")
 public class User {
 
-
     @Id
     @Column(name = "phone" ,length = 11)
     private String phone;

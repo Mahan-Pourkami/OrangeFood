@@ -1,8 +1,6 @@
 package DAO;
 
-import Model.Bankinfo;
-import Model.Basket;
-import Model.Food;
+import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -17,7 +15,14 @@ public class FoodDAO {
 
     final private  SessionFactory sessionFactory;
     public FoodDAO() {
-        sessionFactory = new Configuration().configure().addAnnotatedClass(Food.class).addAnnotatedClass(Basket.class).buildSessionFactory();
+        sessionFactory = new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Buyer.class)
+                .addAnnotatedClass(User.class)
+                .addAnnotatedClass(Basket.class)
+                .addAnnotatedClass(Food.class)
+                .addAnnotatedClass(Bankinfo.class)
+                .buildSessionFactory();
     }
 
 
