@@ -30,6 +30,8 @@ public class BuyerDAO {
                 .addAnnotatedClass(Basket.class)
                 .addAnnotatedClass(Bankinfo.class)
                 .addAnnotatedClass(User.class)
+                .addAnnotatedClass(Restaurant.class)
+                .addAnnotatedClass(Seller.class)
                 .buildSessionFactory();
     }
 

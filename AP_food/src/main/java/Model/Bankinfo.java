@@ -21,9 +21,7 @@ public class Bankinfo {
     private User user;
 
 
-
     public Bankinfo() {}
-
 
     public Bankinfo(String bankName, String accountNumber) {
 

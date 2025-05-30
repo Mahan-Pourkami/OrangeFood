@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "seller")
-public class Seller   {
+
+public class Seller extends User  {
 
     @Column(name = "address", nullable = true)
     private String address;
@@ -15,22 +16,16 @@ public class Seller   {
     @Column(name = "bio", nullable = true)
     private String bio;
 
+    @OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JoinColumn(name = "Restaurant_id",referencedColumnName = "id")
+    private Restaurant restaurant ;
 
-    public Seller() {
-        super();
-    }
 
-    public Seller(String phone, String firstname, String lastname, String password,
-                  String email, Integer token, String profile, String address,
-                  String brand_name, String bio) {
+    public Seller() {}
 
-        if (address == null || brand_name == null || bio == null) {
-            throw new IllegalArgumentException("You should fill the address, brand_name & bio");
-        }
+    public Seller(String phone,String fullname ,String password,String email ,String address , String prof) {
 
-        this.address = address;
-        this.brand_name = brand_name;
-        this.bio = bio;
+        super(phone,fullname,password,email,Role.Seller,address,prof);
     }
 
 
@@ -56,6 +51,8 @@ public class Seller   {
         this.brand_name = brand_name;
     }
 
+
+
     public String getBio() {
         return bio;
     }
@@ -64,4 +61,14 @@ public class Seller   {
 
         this.bio = bio;
     }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+    public void setRestaurant(Restaurant restaurant) {
+
+        this.restaurant = restaurant;
+        this.brand_name = restaurant.getName();
+    }
+
 }

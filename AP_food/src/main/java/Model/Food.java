@@ -4,24 +4,32 @@ import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.PreferencesFactory;
+
 @Entity
 @Table(name = "foods")
 public class Food {
 
     @Id
-    @Column(name = "id")
-    private String id ;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id ;
 
     @Column(name = "name" , nullable = false)
     private String name;
+
     @Column(name = "pictureUrl" , nullable = true)
     private String pictureUrl;
+
     @Column(name = "price" , nullable = false)
     private int price;
-    @Column(name = "restaurantName" , nullable = true)
-    private String restaurantName;
+
+    @ManyToOne(fetch = FetchType.LAZY )
+    @JoinColumn(name = "Restaurant_id" , referencedColumnName = "id")
+    private Restaurant restaurant;
+
     @Column(name = "stockQuantity" , nullable = false)
     private int stockQuantity;
+
     @Column(name = "category" , nullable = true)
     private String category;
 
@@ -31,11 +39,14 @@ public class Food {
     @Column(name = "description" , nullable = true)
     private String description;
 
+    @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY) // 'mappedBy' points to the 'foods' field in Basket
+    private List<Basket> baskets;
+
 
 
     public Food() {}
 
-    public Food(String name,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, String description) {
+    public Food(String name,Restaurant res,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, String description) {
         if (price <= 0) {
             throw new IllegalArgumentException("Invalid price");
         }
@@ -47,20 +58,20 @@ public class Food {
         }
 
 
-        this.id = name+restaurantName;
         this.name = name;
         this.pictureUrl = pictureUrl;
         this.price = price;
-        this.restaurantName = restaurantName;
+        this.restaurant = res ;
         this.stockQuantity = stockQuantity;
         this.category = category;
         this.description = description;
+        res.addFood(this);
     }
 
     public String getName() { return name; }
     public String getPictureUrl() { return pictureUrl; }
     public int getPrice() { return price; }
-    public String getRestaurantName() { return restaurantName; }
+    public String getRestaurantName() { return restaurant.getName(); }
     public int getStockQuantity() { return stockQuantity; }
     public String getCategory() { return category; }
     public List<String> getKeyWords() { return Arrays.asList(keyWords.split(",")); } // Convert string to list
@@ -84,13 +95,6 @@ public class Food {
         this.price = price;
     }
 
-    public void setRestaurantName(String restaurantName) {
-        if (restaurantName == null || restaurantName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Restaurant name cannot be empty");
-        }
-        this.restaurantName = restaurantName;
-    }
-
     public void setStockQuantity(int stockQuantity) {
         if (stockQuantity < 0) {
             throw new IllegalArgumentException("Invalid stock quantity");
@@ -112,11 +116,8 @@ public class Food {
 
     public String getDetail(){
         String detail = "";
-        detail = detail + name + "," + pictureUrl + "," + price + "," + restaurantName + "," + stockQuantity + "," + category + "," + keyWords + "," + description;
+        detail = detail + name + "," + pictureUrl + "," + price + "," + restaurant.getName() + "," + stockQuantity + "," + category + "," + keyWords + "," + description;
         return detail;
     }
 
-    public String getId() {
-        return id;
-    }
 }
