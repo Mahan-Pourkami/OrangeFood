@@ -19,8 +19,6 @@ public class Restaurant {
 
     private String address;
 
-    private LocalDateTime workingHour;
-
     private String logoUrl;
 
     @OneToMany
@@ -29,17 +27,18 @@ public class Restaurant {
     @OneToOne
     private Seller seller;
 
+    //TODO list of baskets
+
 
     public Restaurant() {}
 
-    public Restaurant(String name, String address, LocalDateTime workingHour, String logoUrl, Seller seller) {
+    public Restaurant(String name, String address, String logoUrl, Seller seller) {
         if (isNullOrEmpty(name) || isNullOrEmpty(address) ) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
         this.confirmed = false;
         this.name = name;
         this.address = address;
-        this.workingHour = workingHour;
         this.logoUrl = logoUrl;
         this.foods = new ArrayList<>();
         this.seller = seller;
@@ -62,9 +61,6 @@ public class Restaurant {
         return address;
     }
 
-    public LocalDateTime getWorkingHour() {
-        return workingHour;
-    }
 
     public String getLogoUrl() {
         return logoUrl;
@@ -90,13 +86,6 @@ public class Restaurant {
             throw new IllegalArgumentException("Address cannot be null or empty.");
         }
         this.address = address;
-    }
-
-    public void setWorkingHour(LocalDateTime workingHour) {
-        if (workingHour == null) {
-            throw new IllegalArgumentException("Working hour cannot be null.");
-        }
-        this.workingHour = workingHour;
     }
 
     public void setLogoUrl(String logoUrl) {

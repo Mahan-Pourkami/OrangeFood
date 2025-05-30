@@ -1,5 +1,7 @@
 package Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -13,6 +15,7 @@ public class Admin{
     private HashSet<User> users;
     private HashSet<Restaurant> restaurants;
     private HashSet<Restaurant> waitingRestaurants;
+    //TODO delete the lists
     public Admin(String id, String password){
         if(isNullOrEmpty(id) || isNullOrEmpty(password)){
             throw new IllegalArgumentException("id or password cannot be null or empty");

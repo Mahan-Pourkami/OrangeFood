@@ -68,7 +68,9 @@ public class Food {
         res.addFood(this);
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
     public String getPictureUrl() { return pictureUrl; }
     public int getPrice() { return price; }
     public String getRestaurantName() { return restaurant.getName(); }
