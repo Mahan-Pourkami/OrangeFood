@@ -1,7 +1,6 @@
 package DAO;
 
-import Model.Bankinfo;
-import Model.User;
+import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -9,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import Model.Seller;
+
 
 import java.util.List;
 
@@ -17,7 +16,14 @@ public class SellerDAO {
 
    final private  SessionFactory sessionFactory;
    public SellerDAO() {
-       sessionFactory = new Configuration().configure().addAnnotatedClass(Seller.class).addAnnotatedClass(Bankinfo.class).addAnnotatedClass(User.class).buildSessionFactory();
+       sessionFactory = new Configuration().configure()
+               .addAnnotatedClass(Seller.class)
+               .addAnnotatedClass(Bankinfo.class)
+               .addAnnotatedClass(User.class)
+               .addAnnotatedClass(Restaurant.class)
+               .addAnnotatedClass(Food.class)
+               .addAnnotatedClass(Basket.class)
+               .buildSessionFactory();
    }
 
 
@@ -128,12 +134,8 @@ public class SellerDAO {
            if (transaction != null && transaction.isActive()) {
                transaction.rollback();
            }
-           throw new UserDAO.DataAccessException("Failed to retrieve all buyers", e);
+           throw new UserDAO.DataAccessException("Failed to retrieve all Sellers", e);
        }
-   }
-
-
-
-
-
+    }
 }
+

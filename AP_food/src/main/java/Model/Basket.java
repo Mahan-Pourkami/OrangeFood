@@ -1,60 +1,57 @@
 package Model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table
+@Table(name = "baskets")
 public class Basket {
+
     @Id
-    @Column(name = "id", nullable = false)
-    private String id;
-    @Column(name = "address", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "address", length = 255)
     private String address;
-    @Column(name = "buyer_phone", nullable = false)
+
+    @Column(name = "buyer_phone", length = 20)
     private String buyerPhone;
-    @Column(name = "buyer_name", nullable = false)
+
+    @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id", nullable = false)
-    private Buyer buyer;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "basket_foods_join", joinColumns = @JoinColumn(name = "basket_id"), inverseJoinColumns = @JoinColumn(name = "food_id"))
+    private List<Food> foods;
 
-    @ElementCollection(fetch = FetchType.EAGER) // Try EAGER for now
-    @CollectionTable(name = "basket_foods", joinColumns = @JoinColumn(name = "basket_id"))
-    @MapKeyColumn(name = "food_name")
-    @Column(name = "quantity")
-    private Map<String,Food> foods = new HashMap<>();
+    @Column(name = "State")
+    private StateofCart stateofCart;
 
-    public Basket() {}
+
+
+    public Basket() {
+    }
 
     public Basket(Buyer buyer) {
-        if (buyer == null)
-            throw new IllegalArgumentException("None of the parameters can be null or empty.");
 
-        LocalDateTime dateTime = LocalDateTime.now();
-        this.buyer = buyer;
-        this.id = buyer.getPhone() + dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"));
         this.address = buyer.getAddress();
         this.buyerPhone = buyer.getPhone();
         this.buyerName = buyer.getfullname();
-        this.buyer.addCart(this);
-
+        this.foods=new ArrayList<>();
     }
 
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
+
 
     public String getAddress() {
         return address;
@@ -89,29 +86,38 @@ public class Basket {
         this.buyerName = buyerName;
     }
 
-    public Map<String, Food> getFoods() {
-        return foods;
-    }
-
-
     public void addFood(Food food) {
-        if (food == null || food.getStockQuantity()==0) {
-            throw new IllegalArgumentException("Food name or restaurant name cannot be null or empty, and quantity must be greater than zero.");
-        }
-        foods.put(food.getId(),food);
+        this.foods.add(food);
     }
 
-//    public void addFood(String foodId){
-//        if (isNullOrEmpty(foodId)) {
-//            throw new IllegalArgumentException("Food id cannot be null or empty.");
-//        }
-//        foods.put(foodId, foods.getOrDefault(foodId, 0) + 1);
-//    }
-
-    public void removeFood(String foodId) {
-        if (isNullOrEmpty(foodId) || !foods.containsKey(foodId)) {
-            throw new IllegalArgumentException("Food id cannot be null or empty.");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Basket basket = (Basket) o;
+        if (id == null) {
+            return Objects.equals(buyerPhone, basket.buyerPhone) &&
+                    Objects.equals(address, basket.address) &&
+                    Objects.equals(buyerName, basket.buyerName);
         }
-        foods.remove(foodId);
+        return Objects.equals(id, basket.id);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == null) {
+            return Objects.hash(buyerPhone, address, buyerName);
+        }
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Basket{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", buyerPhone='" + buyerPhone + '\'' +
+                ", buyerName='" + buyerName + '\'' +
+                '}';
     }
 }
