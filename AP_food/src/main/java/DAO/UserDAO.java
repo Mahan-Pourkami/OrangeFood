@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 
 public class UserDAO {
-    private  final UserDAO instance = new UserDAO();  // singletone object
+
     private final SessionFactory sessionFactory;
 
     public UserDAO() {

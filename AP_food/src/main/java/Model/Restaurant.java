@@ -19,7 +19,6 @@ public class Restaurant {
 
     private String address;
 
-
     private LocalDateTime workingHour;
 
     private String logoUrl;
