@@ -82,6 +82,8 @@ public class Food {
         this.name = name;
     }
 
+    public Long getId() { return id; }
+
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }

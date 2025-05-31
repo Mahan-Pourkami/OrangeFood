@@ -38,10 +38,10 @@ public class Main {
 //            restaurantDAO.saveRestaurant(res);
             sellerDAO.updateSeller(u2);
             Restaurant res = restaurantDAO.get(852L);
-            Food f1 = new Food("sushi" , res , "pizza.jpg" , 120000 , 120 , "pizza" , "nothing anymore !");
+           // Food f1 = new Food("sushi" , res , "pizza.jpg" , 120000 , 120 , "pizza" , "nothing anymore !");
 
 //            Food f2 = foodDAO.getFood(452L);
-//            res.addFood(f2);
+            res.removeFood(1152);
 
             restaurantDAO.updateRestaurant(res);
 

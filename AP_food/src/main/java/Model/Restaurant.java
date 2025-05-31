@@ -105,8 +105,9 @@ public class Restaurant {
     }
 
 
-    public boolean removeFood(Food food) {
-       return foods.remove(food);
+    public void removeFood(long id) {
+
+        foods.removeIf(food -> food.getId().equals(id));
     }
 
     public Food findFoodByName(String name) {
