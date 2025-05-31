@@ -1,6 +1,9 @@
 package Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.regex.*;
 
 
@@ -10,9 +13,15 @@ import java.util.regex.*;
 public abstract class User {
 
 
+    // Getters and setters
+    @Setter
+    @Getter
     @Id
     @Column(name = "phone" ,length = 11)
     private String phone;
+
+    @Column(name = "id")
+    private String id ;
 
     @Column(name = "fullname" , nullable = false)
     private String fullname;
@@ -56,15 +65,8 @@ public abstract class User {
         this.fullname=fullname;
         this.role = role;
         this.address = address;
+        this.id = phone.substring(2);
 
-    }
-
-    // Getters and setters
-    public String getPhone() {
-        return phone;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
 

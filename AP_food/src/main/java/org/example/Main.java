@@ -27,17 +27,23 @@ public class Main {
 
             Seller u2 = new Seller("09986404331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
 
-            sellerDAO.saveSeller(u2);
-
-            Restaurant res = new Restaurant("Kababi","Tehran","logo",u2);
+//            sellerDAO.saveSeller(u1);
+//
+//            Restaurant res = new Restaurant("Kababi","Tehran","logo",u1);
 
             u1.setBankinfo(b1);
 
+//            u1.setRestaurant(res);
             sellerDAO.updateSeller(u1);
-            Food f1 = foodDAO.getFood(302L);
-            res.addFood(f1);
-            restaurantDAO.saveRestaurant(res);
-            u2.setRestaurant(res);
+//            restaurantDAO.saveRestaurant(res);
+            sellerDAO.updateSeller(u2);
+            Restaurant res = restaurantDAO.get(852L);
+            Food f1 = new Food("sushi" , res , "pizza.jpg" , 120000 , 120 , "pizza" , "nothing anymore !");
+
+//            Food f2 = foodDAO.getFood(452L);
+//            res.addFood(f2);
+
+            restaurantDAO.updateRestaurant(res);
 
 
         } catch (Exception e) {
@@ -48,3 +54,7 @@ public class Main {
         
     }
 }
+
+
+
+//Food(String name,Restaurant res,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, String description)

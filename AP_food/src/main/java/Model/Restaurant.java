@@ -21,7 +21,7 @@ public class Restaurant {
 
     private String logoUrl;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Food> foods;
 
     @OneToOne

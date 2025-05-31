@@ -35,4 +35,36 @@ public class RestaurantDAO {
             throw new RuntimeException("Error saving restaurant", e);
         }
     }
+
+    public void updateRestaurant(Restaurant restaurant) {
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(restaurant);
+            transaction.commit();
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to update Restaurant",e);
+        }
+    }
+
+    public Restaurant get(Long id) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Restaurant res = session.get(Restaurant.class, id);
+            if (res != null) {
+                return res;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get seller",e);
+        }
+    }
+
 }
