@@ -1,4 +1,4 @@
-package Execptions;
+package Exceptions;
 
 public class Usernotfound extends Exception {
     public Usernotfound()

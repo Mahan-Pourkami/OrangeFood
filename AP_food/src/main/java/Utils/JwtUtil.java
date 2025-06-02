@@ -22,17 +22,17 @@ public class JwtUtil {
     private final Long EXPIRATION_TIME = 15*60L;  /* 15 Minutes */
 
 
-    public String generateToken(User user) {
+    public String generateToken(String phone , String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role",user.role.toString());
-        claims.put("full_name",user.getfullname());
-        claims.put("email",user.getEmail());
-        claims.put("address",user.getAddress());
 
-        return createToken(claims,user.getPhone());
+        claims.put("phone", phone);
+        claims.put("role", role);
+
+        return createToken(claims,phone);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)

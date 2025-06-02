@@ -19,7 +19,7 @@ public class Buyer extends User{
 
     public Buyer(){}
 
-    public Buyer(String phone, String fullname, String password, String email,String prof,String address) {
+    public Buyer(String phone, String fullname, String password, String email,String address,String prof) {
 
         super(phone,fullname,password,email,Role.buyer,address,prof);
         Token  =  0;
