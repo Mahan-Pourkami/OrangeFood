@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,9 @@ public class BasketDAO implements AutoCloseable {
                     .configure("hibernate.cfg.xml")
                     .addAnnotatedClass(Basket.class)
                     .addAnnotatedClass(Food.class)
+                    .addAnnotatedClass(Restaurant.class)
+                    .addAnnotatedClass(Seller.class)
+                    .addAnnotatedClass(Bankinfo.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             System.err.println("Error initializing SessionFactory: " + e.getMessage());

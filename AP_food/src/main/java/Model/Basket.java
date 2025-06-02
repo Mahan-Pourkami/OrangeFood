@@ -15,6 +15,8 @@ public class Basket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @Column(name = "address", length = 255)
     private String address;
 
@@ -24,24 +26,23 @@ public class Basket {
     @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
-    @ManyToOne
-    @JoinColumn(name = "buyer_id")
-    private Buyer buyer;
-
-
-    @ManyToMany(fetch = FetchType.LAZY) // Many Baskets to Many Foods
-    @JoinTable(
-            name = "basket_foods_join", // Name of the join table (e.g., basket_foods_join)
-            joinColumns = @JoinColumn(name = "basket_id"), // Column in join table referring to Basket's ID
-            inverseJoinColumns = @JoinColumn(name = "food_id") // Column in join table referring to Food's ID
-    )
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "basket_foods_join", joinColumns = @JoinColumn(name = "basket_id"), inverseJoinColumns = @JoinColumn(name = "food_id"))
     private List<Food> foods;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Restaurant restaurant;
+
+//    @Column(name = "State")
+//    private StateofCart stateofCart;  //TODO go to the Order
+
+
 
     public Basket() {
     }
 
     public Basket(Buyer buyer) {
-        this.buyer = buyer;
+
         this.address = buyer.getAddress();
         this.buyerPhone = buyer.getPhone();
         this.buyerName = buyer.getfullname();
@@ -81,10 +82,6 @@ public class Basket {
 
     public String getBuyerName() {
         return buyerName;
-    }
-
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
     }
 
     public void setBuyerName(String buyerName) {

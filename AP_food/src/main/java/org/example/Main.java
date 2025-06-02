@@ -1,51 +1,60 @@
 
 package org.example;
+
 import DAO.*;
 import Model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListResourceBundle;
-import java.util.Optional;
-
-
 public class Main {
+
     public static void main(String[] args) {
-        /*
-        UserDAO userDAO = UserDAO.getInstance();
-        BasketDAO basketDAO = new BasketDAO();
-         */
+
+        UserDAO userDAO = new UserDAO();
         FoodDAO foodDAO = new FoodDAO();
         BuyerDAO buyerDAO = new BuyerDAO();
+        BasketDAO basketDAO = new BasketDAO();
+        SellerDAO sellerDAO = new SellerDAO();
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
+
         try {
-            /*
-            User user1 = new User("09989504331","Mehdi Sedighi" ,"xxxx" , null ,Role.Buyer,"Tehran","prof" );
-            Bankinfo bankinfo1 = new Bankinfo("blue","6219861806190277");
-            Buyer buyer = new Buyer("09804573457","Ali Ahmadi","XXXX","ALpi@gpail.com","Tehran","prof");
-            Basket basket1 = new Basket(buyer);
-            Food food1 = new Food("Persian_kebab","kebab.jpg",120000,"Toranj",20,"Persian","nothing");
-            Food food2 = new Food("Persian_pizza","pizza.jpg",120000,"Toranj",20,"Persian","nothing");
 
-            foodDAO.saveFood(food1);
-            foodDAO.saveFood(food2);
-            buyer.addCart(basket1);
-            basket1.addFood(food1);
-            basket1.addFood(food2);
-            buyerDAO.saveBuyer(buyer);
+           Seller u1 = new Seller("09986504331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
+
+            Bankinfo b1 = new Bankinfo("blue","6219861806190277");
+
+            Buyer buyer = new Buyer("09204575452","Ali Ahmadi","XXXX",null,"Tehran","prof");
+
+            Basket b2 = new Basket(buyer);
+
+            Seller u2 = new Seller("09986404331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
+
+//            sellerDAO.saveSeller(u1);
+//
+//            Restaurant res = new Restaurant("Kababi","Tehran","logo",u1);
+
+            u1.setBankinfo(b1);
+
+//            u1.setRestaurant(res);
+            sellerDAO.updateSeller(u1);
+//            restaurantDAO.saveRestaurant(res);
+            sellerDAO.updateSeller(u2);
+            Restaurant res = restaurantDAO.get(852L);
+           // Food f1 = new Food("sushi" , res , "pizza.jpg" , 120000 , 120 , "pizza" , "nothing anymore !");
+
+//            Food f2 = foodDAO.getFood(452L);
+            res.removeFood(1152);
+
+            restaurantDAO.updateRestaurant(res);
 
 
-            Buyer b1 = buyerDAO.getBuyer("09804573456");
-            System.out.println(b1.getfullname());
-            b1.setfullname("parsa samareh");
-            buyerDAO.updateBuyer(b1);
-            Buyer b2 = buyerDAO.getBuyer("09804573456");
-            System.out.println(b2.getfullname());
-
-             */
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        
     }
 }
+
+
+
+//Food(String name,Restaurant res,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, String description)

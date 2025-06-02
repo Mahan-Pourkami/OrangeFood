@@ -10,7 +10,6 @@ public class Bankinfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(name = "bank_name")
     private String bankName;
 
@@ -21,9 +20,7 @@ public class Bankinfo {
     private User user;
 
 
-
     public Bankinfo() {}
-
 
     public Bankinfo(String bankName, String accountNumber) {
 

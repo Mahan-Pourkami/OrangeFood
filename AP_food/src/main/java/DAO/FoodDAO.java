@@ -15,12 +15,11 @@ public class FoodDAO {
 
     final private  SessionFactory sessionFactory;
     public FoodDAO() {
-        sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Buyer.class)
-                .addAnnotatedClass(User.class)
+        sessionFactory = new Configuration().configure().
+                addAnnotatedClass(Food.class)
                 .addAnnotatedClass(Basket.class)
-                .addAnnotatedClass(Food.class)
+                .addAnnotatedClass(Restaurant.class)
+                .addAnnotatedClass(Seller.class)
                 .addAnnotatedClass(Bankinfo.class)
                 .buildSessionFactory();
     }
@@ -53,7 +52,7 @@ public class FoodDAO {
         }
     }
 
-    public void deleteFood(String id) {
+    public void deleteFood(Long id) {
         Transaction transaction = null ;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -73,7 +72,7 @@ public class FoodDAO {
         }
     }
 
-    public boolean existFood(String id) {
+    public boolean existFood(Long id) {
         Transaction transaction = null ;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -91,7 +90,7 @@ public class FoodDAO {
         }
     }
 
-    public Food getFood(String id) {
+    public Food getFood(Long id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

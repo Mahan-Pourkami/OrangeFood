@@ -19,10 +19,10 @@ import java.util.function.Function;
 
 
 public class UserDAO {
-    private static final UserDAO instance = new UserDAO();  // singletone object
+
     private final SessionFactory sessionFactory;
 
-    private UserDAO() {
+    public UserDAO() {
         try {
             this.sessionFactory = new Configuration()
                     .configure() // loads hibernate.cfg.xml
@@ -34,9 +34,6 @@ public class UserDAO {
         }
     }
 
-    public static UserDAO getInstance() {
-        return instance;
-    }
 
     // Helper method for transactions
     private void executeInTransaction(Consumer<Session> operation) {
@@ -54,13 +51,7 @@ public class UserDAO {
     }
 
     // Helper method for queries
-    private <T> T executeQuery(Function<Session, T> operation) {
-        try (Session session = sessionFactory.openSession()) {
-            return operation.apply(session);
-        } catch (Exception e) {
-            throw new DataAccessException("Database query failed", e);
-        }
-    }
+
 
     public void saveUser(User user) {
         // Check if user exists first
@@ -89,7 +80,7 @@ public class UserDAO {
         }
     }
 
-    // it creates a new user if it doesn't exist
+    // it creates a new user if it doesn't exists
     public void updateUser(User user) {
         executeInTransaction(session -> session.merge(user));
     }

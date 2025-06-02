@@ -1,10 +1,17 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table
 public class Restaurant {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private boolean confirmed;
 
@@ -12,21 +19,28 @@ public class Restaurant {
 
     private String address;
 
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
-    private LocalDateTime workingHour;
     private String logoUrl;
-    private HashSet<Food> foodList;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Food> foods;
+
+    @OneToOne
     private Seller seller;
-    public Restaurant(String name, String address, LocalDateTime workingHour, String logoUrl, Seller seller) {
-        if (isNullOrEmpty(name) || isNullOrEmpty(address) || workingHour == null) {
+
+    //TODO list of baskets
+
+
+    public Restaurant() {}
+
+    public Restaurant(String name, String address, String logoUrl, Seller seller) {
+        if (isNullOrEmpty(name) || isNullOrEmpty(address) ) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
         this.confirmed = false;
         this.name = name;
         this.address = address;
-        this.workingHour = workingHour;
         this.logoUrl = logoUrl;
-        this.foodList = new HashSet<>();
+        this.foods = new ArrayList<>();
         this.seller = seller;
     }
 
@@ -35,9 +49,9 @@ public class Restaurant {
     }
 
     // Getters
-    public String getFormattedWorkingHour() {
-        return workingHour.format(dateFormatter);
-    }
+//    public String getFormattedWorkingHour() {
+//        return workingHour.format(dateFormatter);
+//    }
 
     public String getName() {
         return name;
@@ -47,17 +61,14 @@ public class Restaurant {
         return address;
     }
 
-    public LocalDateTime getWorkingHour() {
-        return workingHour;
-    }
 
     public String getLogoUrl() {
         return logoUrl;
     }
 
-    public HashSet<Food> getFoodList() {
-        return new HashSet<>(foodList); // Return a copy to avoid external modification
-    }
+//    public HashSet<Food> getFoodList() {
+//        return new HashSet<>(foodList); // Return a copy to avoid external modification
+//    }
     public boolean isConfirmed() {
         return confirmed;
     }
@@ -77,13 +88,6 @@ public class Restaurant {
         this.address = address;
     }
 
-    public void setWorkingHour(LocalDateTime workingHour) {
-        if (workingHour == null) {
-            throw new IllegalArgumentException("Working hour cannot be null.");
-        }
-        this.workingHour = workingHour;
-    }
-
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
     }
@@ -94,30 +98,31 @@ public class Restaurant {
 
     // Food-related methods
     public void addFood(Food food) {
-        if (food == null) {
-            throw new IllegalArgumentException("Food cannot be null.");
+       if (food == null) {
+           throw new IllegalArgumentException("Food cannot be null.");
         }
-        foodList.add(food);
+        foods.add(food);
     }
 
 
-    public boolean removeFood(Food food) {
-        return foodList.remove(food);
+    public void removeFood(long id) {
+
+        foods.removeIf(food -> food.getId().equals(id));
     }
 
     public Food findFoodByName(String name) {
         if (isNullOrEmpty(name)) return null;
-        for (Food food : foodList) {
+        for (Food food : foods) {
             if (food.getName().equalsIgnoreCase(name)) {
                 return food;
             }
         }
-        return null; // not found
+        return null;
     }
 
     public String getMenuString() {
         String menu = "";
-        for (Food food : foodList) {
+        for (Food food : foods) {
             menu = menu + (food.getName()) +"," ;
         }
         return menu;

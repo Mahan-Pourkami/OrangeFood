@@ -1,14 +1,21 @@
 package Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
 public class Admin{
+    @Getter
     private final String id;
+    @Getter
     private final String password;
     private HashSet<User> users;
     private HashSet<Restaurant> restaurants;
     private HashSet<Restaurant> waitingRestaurants;
+    //TODO delete the lists
     public Admin(String id, String password){
         if(isNullOrEmpty(id) || isNullOrEmpty(password)){
             throw new IllegalArgumentException("id or password cannot be null or empty");
@@ -22,12 +29,7 @@ public class Admin{
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
-    public String getId() {
-        return id;
-    }
-    public String getPassword() {
-        return password;
-    }
+
     public void showStatus(){}
 
 
@@ -79,12 +81,6 @@ public class Admin{
     }
     public void removeUser(String phone){
         if (phone == null || phone.trim().isEmpty()) return;
-        Iterator<User> iterator = users.iterator();
-        while(iterator.hasNext()){
-            User user = iterator.next();
-            if(phone.equals(user.getPhone())){
-                iterator.remove();
-            }
-        }
+        users.removeIf(user -> phone.equals(user.getPhone()));
     }
 }
