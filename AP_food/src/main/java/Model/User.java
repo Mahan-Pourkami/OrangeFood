@@ -33,7 +33,7 @@ public abstract class User {
     private String email;
 
     @Column(name = "role")
-    private Role role;
+    public Role role;
 
     @Column(name = "prof" , nullable = true)
     private String profile;
@@ -126,6 +126,8 @@ class validator {
         return matcher.matches();
 
     }
+
+
 
     protected static boolean validatePhone(@org.jetbrains.annotations.NotNull String phone) {
 
