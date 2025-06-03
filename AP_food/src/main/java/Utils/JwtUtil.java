@@ -5,10 +5,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import com.sun.net.httpserver.HttpExchange;
 
 import Model.User;
 import Model.Role;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,12 +19,12 @@ import java.util.function.Function;
 
 public class JwtUtil {
 
-    private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final static Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private final Long EXPIRATION_TIME = 15*60L;  /* 15 Minutes */
+    private final static Long EXPIRATION_TIME = 15*60L;  /* 15 Minutes */
 
 
-    public String generateToken(String phone , String role) {
+    public static String generateToken(String phone, String role) {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("phone", phone);
@@ -31,7 +33,7 @@ public class JwtUtil {
         return createToken(claims,phone);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private static String createToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -41,6 +43,7 @@ public class JwtUtil {
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();

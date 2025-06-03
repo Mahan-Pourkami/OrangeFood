@@ -79,6 +79,25 @@ public class UserDAO {
             throw new RuntimeException("failed to get user",e);
         }
     }
+    public User getUserByPhoneAndPass(String phone, String password) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            System.out.println("try to get user");
+            User user = session.find(User.class, phone);
+            System.out.println("user found");
+            if (user != null && user.getPassword().equals(password)) {
+                return user;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get user",e);
+        }
+    }
 
     // it creates a new user if it doesn't exists
     public void updateUser(User user) {
