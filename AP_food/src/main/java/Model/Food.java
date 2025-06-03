@@ -46,17 +46,13 @@ public class Food {
 
     public Food() {}
 
-    public Food(String name,Restaurant res,String pictureUrl, int price, String restaurantName, int stockQuantity, String category, String description) {
+    public Food(String name,Restaurant res,String pictureUrl, int price, int stockQuantity, String category, String description) {
         if (price <= 0) {
             throw new IllegalArgumentException("Invalid price");
         }
         if (stockQuantity < 0) {
             throw new IllegalArgumentException("Invalid stockQuantity");
         }
-        if (name == null || name.trim().isEmpty() || restaurantName == null || restaurantName.trim().isEmpty()) {
-            throw new IllegalArgumentException("name or restaurantName cannot be null");
-        }
-
 
         this.name = name;
         this.pictureUrl = pictureUrl;
@@ -68,7 +64,9 @@ public class Food {
         res.addFood(this);
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
     public String getPictureUrl() { return pictureUrl; }
     public int getPrice() { return price; }
     public String getRestaurantName() { return restaurant.getName(); }
@@ -83,6 +81,8 @@ public class Food {
         }
         this.name = name;
     }
+
+    public Long getId() { return id; }
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;

@@ -19,28 +19,26 @@ public class Restaurant {
 
     private String address;
 
-
-    private LocalDateTime workingHour;
-
     private String logoUrl;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Food> foods;
 
     @OneToOne
     private Seller seller;
 
+    //TODO list of baskets
+
 
     public Restaurant() {}
 
-    public Restaurant(String name, String address, LocalDateTime workingHour, String logoUrl, Seller seller) {
+    public Restaurant(String name, String address, String logoUrl, Seller seller) {
         if (isNullOrEmpty(name) || isNullOrEmpty(address) ) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
         this.confirmed = false;
         this.name = name;
         this.address = address;
-        this.workingHour = workingHour;
         this.logoUrl = logoUrl;
         this.foods = new ArrayList<>();
         this.seller = seller;
@@ -63,9 +61,6 @@ public class Restaurant {
         return address;
     }
 
-    public LocalDateTime getWorkingHour() {
-        return workingHour;
-    }
 
     public String getLogoUrl() {
         return logoUrl;
@@ -93,13 +88,6 @@ public class Restaurant {
         this.address = address;
     }
 
-    public void setWorkingHour(LocalDateTime workingHour) {
-        if (workingHour == null) {
-            throw new IllegalArgumentException("Working hour cannot be null.");
-        }
-        this.workingHour = workingHour;
-    }
-
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
     }
@@ -117,8 +105,9 @@ public class Restaurant {
     }
 
 
-    public boolean removeFood(Food food) {
-       return foods.remove(food);
+    public void removeFood(long id) {
+
+        foods.removeIf(food -> food.getId().equals(id));
     }
 
     public Food findFoodByName(String name) {

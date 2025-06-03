@@ -105,7 +105,7 @@ public class BuyerDAO {
         return buyer != null;
     }
 
-    public Buyer getBuyer(Long id) {
+    public Buyer getBuyer(String id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Buyer.class,id);
         } catch (Exception e) {

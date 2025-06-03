@@ -1,18 +1,25 @@
 package Model;
 
 import jakarta.persistence.*;
-import java.util.regex.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public abstract class User {
+public class User {
 
 
+    // Getters and setters
+    @Setter
+    @Getter
     @Id
     @Column(name = "phone" ,length = 11)
     private String phone;
+
+    @Column(name = "id")
+    private String id ;
 
     @Column(name = "fullname" , nullable = false)
     private String fullname;
@@ -24,7 +31,7 @@ public abstract class User {
     private String email;
 
     @Column(name = "role")
-    private Role role;
+    public Role role;
 
     @Column(name = "prof" , nullable = true)
     private String profile;
@@ -43,10 +50,10 @@ public abstract class User {
 
     public User(String phone, String fullname, String password, String email , Role role, String address , String profile) {
 
-        if(!validator.validatePhone(phone))
+        if(!Validator.validatePhone(phone))
             throw new IllegalArgumentException("Invalid phone number");
 
-        if(email!= null && !validator.validateEmail(email))
+        if(email!= null && !Validator.validateEmail(email))
             throw new IllegalArgumentException("Invalid email format");
 
         this.phone = phone;
@@ -56,15 +63,8 @@ public abstract class User {
         this.fullname=fullname;
         this.role = role;
         this.address = address;
+        this.id = phone.substring(2);
 
-    }
-
-    // Getters and setters
-    public String getPhone() {
-        return phone;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
 
@@ -114,32 +114,3 @@ public abstract class User {
     }
 }
 
-class validator {
-
-    protected static boolean validateEmail(String email) {
-
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-
-    }
-
-    protected static boolean validatePhone(@org.jetbrains.annotations.NotNull String phone) {
-
-        if(!phone.startsWith("09")){
-            return false;
-        }
-
-        if(phone.length() != 11) {
-            return false;
-        }
-        for(char c : phone.toCharArray()) {
-            if(!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-}

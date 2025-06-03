@@ -2,9 +2,6 @@ package Model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Mahan Pourkami
  * @date : 11:52am ~ 16/05/2025
@@ -22,9 +19,9 @@ public class Buyer extends User{
 
     public Buyer(){}
 
-    public Buyer(String phone, String fullname, String password, String email,String prof,String address) {
+    public Buyer(String phone, String fullname, String password, String email,String address,String prof) {
 
-        super(phone,fullname,password,email,Role.Buyer,address,prof);
+        super(phone,fullname,password,email,Role.buyer,address,prof);
         Token  =  0;
     }
 

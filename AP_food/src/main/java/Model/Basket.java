@@ -15,6 +15,8 @@ public class Basket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @Column(name = "address", length = 255)
     private String address;
 
@@ -28,8 +30,11 @@ public class Basket {
     @JoinTable(name = "basket_foods_join", joinColumns = @JoinColumn(name = "basket_id"), inverseJoinColumns = @JoinColumn(name = "food_id"))
     private List<Food> foods;
 
-    @Column(name = "State")
-    private StateofCart stateofCart;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Restaurant restaurant;
+
+//    @Column(name = "State")
+//    private StateofCart stateofCart;  //TODO go to the Order
 
 
 

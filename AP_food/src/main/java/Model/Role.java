@@ -1,7 +1,7 @@
 package Model;
 
 public enum Role {
-    Seller,
-    Buyer,
-    Courier
+    seller,
+    buyer,
+    courier
 }
