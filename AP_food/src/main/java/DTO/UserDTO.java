@@ -3,15 +3,18 @@ package DTO;
 import Model.*;
 import Exceptions.*;
 import DAO.*;
+import Utils.JwtUtil;
+import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class UserDTO {
 
     public static class UserRegisterDTO {
 
-        UserDAO userDAO ;
-        SellerDAO sellerDAO;
-        BuyerDAO buyerDAO ;
-        CourierDAO courierDAO ;
+        UserDAO userDAO = new UserDAO();
+        SellerDAO sellerDAO = new SellerDAO();
+        BuyerDAO buyerDAO = new BuyerDAO();
+        CourierDAO courierDAO = new CourierDAO();
 
 
         public String fullName;
@@ -32,12 +35,9 @@ public class UserDTO {
             this.address = address;
             this.email = email;
             this.profileImageBase64 = profileImageBase64;
+            this.bankinfo = new BankinfoDTO();
             this.bankinfo.bankName = bankname;
             this.bankinfo.accountNumber = account;
-            this.userDAO = new UserDAO();
-            this.sellerDAO = new SellerDAO();
-            this.buyerDAO = new BuyerDAO();
-            this.courierDAO = new CourierDAO();
 
         }
 
@@ -120,9 +120,31 @@ public class UserDTO {
         public BankinfoDTO bankinfo;
     }
 
-    public static class UserAuthResponseDTO {
+
+
+    public static class UserRegResponseDTO {
+
+        public JwtUtil jwtUtil = new JwtUtil();
+        public JSONObject jsonObject = new JSONObject();
+
+        public UserRegResponseDTO(String message , String phone , String role ) {
+
+            this.message = message;
+            this.user_id = phone.substring(2);
+            this.token = jwtUtil.generateToken(phone, role);
+
+        }
+
         public String message;
         public String user_id;
         public String token;
+
+        public String response() throws JsonProcessingException {
+
+            jsonObject.put("message",this.message);
+            jsonObject.put("id",this.user_id);
+            jsonObject.put("token",this.token);
+            return jsonObject.toString();
+        }
     }
 }

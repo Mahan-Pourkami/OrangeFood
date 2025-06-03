@@ -6,12 +6,11 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
-
 import Model.Validator;
 import DTO.UserDTO;
 import Exceptions.*;
-
 import java.io.*;
+
 
 public class AuthHandler implements HttpHandler {
 
@@ -40,6 +39,7 @@ public class AuthHandler implements HttpHandler {
                     break;
 
                 default:
+
                     response = "Invalid request";
                     exchange.sendResponseHeaders(405, response.length());
             }
@@ -52,14 +52,11 @@ public class AuthHandler implements HttpHandler {
             headers.add("Content-Type", "application/json");
             exchange.sendResponseHeaders(500, response.getBytes().length);
         }
-
         finally {
 
             sendResponse(exchange, response);
         }
     }
-
-
     private String handleGetRequest(HttpExchange exchange) throws IOException {
 
         String response = "";
@@ -90,17 +87,24 @@ public class AuthHandler implements HttpHandler {
                             bankobject.getString("account_number"));
 
                     userDTOreg.register();
-                    response = "User registered successfully";
-                    exchange.sendResponseHeaders(200, response.length());
+                    UserDTO.UserRegResponseDTO userRegResponseDTO = new UserDTO.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    response = userRegResponseDTO.response();
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
                 }
                 else {
-                    response = invalid_input_reg(jsonobject);
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    response = generateerror("Invalid "+invalid_input_reg(jsonobject));
                     exchange.sendResponseHeaders(400, response.length());
                 }
             }
             catch (DuplicatedUserexception e) {
-                response = "Phone number already exists";
-                exchange.sendResponseHeaders(409, response.length());
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generateerror("Phone number already exists");
+                exchange.sendResponseHeaders(409, response.getBytes().length);
             }
         }
 
@@ -118,7 +122,7 @@ public class AuthHandler implements HttpHandler {
                     System.out.println("User found");
                     if (user == null) {
                         JSONObject errorJson = new JSONObject();
-                        errorJson.put("error", "Resource not found");
+                        errorJson.put("error", "Unauthorized request");
                         response = errorJson.toString();
                         Headers headers = exchange.getResponseHeaders();
                         headers.add("Content-Type", "application/json");
@@ -156,7 +160,7 @@ public class AuthHandler implements HttpHandler {
                 else {
                     String invalid_part = invalid_input_login(jsonobject);
                     JSONObject errorJson = new JSONObject();
-                    errorJson.put("error", invalid_part);
+                    errorJson.put("error", "Unauthorized request");
                     response = errorJson.toString();
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
@@ -199,39 +203,32 @@ public class AuthHandler implements HttpHandler {
 
     private static String invalid_input_reg(JSONObject jsonObject) {
 
-        String result = "" ;
-
-        String [] fields = {"full_name" , "phone" , "email" , "password" , "role" , "address" , "profileImageBase64"};
-
+        String[] fields = {"full_name", "phone", "email", "password", "role", "address", "profileImageBase64"};
         for (String field : fields) {
-            if(!jsonObject.has(field)) {
-                result = "Invalid" + field;
-                return result;
+            if (!jsonObject.has(field) || jsonObject.getString(field).isEmpty()) {
+                return field;
             }
         }
-
-        if(!Validator.validateEmail(jsonObject.getString("email"))){
-            result = "Invalid email";
+        if (!Validator.validateEmail(jsonObject.getString("email"))) {
+            return "email";
         }
-
-        if(!Validator.validatePhone(jsonObject.getString("phone"))){
-            result = "Invalid phone";
+        if (!Validator.validatePhone(jsonObject.getString("phone"))) {
+            return "phone";
         }
-
-        JSONObject bankobject = jsonObject.optJSONObject("bank_info");
-        if(bankobject != null){
-            result = "Invalid bank_info";
-            return result;
+        if (!jsonObject.has("bank_info")) {
+            return "bank_info ";
         }
-        if(!bankobject.has("bank_name")){
-            result = "Invalid bank_name";
-            return result;
+        JSONObject bankObject = jsonObject.optJSONObject("bank_info");
+        if (bankObject == null) {
+            return "bank_info";
         }
-        if(!bankobject.has("account_number")){
-            result = "Invalid account_number";
-            return result;
+        if (!bankObject.has("bank_name") || bankObject.getString("bank_name").isEmpty()) {
+            return "bank_name";
         }
-        return result;
+        if (!bankObject.has("account_number") || bankObject.getString("account_number").isEmpty()) {
+            return "account_number";
+        }
+        return ""; // Return an empty string if everything is valid
     }
 
     private static String invalid_input_login(JSONObject jsonObject) {
@@ -263,4 +260,13 @@ public class AuthHandler implements HttpHandler {
         }
         exchange.close();
     }
+
+
+    private String generateerror(String error) {
+
+        JSONObject errorJson = new JSONObject();
+        errorJson.put("error", error);
+        return errorJson.toString();
+    }
 }
+

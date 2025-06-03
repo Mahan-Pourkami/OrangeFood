@@ -13,6 +13,7 @@ public class Server {
 
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
 

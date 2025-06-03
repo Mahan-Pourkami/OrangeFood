@@ -32,6 +32,10 @@ public class RestaurantsHandler implements HttpHandler {
                     System.out.println("PUT res request received");
                     break;
 
+                case "DELETE":
+                    System.out.println("DELETE res request received");
+                    break;
+
                 default:
                     response = "Invalid res request";
                     statusCode = 405;
@@ -79,6 +83,7 @@ public class RestaurantsHandler implements HttpHandler {
 
         return result;
     }
+
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
              BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
