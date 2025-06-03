@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public abstract class User {
+public class User {
 
 
     // Getters and setters
