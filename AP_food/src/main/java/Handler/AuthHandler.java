@@ -154,7 +154,12 @@ public class AuthHandler implements HttpHandler {
 
                 }
                 else {
-                    response = invalid_input_login(jsonobject);
+                    String invalid_part = invalid_input_login(jsonobject);
+                    JSONObject errorJson = new JSONObject();
+                    errorJson.put("error", invalid_part);
+                    response = errorJson.toString();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(400, response.length());
                 }
             }
@@ -244,6 +249,9 @@ public class AuthHandler implements HttpHandler {
 
         if(!Validator.validatePhone(jsonObject.getString("phone"))){
             result = "Invalid phone";
+        }
+        if(jsonObject.getString("password") == "" || jsonObject.getString("password") == null){
+            result = "Invalid password";
         }
 
         return result;
