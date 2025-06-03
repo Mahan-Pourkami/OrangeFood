@@ -1,5 +1,8 @@
 package Handler;
 
+import Model.User;
+import Utils.JwtUtil;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
@@ -42,8 +45,12 @@ public class AuthHandler implements HttpHandler {
             }
         }
         catch (Exception e) {
-            response = "Methode not allowed";
-            exchange.sendResponseHeaders(500, response.length());
+            JSONObject errorJson = new JSONObject();
+            errorJson.put("error", "Internal server error");
+            response = errorJson.toString();
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(500, response.getBytes().length);
         }
 
         finally {
@@ -67,7 +74,7 @@ public class AuthHandler implements HttpHandler {
         if(paths.length == 3 && paths[2].equals("register")) {
             try {
                 JSONObject jsonobject = getJsonObject(exchange);
-                if(!invalid_input_reg(jsonobject).isEmpty()){
+                if(invalid_input_reg(jsonobject).isEmpty()){
 
                     JSONObject bankobject = jsonobject.optJSONObject("bank_info");
 
@@ -96,16 +103,86 @@ public class AuthHandler implements HttpHandler {
                 exchange.sendResponseHeaders(409, response.length());
             }
         }
+
+
+        else if(paths.length == 3 && paths[2].equals("login")) {
+            System.out.println("Login request received");
+            try {
+                JSONObject jsonobject = getJsonObject(exchange);
+                if(invalid_input_login(jsonobject).isEmpty()){
+                    UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
+                            jsonobject.getString("phone"),
+                            jsonobject.getString("password"));
+                    System.out.println("UserDTO made");
+                    User user = userDTOlogin.getUserByPhoneAndPass();
+                    System.out.println("User found");
+                    if (user == null) {
+                        JSONObject errorJson = new JSONObject();
+                        errorJson.put("error", "Resource not found");
+                        response = errorJson.toString();
+                        Headers headers = exchange.getResponseHeaders();
+                        headers.add("Content-Type", "application/json");
+                        exchange.sendResponseHeaders(404, response.getBytes().length);
+                    } else {
+                        String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
+
+                        JSONObject json = new JSONObject();
+                        json.put("message", "Login successful");
+                        json.put("token", token);
+
+                        JSONObject userJson = new JSONObject();
+                        userJson.put("id", user.getPhone());
+                        userJson.put("full_name", user.getfullname());
+                        userJson.put("phone", user.getPhone());
+                        userJson.put("email", user.getEmail());
+                        userJson.put("role", user.role);
+                        userJson.put("address", user.getAddress());
+                        userJson.put("profileImageBase64", user.getProfile());
+
+                        JSONObject bankInfo = new JSONObject();
+                        bankInfo.put("bank_name", user.getBankinfo().getBankName()); // or user.getBankInfo().getName()
+                        bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
+                        userJson.put("bank_info", bankInfo);
+
+                        json.put("user", userJson);
+
+                        Headers headers = exchange.getResponseHeaders();
+                        headers.add("Content-Type", "application/json");
+                        exchange.sendResponseHeaders(200, json.toString().getBytes().length);
+                        response = json.toString();
+                    }
+
+                }
+                else {
+                    response = invalid_input_login(jsonobject);
+                    exchange.sendResponseHeaders(400, response.length());
+                }
+            }
+            finally {
+
+            }
+            /*
+            catch () {
+                response = "Phone number already exists";
+                exchange.sendResponseHeaders(409, response.length());
+            }
+
+             */
+        }
+
+
         else {
             response = "Invalid request";
             exchange.sendResponseHeaders(405, response.length());
         }
+
         return response;
     }
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
+        {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -149,6 +226,26 @@ public class AuthHandler implements HttpHandler {
             result = "Invalid account_number";
             return result;
         }
+        return result;
+    }
+
+    private static String invalid_input_login(JSONObject jsonObject) {
+
+        String result = "" ;
+
+        String [] fields = {"phone" , "password"};
+
+        for (String field : fields) {
+            if(!jsonObject.has(field)) {
+                result = "Invalid" + field;
+                return result;
+            }
+        }
+
+        if(!Validator.validatePhone(jsonObject.getString("phone"))){
+            result = "Invalid phone";
+        }
+
         return result;
     }
 

@@ -83,6 +83,17 @@ public class UserDTO {
     public static class UserLoginRequestDTO {
         public String phone;
         public String password;
+        UserDAO userDAO;
+        public UserLoginRequestDTO(String phone, String password) {
+            this.phone = phone;
+            this.password = password;
+            this.userDAO = new UserDAO();
+        }
+        public User getUserByPhoneAndPass() {
+            User user = userDAO.getUserByPhoneAndPass(phone,password);
+            System.out.println("user found");
+            return user;
+        }
     }
 
     public static class UserLoginResponseDTO {

@@ -27,9 +27,9 @@ public class Main {
 
             Seller u2 = new Seller("09986404331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
 
-//            sellerDAO.saveSeller(u1);
+//          sellerDAO.saveSeller(u1);
 //
-//            Restaurant res = new Restaurant("Kababi","Tehran","logo",u1);
+//          Restaurant res = new Restaurant("Kababi","Tehran","logo",u1);
 
             u1.setBankinfo(b1);
 
