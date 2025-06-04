@@ -18,6 +18,8 @@ public class User {
     @Column(name = "phone" ,length = 11)
     private String phone;
 
+    @Setter
+    @Getter
     @Column(name = "id")
     private String id ;
 
