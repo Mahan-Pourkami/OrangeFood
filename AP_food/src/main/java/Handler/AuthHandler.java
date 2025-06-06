@@ -381,7 +381,7 @@ public class AuthHandler implements HttpHandler {
         if(!Validator.validatePhone(jsonObject.getString("phone"))){
             result = "Invalid phone";
         }
-        if(jsonObject.getString("password") == "" || jsonObject.getString("password") == null){
+        if(jsonObject.getString("password").isEmpty()|| jsonObject.getString("password") == null){
             result = "Invalid password";
         }
 
