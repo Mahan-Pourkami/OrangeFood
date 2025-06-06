@@ -11,7 +11,6 @@ import lombok.Setter;
 public class User {
 
 
-    // Getters and setters
     @Setter
     @Getter
     @Id

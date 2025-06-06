@@ -4,6 +4,7 @@ import Model.*;
 import Exceptions.*;
 import DAO.*;
 import Utils.JwtUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -174,4 +175,33 @@ public class UserDTO {
             return jsonObject.toString();
         }
     }
+
+    public static class Userupdateprof{
+
+        UserDAO userDAO = new UserDAO();
+
+
+       public Userupdateprof(String phone , JSONObject jsonObject ) {
+
+            User user = userDAO.getUserByPhone(phone);
+
+            user.setId(jsonObject.getString("id"));
+            user.setPhone(jsonObject.getString("phone"));
+            user.setfullname(jsonObject.getString("full_name"));
+            user.setEmail(jsonObject.getString("email"));
+            user.setAddress(jsonObject.getString("address"));
+            user.setProfile(jsonObject.getString("profileImageBase64"));
+            JSONObject bankobject = jsonObject.optJSONObject("bank_info");
+            Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
+            user.setBankinfo(bankinfo);
+
+
+            userDAO.updateUser(user);
+
+        }
+
+
+    }
+
+
 }
