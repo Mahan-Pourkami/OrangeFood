@@ -1,16 +1,9 @@
 package Utils;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import com.sun.net.httpserver.HttpExchange;
-
-import Model.User;
-import Model.Role;
-
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,26 +38,47 @@ public class JwtUtil {
     }
 
 
-    private Claims extractAllClaims(String token) {
+    private static Claims extractAllClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private String extractSubject(String token) {
+    public static String extractSubject(String token) {
+
         return extractClaim(token, Claims::getSubject);
     }
 
-    private Boolean isTokenExpired(String token) {
+    public static boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    public Boolean validateToken(String token, String expectedSubject) {
-        final String extractedSubject = extractSubject(token);
-        return (extractedSubject.equals(expectedSubject) && !isTokenExpired(token));
-    }
+
+
+//    public static boolean hasValidToken(String phone) {
+//        for (String token : AuthHandler.tokens) {
+//            try {
+//                Claims claims = Jwts.parserBuilder()
+//                        .setSigningKey(SECRET_KEY)
+//                        .build()
+//                        .parseClaimsJws(token)
+//                        .getBody();
+//
+//                String tokenPhone = claims.get("phone", String.class);
+//                boolean isExpired = claims.getExpiration().before(new Date());
+//
+//                if (phone.equals(tokenPhone) && !isExpired) {
+//                    return true;
+//                }
+//            } catch (Exception e) {
+//
+//                AuthHandler.tokens.remove(token);
+//            }
+//        }
+//        return false;
+//    }
 
 }

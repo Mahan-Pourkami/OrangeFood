@@ -154,7 +154,6 @@ public class UserDAO {
         }
     }
 
-    // Custom exception for better error handling
     public static class DataAccessException extends RuntimeException {
         public DataAccessException(String message) {
             super(message);
@@ -164,5 +163,4 @@ public class UserDAO {
             super(message, cause);
         }
     }
-
 }

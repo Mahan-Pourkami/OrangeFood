@@ -14,6 +14,11 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
+    private   String main_token = "";
+    private long expiry_time = 0;
+    final private long LIMIT = 15 * 60 * 1000; // 15 minutes
+
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -27,6 +32,7 @@ public class AuthHandler implements HttpHandler {
 
                 case "GET":
                     System.out.println("GET request received");
+                    response=handleGetRequest(exchange, paths);
                     break;
 
                 case "POST":
@@ -35,16 +41,17 @@ public class AuthHandler implements HttpHandler {
                     break;
 
                 case "PUT":
-                    //TODO
+                    System.out.println("PUT request received");
+                    response=handlePutRequest(exchange,paths);
                     break;
 
                 default:
-
                     response = "Invalid request";
                     exchange.sendResponseHeaders(405, response.length());
             }
         }
         catch (Exception e) {
+
             JSONObject errorJson = new JSONObject();
             errorJson.put("error", "Internal server error");
             response = errorJson.toString();
@@ -54,21 +61,84 @@ public class AuthHandler implements HttpHandler {
         }
         finally {
 
-            sendResponse(exchange, response);
+            send_Response(exchange, response);
         }
     }
-    private String handleGetRequest(HttpExchange exchange) throws IOException {
+
+    private String handlePutRequest(HttpExchange exchange , String[] paths) throws IOException {
 
         String response = "";
 
+        if(paths.length == 3 && paths[2].equals("profile")){
 
-        return exchange.getRequestURI().getPath();
+            if(token_validation()){
+
+                JSONObject profilejson = getJsonObject(exchange);
+                if(invalid_input_update(profilejson).isEmpty()){
+
+                    UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(main_token.substring(0,11), profilejson);
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    JSONObject json = new JSONObject();
+                    json.put("message", "Profile updated successfully");
+                    response = json.toString();
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
+
+                }
+                else{
+                    response = generate_error("Invalid " + invalid_input_update(profilejson));
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(400, response.getBytes().length);
+                }
+            }
+
+            else {
+                response = generate_error("Unauthorized request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(401,response.getBytes().length);
+            }
+
+        }
+
+
+        return response;
+
+    }
+
+
+
+    private String handleGetRequest(HttpExchange exchange , String[] paths) throws IOException {
+
+        String response = "";
+        if(paths.length == 3 && paths[2].equals("profile")) {
+
+            if(token_validation()) {
+                System.out.println(main_token.substring(0,11));
+                UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(main_token.substring(0,11));
+                response = userdto.response();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+            }
+            else {
+                response= generate_error("Unauthorized request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(401, response.getBytes().length);
+            }
+        }
+
+        return response;
     }
 
     private String handlePostRequest(HttpExchange exchange , String[] paths) throws IOException  , DuplicatedUserexception {
 
-        String response;
+        String response ="";
+
         if(paths.length == 3 && paths[2].equals("register")) {
+
             try {
                 JSONObject jsonobject = getJsonObject(exchange);
                 if(invalid_input_reg(jsonobject).isEmpty()){
@@ -96,14 +166,14 @@ public class AuthHandler implements HttpHandler {
                 else {
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
-                    response = generateerror("Invalid "+invalid_input_reg(jsonobject));
+                    response = generate_error("Invalid "+invalid_input_reg(jsonobject));
                     exchange.sendResponseHeaders(400, response.length());
                 }
             }
             catch (DuplicatedUserexception e) {
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
-                response = generateerror("Phone number already exists");
+                response = generate_error("Phone number already exists");
                 exchange.sendResponseHeaders(409, response.getBytes().length);
             }
         }
@@ -114,13 +184,17 @@ public class AuthHandler implements HttpHandler {
             try {
                 JSONObject jsonobject = getJsonObject(exchange);
                 if(invalid_input_login(jsonobject).isEmpty()){
+
                     UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
                             jsonobject.getString("phone"),
                             jsonobject.getString("password"));
+
                     System.out.println("UserDTO made");
                     User user = userDTOlogin.getUserByPhoneAndPass();
                     System.out.println("User found");
+
                     if (user == null) {
+
                         JSONObject errorJson = new JSONObject();
                         errorJson.put("error", "Unauthorized request");
                         response = errorJson.toString();
@@ -128,14 +202,15 @@ public class AuthHandler implements HttpHandler {
                         headers.add("Content-Type", "application/json");
                         exchange.sendResponseHeaders(404, response.getBytes().length);
                     } else {
-                        String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
 
+                        String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
                         JSONObject json = new JSONObject();
                         json.put("message", "Login successful");
                         json.put("token", token);
-
+                        main_token = jsonobject.getString("phone") +token;
+                        expiry_time = System.currentTimeMillis() + LIMIT ;
                         JSONObject userJson = new JSONObject();
-                        userJson.put("id", user.getPhone());
+                        userJson.put("id", user.getPhone().substring(2));
                         userJson.put("full_name", user.getfullname());
                         userJson.put("phone", user.getPhone());
                         userJson.put("email", user.getEmail());
@@ -155,7 +230,6 @@ public class AuthHandler implements HttpHandler {
                         exchange.sendResponseHeaders(200, json.toString().getBytes().length);
                         response = json.toString();
                     }
-
                 }
                 else {
                     String invalid_part = invalid_input_login(jsonobject);
@@ -167,26 +241,39 @@ public class AuthHandler implements HttpHandler {
                     exchange.sendResponseHeaders(400, response.length());
                 }
             }
-            finally {
-
-            }
-            /*
-            catch () {
-                response = "Phone number already exists";
-                exchange.sendResponseHeaders(409, response.length());
-            }
-
-             */
+            finally {}
         }
 
+        else if(paths.length == 3 && paths[2].equals("logout")) {
+
+            if(System.currentTimeMillis() < expiry_time){
+
+                JSONObject messageobj = new JSONObject();
+                messageobj.put("message", "User logged out successfully");
+                response = messageobj.toString();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+                expiry_time = 0 ;
+
+            }
+            else {
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error("Unauthorized request");
+                exchange.sendResponseHeaders(401, response.getBytes().length);
+            }
+
+        }
 
         else {
             response = "Invalid request";
             exchange.sendResponseHeaders(405, response.length());
         }
-
         return response;
     }
+
+
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
@@ -208,6 +295,14 @@ public class AuthHandler implements HttpHandler {
             if (!jsonObject.has(field) || jsonObject.getString(field).isEmpty()) {
                 return field;
             }
+
+        if(jsonObject.getString("role").equals("buyer")
+        && jsonObject.getString("role").equals("seller")
+        && jsonObject.getString("role").equals("courier")) {
+
+            return "role";
+        }
+
         }
         if (!Validator.validateEmail(jsonObject.getString("email"))) {
             return "email";
@@ -231,6 +326,45 @@ public class AuthHandler implements HttpHandler {
         return ""; // Return an empty string if everything is valid
     }
 
+    private static String invalid_input_update(JSONObject jsonObject) {
+
+        String[] fields = {"full_name", "phone", "email", "role", "address", "profileImageBase64"};
+        for (String field : fields) {
+            if (!jsonObject.has(field) || jsonObject.getString(field).isEmpty()) {
+                return field;
+            }
+        }
+
+        if(jsonObject.getString("role").equals("buyer")
+                && jsonObject.getString("role").equals("seller")
+                && jsonObject.getString("role").equals("courier")) {
+
+            return "role";
+        }
+
+        if (!Validator.validateEmail(jsonObject.getString("email"))) {
+            return "email";
+        }
+        if (!Validator.validatePhone(jsonObject.getString("phone"))) {
+            return "phone";
+        }
+        if (!jsonObject.has("bank_info")) {
+            return "bank_info ";
+        }
+        JSONObject bankObject = jsonObject.optJSONObject("bank_info");
+        if (bankObject == null) {
+            return "bank_info";
+        }
+        if (!bankObject.has("bank_name") || bankObject.getString("bank_name").isEmpty()) {
+            return "bank_name";
+        }
+        if (!bankObject.has("account_number") || bankObject.getString("account_number").isEmpty()) {
+            return "account_number";
+        }
+        return ""; // Return an empty string if everything is valid
+
+    }
+
     private static String invalid_input_login(JSONObject jsonObject) {
 
         String result = "" ;
@@ -247,14 +381,14 @@ public class AuthHandler implements HttpHandler {
         if(!Validator.validatePhone(jsonObject.getString("phone"))){
             result = "Invalid phone";
         }
-        if(jsonObject.getString("password") == "" || jsonObject.getString("password") == null){
+        if(jsonObject.getString("password").isEmpty()|| jsonObject.getString("password") == null){
             result = "Invalid password";
         }
 
         return result;
     }
 
-    private void sendResponse(HttpExchange exchange, String response) throws IOException {
+    private void send_Response(HttpExchange exchange, String response) throws IOException {
         try(OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
@@ -262,11 +396,16 @@ public class AuthHandler implements HttpHandler {
     }
 
 
-    private String generateerror(String error) {
+    private String generate_error(String error) {
 
         JSONObject errorJson = new JSONObject();
         errorJson.put("error", error);
         return errorJson.toString();
     }
-}
 
+    public boolean token_validation(){
+
+        return (System.currentTimeMillis() < expiry_time);
+
+    }
+}

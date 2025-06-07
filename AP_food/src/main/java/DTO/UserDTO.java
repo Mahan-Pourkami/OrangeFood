@@ -4,6 +4,7 @@ import Model.*;
 import Exceptions.*;
 import DAO.*;
 import Utils.JwtUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -81,6 +82,7 @@ public class UserDTO {
     }
 
     public static class UserLoginRequestDTO {
+
         public String phone;
         public String password;
         UserDAO userDAO;
@@ -96,20 +98,12 @@ public class UserDTO {
         }
     }
 
-    public static class UserLoginResponseDTO {
-
-        public String message;
-        public String token;
-        public String fullName;
-        public String phone;
-        public String email;
-        public String role;
-        public String address;
-        public String profileImageBase64;
-        public BankinfoDTO bankinfo;
-    }
-
     public static class UserResponprofileDTO {
+
+        UserDAO userDAO = new UserDAO();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject bankjson = new JSONObject();
+
         public String id;
         public String fullName;
         public String phone;
@@ -118,6 +112,40 @@ public class UserDTO {
         public String email;
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
+
+       public UserResponprofileDTO (String phone) {
+
+           User user = userDAO.getUserByPhone(phone);
+
+           this.id = user.getId();
+           this.phone = phone;
+           this.fullName=user.getfullname();
+           this.email=user.getEmail();
+           this.address=user.getAddress();
+           this.role = user.role.toString();
+           this.profileImageBase64 = user.getProfile();
+           this.bankinfo= new BankinfoDTO();
+           bankinfo.accountNumber=user.getBankinfo().getAccountNumber();
+           bankinfo.bankName=user.getBankinfo().getBankName();
+
+        }
+
+        public String response (){
+
+           jsonObject.put("id", id);
+           jsonObject.put("full_name", fullName);
+           jsonObject.put("phone", phone);
+           jsonObject.put("role", role);
+           jsonObject.put("address", address);
+           jsonObject.put("profileImageBase64", this.profileImageBase64);
+           bankjson.put("bank_name", bankinfo.bankName);
+           bankjson.put("account_number", bankinfo.accountNumber);
+           jsonObject.put("bank_info", bankjson);
+
+           return jsonObject.toString();
+        }
+
+
     }
 
 
@@ -147,4 +175,33 @@ public class UserDTO {
             return jsonObject.toString();
         }
     }
+
+    public static class Userupdateprof{
+
+        UserDAO userDAO = new UserDAO();
+
+
+       public Userupdateprof(String phone , JSONObject jsonObject ) {
+
+            User user = userDAO.getUserByPhone(phone);
+
+            user.setId(jsonObject.getString("id"));
+            user.setPhone(jsonObject.getString("phone"));
+            user.setfullname(jsonObject.getString("full_name"));
+            user.setEmail(jsonObject.getString("email"));
+            user.setAddress(jsonObject.getString("address"));
+            user.setProfile(jsonObject.getString("profileImageBase64"));
+            JSONObject bankobject = jsonObject.optJSONObject("bank_info");
+            Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
+            user.setBankinfo(bankinfo);
+
+
+            userDAO.updateUser(user);
+
+        }
+
+
+    }
+
+
 }
