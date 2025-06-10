@@ -4,7 +4,6 @@ import Model.*;
 import Exceptions.*;
 import DAO.*;
 import Utils.JwtUtil;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -27,7 +26,7 @@ public class UserDTO {
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
 
-        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account) {
+        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account) throws UnsupportedMediaException, DuplicatedUserexception, EmailException {
 
             this.fullName = fullName;
             this.phone = phone;
@@ -40,6 +39,16 @@ public class UserDTO {
             this.bankinfo.bankName = bankname;
             this.bankinfo.accountNumber = account;
 
+            if(userDAO.getUserByPhone(phone) != null)
+                throw new DuplicatedUserexception();
+
+            if(userDAO.getUserByEmail(email) != null && !email.isEmpty())
+                throw new EmailException();
+
+            if(!profileImageBase64.endsWith("jpg") && !profileImageBase64.endsWith("jpeg") && !profileImageBase64.endsWith("png") && !profileImageBase64.endsWith("png"))
+                throw new UnsupportedMediaException();
+
+
         }
 
         public void register() throws DuplicatedUserexception {
@@ -47,9 +56,6 @@ public class UserDTO {
             if(userDAO.getUserByPhone(phone) == null) {
                 if (role.equals("seller")) {
 
-                    //(String phone,String fullname ,String password,String email ,String address , String prof)
-                    //Buyer(String phone, String fullname, String password, String email,String address,String prof)
-                    //Courier(String phone , String fullname, String password , String email , String address , String prof)
 
                     Seller seller = new Seller(phone, fullName, password, email, address, profileImageBase64);
                     Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
@@ -86,15 +92,20 @@ public class UserDTO {
         public String phone;
         public String password;
         UserDAO userDAO;
+
         public UserLoginRequestDTO(String phone, String password) {
+
             this.phone = phone;
             this.password = password;
             this.userDAO = new UserDAO();
+
         }
         public User getUserByPhoneAndPass() {
+
             User user = userDAO.getUserByPhoneAndPass(phone,password);
             System.out.println("user found");
             return user;
+
         }
     }
 
@@ -181,12 +192,18 @@ public class UserDTO {
         UserDAO userDAO = new UserDAO();
 
 
-       public Userupdateprof(String phone , JSONObject jsonObject ) {
+       public Userupdateprof(String phone , JSONObject jsonObject ) throws EmailException, UnsupportedMediaException {
 
             User user = userDAO.getUserByPhone(phone);
+            if(!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email"))!=null && !jsonObject.getString("email").isEmpty()) {
+                throw new EmailException();
+            }
+            String prof = jsonObject.getString("profileImageBase64");
+            if(!prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
+                throw new UnsupportedMediaException();
+            }
 
-            user.setId(jsonObject.getString("id"));
-            user.setPhone(jsonObject.getString("phone"));
+            //user.setPhone(jsonObject.getString("phone"));
             user.setfullname(jsonObject.getString("full_name"));
             user.setEmail(jsonObject.getString("email"));
             user.setAddress(jsonObject.getString("address"));

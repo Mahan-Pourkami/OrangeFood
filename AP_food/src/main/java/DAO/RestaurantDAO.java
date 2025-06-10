@@ -49,7 +49,7 @@ public class RestaurantDAO {
         }
     }
 
-    public Restaurant get(Long id) {
+    public Restaurant get_restaurant(Long id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

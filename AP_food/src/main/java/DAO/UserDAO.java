@@ -1,9 +1,8 @@
 package DAO;
 
 import Model.Bankinfo;
-import Model.Buyer;
-import Model.Seller;
 import Model.User;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -11,12 +10,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
-
 
 public class UserDAO {
 
@@ -99,7 +96,7 @@ public class UserDAO {
         }
     }
 
-    // it creates a new user if it doesn't exists
+    // it creates a new user if it doesn't exist
     public void updateUser(User user) {
         executeInTransaction(session -> session.merge(user));
     }
@@ -109,11 +106,9 @@ public class UserDAO {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, phone);
-
             if (user == null) {
                 throw new DataAccessException("User with phone " + phone + " not found");
             }
-
             session.remove(user);
             transaction.commit();
         } catch (Exception e) {
@@ -146,6 +141,27 @@ public class UserDAO {
                 throw new DataAccessException("Failed to retrieve users", e);
             }
             }
+
+    public User getUserByEmail(String email) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM User U WHERE U.email = :email";
+            Query<User> query = session.createQuery(hql, User.class);
+            query.setParameter("email", email);
+            User user = query.uniqueResult(); // Attempts to get a single result, or null if none
+            transaction.commit(); // Commit the read transaction
+            return user;
+        } catch (NoResultException e) {
+            // No user found with the given email
+            if(transaction!=null && transaction.isActive()) transaction.rollback();
+            return null;
+        } catch (Exception e) {
+            // General exception during database operation
+            if(transaction!=null && transaction.isActive()) transaction.rollback();
+            throw new DataAccessException("Failed to get user by email", e);
+        }
+    }
 
 
     public void close() {
