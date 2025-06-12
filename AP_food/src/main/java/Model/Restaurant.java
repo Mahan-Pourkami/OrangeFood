@@ -1,6 +1,8 @@
 package Model;
 
 import jakarta.persistence.*;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,16 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private boolean confirmed;
-
     private String name;
 
     private String address;
 
+    @Setter
     private String logoUrl;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Food> foods;
+
 
     @OneToOne
     private Seller seller;
@@ -36,7 +38,6 @@ public class Restaurant {
         if (isNullOrEmpty(name) || isNullOrEmpty(address) ) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
-        this.confirmed = false;
         this.name = name;
         this.address = address;
         this.logoUrl = logoUrl;
@@ -69,9 +70,6 @@ public class Restaurant {
 //    public HashSet<Food> getFoodList() {
 //        return new HashSet<>(foodList); // Return a copy to avoid external modification
 //    }
-    public boolean isConfirmed() {
-        return confirmed;
-    }
 
     // Setters
     public void setName(String name) {
@@ -88,13 +86,6 @@ public class Restaurant {
         this.address = address;
     }
 
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
-    }
 
     // Food-related methods
     public void addFood(Food food) {

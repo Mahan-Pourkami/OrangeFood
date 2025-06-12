@@ -16,8 +16,8 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
-    private   String main_token = "";
-    private long expiry_time = 0;
+    public static String main_token = "";
+    private static long expiry_time = 0;
     final private long LIMIT = 15 * 60 * 1000; // 15 minutes
 
     @Override
@@ -71,8 +71,9 @@ public class AuthHandler implements HttpHandler {
         String response = "";
 
         if(paths.length == 3 && paths[2].equals("profile")){
+            String token = JwtUtil.get_token_from_server(exchange);
 
-            if(token_validation()) {
+            if(JwtUtil.validateToken(token)) {
 
                 JSONObject profilejson = getJsonObject(exchange);
 
@@ -80,7 +81,7 @@ public class AuthHandler implements HttpHandler {
 
                     if (invalid_input_update(profilejson).isEmpty()) {
 
-                        UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(main_token.substring(0, 11), profilejson);
+                        UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(JwtUtil.extractSubject(token), profilejson);
                         Headers headers = exchange.getResponseHeaders();
                         headers.add("Content-Type", "application/json");
                         JSONObject json = new JSONObject();
@@ -135,9 +136,11 @@ public class AuthHandler implements HttpHandler {
         String response = "";
         if(paths.length == 3 && paths[2].equals("profile")) {
 
-            if(token_validation()) {
-                System.out.println(main_token.substring(0,11));
-                UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(main_token.substring(0,11));
+            String token = JwtUtil.get_token_from_server(exchange);
+
+            if(JwtUtil.validateToken(token)) {
+
+                UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token));
                 response = userdto.response();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
@@ -236,8 +239,6 @@ public class AuthHandler implements HttpHandler {
                         JSONObject json = new JSONObject();
                         json.put("message", "Login successful");
                         json.put("token", token);
-                        main_token = jsonobject.getString("phone") +token;
-                        expiry_time = System.currentTimeMillis() + LIMIT ;
                         JSONObject userJson = new JSONObject();
                         userJson.put("id", user.getPhone().substring(2));
                         userJson.put("full_name", user.getfullname());
@@ -271,15 +272,18 @@ public class AuthHandler implements HttpHandler {
 
         else if(paths.length == 3 && paths[2].equals("logout")) {
 
-            if(System.currentTimeMillis() < expiry_time){
+            String token = JwtUtil.get_token_from_server(exchange);
+
+            if(JwtUtil.validateToken(token)) {
 
                 JSONObject messageobj = new JSONObject();
+                JwtUtil.expireToken(token);
                 messageobj.put("message", "User logged out successfully");
                 response = messageobj.toString();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
-                expiry_time = 0 ;
+
 
             }
             else {
@@ -424,9 +428,4 @@ public class AuthHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    public boolean token_validation(){
-
-        return (System.currentTimeMillis() < expiry_time);
-
-    }
 }

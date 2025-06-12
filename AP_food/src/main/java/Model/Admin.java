@@ -37,40 +37,40 @@ public class Admin{
         if (res == null) return;
         waitingRestaurants.add(res);
     }
-    public void confirmRestaurant(String name){ //admin confirms the restaurant by making confirmation true and removing from list
-        if (name == null || name.trim().isEmpty()) return;
-        Iterator<Restaurant> iterator = waitingRestaurants.iterator();
-        while(iterator.hasNext()){
-            Restaurant res = iterator.next();
-            if(res.getName().equals(name)){
-                res.setConfirmed(true);
-                iterator.remove(); // safe remove
-                restaurants.add(res);
-                break;
-            }
-        }
-
-    }
-    public void confirmRestaurant (Restaurant res){ //admin confirms the restaurant by making confirmation true and removing from list
-        if(res == null) return;
-        res.setConfirmed(true);
-        restaurants.add(res);
-        waitingRestaurants.remove(res);
-    }
-    public void rejectRestaurant(String name){ //seller asks admin to reject the restaurant (with name) by adding it to waiting list
-        for(Restaurant r : waitingRestaurants){
-            if(r.getName().equals(name)){
-                r.setConfirmed(false);
-                waitingRestaurants.remove(r);
-                break;
-            }
-        }
-    }
-    public void rejectRestaurant(Restaurant res){ //admin rejects the restaurant by making confirmation false and removing it from waiting list
-        if (res == null) return;
-        res.setConfirmed(false);
-        waitingRestaurants.remove(res);
-    }
+//    public void confirmRestaurant(String name){ //admin confirms the restaurant by making confirmation true and removing from list
+//        if (name == null || name.trim().isEmpty()) return;
+//        Iterator<Restaurant> iterator = waitingRestaurants.iterator();
+//        while(iterator.hasNext()){
+//            Restaurant res = iterator.next();
+//            if(res.getName().equals(name)){
+//                res.setConfirmed(true);
+//                iterator.remove(); // safe remove
+//                restaurants.add(res);
+//                break;
+//            }
+//        }
+//
+//    }
+//    public void confirmRestaurant (Restaurant res){ //admin confirms the restaurant by making confirmation true and removing from list
+//        if(res == null) return;
+//        res.setConfirmed(true);
+//        restaurants.add(res);
+//        waitingRestaurants.remove(res);
+//    }
+//    public void rejectRestaurant(String name){ //seller asks admin to reject the restaurant (with name) by adding it to waiting list
+//        for(Restaurant r : waitingRestaurants){
+//            if(r.getName().equals(name)){
+//                r.setConfirmed(false);
+//                waitingRestaurants.remove(r);
+//                break;
+//            }
+//        }
+//    }
+//    public void rejectRestaurant(Restaurant res){ //admin rejects the restaurant by making confirmation false and removing it from waiting list
+//        if (res == null) return;
+//        res.setConfirmed(false);
+//        waitingRestaurants.remove(res);
+//    }
     public void addUser(User user){
         if(user == null) return;
         users.add(user);

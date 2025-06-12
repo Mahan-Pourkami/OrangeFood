@@ -12,9 +12,6 @@ import jakarta.persistence.*;
 public class Buyer extends User{
 
 
-
-
-
     @Column(name = "wallet" )
     private  Integer Token ;
 

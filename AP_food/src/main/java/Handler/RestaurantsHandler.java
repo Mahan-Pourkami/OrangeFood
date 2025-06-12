@@ -1,6 +1,9 @@
 package Handler;
 
+import DAO.UserDAO;
+import Model.User;
 import Model.Validator;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
@@ -47,6 +50,9 @@ public class RestaurantsHandler implements HttpHandler {
         }
 
         finally {
+
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
             exchange.sendResponseHeaders(statusCode, response.length());
             sendResponse(exchange, response);
         }
@@ -57,10 +63,7 @@ public class RestaurantsHandler implements HttpHandler {
         int statusCode = 200;
         if(paths.length == 2 && paths[1].equals("restaurants")) {
             JSONObject jsonobject = getJsonObject(exchange);
-            if (invalid_input_restaurants(jsonobject).isEmpty()) {
 
-
-            }
         }
         return response;
     }
@@ -77,9 +80,6 @@ public class RestaurantsHandler implements HttpHandler {
             }
         }
 
-        if(!Validator.validatePhone(jsonObject.getString("phone"))){
-            result = "Invalid phone";
-        }
 
         return result;
     }
@@ -103,4 +103,7 @@ public class RestaurantsHandler implements HttpHandler {
         }
         exchange.close();
     }
+
 }
+
+
