@@ -1,19 +1,20 @@
 package Handler;
 
 import DTO.RestaurantDTO;
-import Exceptions.DuplicatedUserexception;
-import Exceptions.ForbiddenroleException;
-import Exceptions.InvalidTokenexception;
-import Exceptions.UnsupportedMediaException;
+import Exceptions.*;
 import Utils.JwtUtil;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.json.JSONObject;
-
 import java.io.*;
 
+
+
 public class RestaurantsHandler implements HttpHandler {
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -27,6 +28,7 @@ public class RestaurantsHandler implements HttpHandler {
 
                 case "GET":
                     System.out.println("GET res request received");
+                    response=handleGetRequest(exchange, paths);
                     break;
 
                 case "POST":
@@ -56,7 +58,7 @@ public class RestaurantsHandler implements HttpHandler {
 
     }
 
-    private String handlePostRequest (HttpExchange exchange , String[] paths) throws IOException{
+    public String handlePostRequest (HttpExchange exchange , String[] paths) throws IOException{
         String response = "";
         try {
             System.out.println("Hello");
@@ -69,6 +71,7 @@ public class RestaurantsHandler implements HttpHandler {
 
                 if (!JwtUtil.extractRole(token).equals("seller"))
                     throw new ForbiddenroleException();
+
 
                 String phone = JwtUtil.extractSubject(token);
                 RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject,phone);
@@ -117,9 +120,61 @@ public class RestaurantsHandler implements HttpHandler {
             Headers headers = exchange.getResponseHeaders();
             headers.add("Content-Type", "application/json");
             exchange.sendResponseHeaders(415, response.getBytes().length);
+
         }
         return response;
     }
+
+    public String handleGetRequest (HttpExchange exchange , String[] paths) throws IOException{
+
+        String response = "";
+
+        try {
+            if(paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("mine")) {
+
+                String token = JwtUtil.get_token_from_server(exchange);
+                if(!JwtUtil.validateToken(token)){
+                    throw new InvalidTokenexception();
+                }
+                String phone = JwtUtil.extractSubject(token);
+                System.out.println(phone);
+                RestaurantDTO.Addrestaurant_response restaurantDTO = new RestaurantDTO.Addrestaurant_response(phone);
+
+                response = restaurantDTO.response();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+            }
+            else {
+                response = "Invalid request";
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(403, response.getBytes().length);
+            }
+        }
+        catch (NosuchRestaurantException e) {
+            response = generate_error("No restaurant found");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(405, response.getBytes().length);
+
+        }
+        catch (InvalidTokenexception e) {
+            response = generate_error("Unauthorized request");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(401, response.getBytes().length);
+        }
+        return response;
+    }
+
+    public String handlePutRequest (HttpExchange exchange , String[] paths) throws IOException{
+        String response = "";
+        return response;
+        //TODO complete
+    }
+
+
     private static String invalid_input_restaurants(JSONObject jsonObject) {
 
         String result = "" ;
@@ -148,14 +203,14 @@ public class RestaurantsHandler implements HttpHandler {
         }
     }
 
-    private String generate_error(String error) {
+    public String generate_error(String error) {
 
         JSONObject errorJson = new JSONObject();
         errorJson.put("error", error);
         return errorJson.toString();
     }
 
-    private void send_Response(HttpExchange exchange, String response) throws IOException {
+    public void send_Response(HttpExchange exchange, String response) throws IOException {
         try(OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }

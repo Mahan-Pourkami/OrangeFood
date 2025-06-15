@@ -17,8 +17,7 @@ public class Server {
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
 
-
-           server.start();
+            server.start();
            System.out.println("MainServer.Server started at http://localhost:8080");
 
         } catch (IOException e) {

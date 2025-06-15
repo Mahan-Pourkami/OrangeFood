@@ -157,7 +157,7 @@ public class AuthHandler implements HttpHandler {
         return response;
     }
 
-    private String handlePostRequest(HttpExchange exchange , String[] paths) throws IOException  , DuplicatedUserexception {
+    public String handlePostRequest(HttpExchange exchange , String[] paths) throws IOException  , DuplicatedUserexception {
 
         String response ="";
 
@@ -301,7 +301,7 @@ public class AuthHandler implements HttpHandler {
     }
 
 
-    private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
+    public static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
 
         try (InputStream requestBody = exchange.getRequestBody();
              BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
@@ -414,14 +414,14 @@ public class AuthHandler implements HttpHandler {
         return result;
     }
 
-    private void send_Response(HttpExchange exchange, String response) throws IOException {
+    public void send_Response(HttpExchange exchange, String response) throws IOException {
         try(OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
         exchange.close();
     }
 
-    private String generate_error(String error) {
+    public String generate_error(String error) {
 
         JSONObject errorJson = new JSONObject();
         errorJson.put("error", error);
