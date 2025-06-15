@@ -2,6 +2,7 @@ package DTO;
 
 import DAO.*;
 import Exceptions.DuplicatedUserexception;
+import Exceptions.NosuchRestaurantException;
 import Exceptions.UnsupportedMediaException;
 import Model.*;
 import org.json.JSONObject;
@@ -28,10 +29,17 @@ public class RestaurantDTO {
                 throw new UnsupportedMediaException();
             }
 
+
             this.name = json.getString("name");
             this.address = json.getString("address");
             this.phone = json.getString("phone");
-            this.logoBase64 = json.getString("logoBase64");
+
+            if(json.getString("logoBase64")==null || json.getString("logoBase64").isEmpty()) {
+                this.logoBase64 = json.getString("logoBase64");
+            }
+            else this.logoBase64 = "default.png";
+
+
             this.tax_fee = json.getInt("tax_fee");
             this.additional_fee = json.getInt("additional_fee");
             this.seller_phone = seller_phone;
@@ -66,12 +74,25 @@ public class RestaurantDTO {
         public Integer tax_fee ;
         public Integer additional_fee;
 
-        public Addrestaurant_response(String phone){
+        public Addrestaurant_response(String phone) throws NosuchRestaurantException {
 
             Seller seller = sellerDAO.getSeller(phone);
             Restaurant res = seller.getRestaurant();
+            if(res == null){
+                throw new NosuchRestaurantException();
+            }
+
             res = restaurantDAO.get_restaurant(res.getId());
 
+            if(res.getLogoUrl() == null){
+                res.setLogoUrl("default.png");
+            }
+            if(res.getTax_fee() == null){
+                res.setTax_fee(0);
+            }
+            if(res.getAdditional_fee() == null){
+                res.setAdditional_fee(0);
+            }
 
             this.id = res.getId();
             this.name = res.getName();
@@ -97,4 +118,6 @@ public class RestaurantDTO {
             return json.toString();
         }
     }
+
+
 }
