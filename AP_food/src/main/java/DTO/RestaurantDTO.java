@@ -70,7 +70,8 @@ public class RestaurantDTO {
 
             Seller seller = sellerDAO.getSeller(phone);
             Restaurant res = seller.getRestaurant();
-            System.out.println(res.getId());
+            res = restaurantDAO.get_restaurant(res.getId());
+
 
             this.id = res.getId();
             this.name = res.getName();

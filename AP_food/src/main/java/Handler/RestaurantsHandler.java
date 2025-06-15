@@ -148,13 +148,6 @@ public class RestaurantsHandler implements HttpHandler {
         }
     }
 
-    private void sendResponse(HttpExchange exchange, String response) throws IOException {
-        try(OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-        exchange.close();
-    }
-
     private String generate_error(String error) {
 
         JSONObject errorJson = new JSONObject();
