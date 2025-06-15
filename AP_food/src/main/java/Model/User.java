@@ -51,11 +51,6 @@ public class User {
 
     public User(String phone, String fullname, String password, String email , Role role, String address , String profile) {
 
-        if(!Validator.validatePhone(phone))
-            throw new IllegalArgumentException("Invalid phone number");
-
-        if(email!= null && !Validator.validateEmail(email))
-            throw new IllegalArgumentException("Invalid email format");
 
         this.phone = phone;
         this.password = password;
