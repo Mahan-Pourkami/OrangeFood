@@ -1,6 +1,8 @@
 package Exceptions;
 
-public class InvalidTokenexception extends RuntimeException {
+import java.io.IOException;
+
+public class InvalidTokenexception extends IOException {
     public InvalidTokenexception() {
 
         super("Unauthorized request");

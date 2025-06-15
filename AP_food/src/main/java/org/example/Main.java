@@ -25,18 +25,24 @@ public class Main {
 
             //Basket b2 = new Basket(buyer);
 
-            //Seller u2 = new Seller("09986404331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
+           // Seller u2 = new Seller("09986404331","Mehdi Sedighi" ,"xxxx" , null ,"Tehran","prof");
             u1.setBankinfo(b1);
-           sellerDAO.saveSeller(u1);
-           //sellerDAO.updateSeller(u1);
-           //sellerDAO.updateSeller(u2);
-//          Restaurant res = new Restaurant("Kababi","Tehran","logo",u1);
+
+         Seller u2 = sellerDAO.getSeller("09121111111");
+
+          //Restaurant res = new Restaurant("Kababi","Tehran","66147932",null,2,5,u1);
+            Restaurant res = restaurantDAO.get_restaurant(1202L);
+            res.setName("Amoo");
+            res.setLogoUrl(null);
+            u2.setRestaurant(res);
+            sellerDAO.updateSeller(u2);
+            restaurantDAO.updateRestaurant(res);
 
 
-//          u1.setRestaurant(res);
 
 //            restaurantDAO.saveRestaurant(res);
-
+//            u1.setRestaurant(res);
+//            sellerDAO.updateSeller(u1);
 //            Restaurant res = restaurantDAO.get(852L);
            // Food f1 = new Food("sushi" , res , "pizza.jpg" , 120000 , 120 , "pizza" , "nothing anymore !");
 

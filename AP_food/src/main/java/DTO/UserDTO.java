@@ -55,8 +55,6 @@ public class UserDTO {
 
             if(userDAO.getUserByPhone(phone) == null) {
                 if (role.equals("seller")) {
-
-
                     Seller seller = new Seller(phone, fullName, password, email, address, profileImageBase64);
                     Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
                     seller.setBankinfo(sellerBankinfo);
@@ -203,7 +201,6 @@ public class UserDTO {
                 throw new UnsupportedMediaException();
             }
 
-            //user.setPhone(jsonObject.getString("phone"));
             user.setfullname(jsonObject.getString("full_name"));
             user.setEmail(jsonObject.getString("email"));
             user.setAddress(jsonObject.getString("address"));
@@ -211,14 +208,8 @@ public class UserDTO {
             JSONObject bankobject = jsonObject.optJSONObject("bank_info");
             Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
             user.setBankinfo(bankinfo);
-
-
             userDAO.updateUser(user);
 
         }
-
-
     }
-
-
 }

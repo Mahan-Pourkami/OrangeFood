@@ -330,7 +330,7 @@ public class AuthHandler implements HttpHandler {
             return "role";
         }
         }
-        if (!Validator.validateEmail(jsonObject.getString("email"))) {
+        if (!Validator.validateEmail(jsonObject.getString("email")) && !jsonObject.getString("email").isEmpty()) {
             return "email";
         }
         if (!Validator.validatePhone(jsonObject.getString("phone"))) {

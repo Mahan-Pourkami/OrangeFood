@@ -60,7 +60,7 @@ public class Food {
         this.stockQuantity = stockQuantity;
         this.category = category;
         this.description = description;
-        res.addFood(this);
+
     }
 
     public String getName() {
