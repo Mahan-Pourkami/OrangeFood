@@ -119,5 +119,52 @@ public class RestaurantDTO {
         }
     }
 
+    public static class UpdateRestaurant_request {
 
+        SellerDAO sellerDAO = new SellerDAO() ;
+        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
+
+
+        public String name ;
+        public String address ;
+        public String phone ;
+        public String logoBase64 ;
+        public Integer tax_fee;
+        public Integer additional_fee;
+
+        public  UpdateRestaurant_request(JSONObject json,String phone) throws NosuchRestaurantException, UnsupportedMediaException {
+
+            String logo_img = json.getString("logoBase64");
+
+            Seller seller = sellerDAO.getSeller(phone);
+            if(seller.getRestaurant() == null){
+                throw new NosuchRestaurantException();
+            }
+
+            if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
+                throw new UnsupportedMediaException();
+            }
+
+            this.name = json.getString("name");
+            this.address = json.getString("address");
+            this.phone = json.getString("phone");
+
+            if(json.getString("logoBase64")==null || json.getString("logoBase64").isEmpty()) {
+                this.logoBase64 = json.getString("logoBase64");
+            }
+            else this.logoBase64 = "default.png";
+            this.tax_fee = json.getInt("tax_fee");
+            this.additional_fee = json.getInt("additional_fee");
+
+        }
+
+        public void update() throws NosuchRestaurantException {
+            Seller seller = sellerDAO.getSeller(phone);
+            Restaurant res = restaurantDAO.get_restaurant(seller.getRestaurant().getId());
+            if(res == null){
+                throw new NosuchRestaurantException();
+            }
+            restaurantDAO.updateRestaurant(res);
+        }
+    }
 }

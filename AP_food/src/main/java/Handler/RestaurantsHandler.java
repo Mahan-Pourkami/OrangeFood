@@ -1,16 +1,19 @@
 package Handler;
 
+import DAO.RestaurantDAO;
+import DAO.SellerDAO;
 import DTO.RestaurantDTO;
 import Exceptions.*;
+import Model.Restaurant;
+import Model.Seller;
 import Utils.JwtUtil;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.json.JSONObject;
 import java.io.*;
-
+import java.util.Objects;
 
 
 public class RestaurantsHandler implements HttpHandler {
@@ -59,9 +62,10 @@ public class RestaurantsHandler implements HttpHandler {
     }
 
     public String handlePostRequest (HttpExchange exchange , String[] paths) throws IOException{
+
         String response = "";
         try {
-            System.out.println("Hello");
+
             if (paths.length == 2 && paths[1].equals("restaurants")) {
                 JSONObject jsonobject = getJsonObject(exchange);
                 String token = JwtUtil.get_token_from_server(exchange);
@@ -169,9 +173,70 @@ public class RestaurantsHandler implements HttpHandler {
     }
 
     public String handlePutRequest (HttpExchange exchange , String[] paths) throws IOException{
+
+        SellerDAO sellerDAO = new SellerDAO();
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
+
         String response = "";
+        try {
+            if(paths.length == 3 && paths[1].equals("restaurants")) {
+
+                JSONObject jsonobject = getJsonObject(exchange);
+                Long Id = Long.parseLong(paths[2]);
+                String token = JwtUtil.get_token_from_server(exchange);
+                String phone = JwtUtil.extractSubject(token);
+                if(!JwtUtil.validateToken(token)){
+                    throw new InvalidTokenexception();
+                }
+                if(!JwtUtil.extractRole(token).equals("seller")){
+                    throw new ForbiddenroleException();
+                }
+                Seller seller = sellerDAO.getSeller(phone);
+                if(seller.getRestaurant()!=null  && !seller.getRestaurant().getId().equals(Id)){
+                    throw new InvalidTokenexception();
+                }
+
+                RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject,phone);
+                update_req.update();
+                RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone);
+                response = update_response.response();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+
+            }
+        }
+        catch (InvalidTokenexception e) {
+
+            response = generate_error("Unauthorized request");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(401, response.getBytes().length);
+        }
+
+        catch (ForbiddenroleException e) {
+            response = generate_error("Forbidden request");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(403, response.getBytes().length);
+        }
+
+        catch (NosuchRestaurantException e) {
+            response = generate_error("No restaurant found");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(404, response.getBytes().length);
+        }
+
+        catch (UnsupportedMediaException e) {
+           response = generate_error("Unsupported media type");
+           Headers headers = exchange.getResponseHeaders();
+           headers.add("Content-Type", "application/json");
+           exchange.sendResponseHeaders(415, response.getBytes().length);
+        }
+
         return response;
-        //TODO complete
+
     }
 
 
@@ -216,6 +281,9 @@ public class RestaurantsHandler implements HttpHandler {
         }
         exchange.close();
     }
+
+
+
 
 }
 
