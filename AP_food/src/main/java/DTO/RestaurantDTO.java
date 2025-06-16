@@ -137,6 +137,7 @@ public class RestaurantDTO {
             String logo_img = json.getString("logoBase64");
 
             Seller seller = sellerDAO.getSeller(phone);
+
             if(seller.getRestaurant() == null){
                 throw new NosuchRestaurantException();
             }
@@ -152,7 +153,9 @@ public class RestaurantDTO {
             if(json.getString("logoBase64")==null || json.getString("logoBase64").isEmpty()) {
                 this.logoBase64 = json.getString("logoBase64");
             }
+
             else this.logoBase64 = "default.png";
+
             this.tax_fee = json.getInt("tax_fee");
             this.additional_fee = json.getInt("additional_fee");
 

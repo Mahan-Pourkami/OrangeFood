@@ -1,0 +1,8 @@
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "phone": "09050151653",
+  "password": "xxxx"
+}
+

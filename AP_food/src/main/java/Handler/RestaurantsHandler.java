@@ -4,7 +4,6 @@ import DAO.RestaurantDAO;
 import DAO.SellerDAO;
 import DTO.RestaurantDTO;
 import Exceptions.*;
-import Model.Restaurant;
 import Model.Seller;
 import Utils.JwtUtil;
 
@@ -13,7 +12,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 import java.io.*;
-import java.util.Objects;
 
 
 public class RestaurantsHandler implements HttpHandler {
@@ -24,7 +22,7 @@ public class RestaurantsHandler implements HttpHandler {
         String request = exchange.getRequestMethod();
         String [] paths = exchange.getRequestURI().getPath().split("/");
         String response = "";
-        int statusCode = 200;
+
         try {
 
             switch (request) {
@@ -41,6 +39,7 @@ public class RestaurantsHandler implements HttpHandler {
 
                 case "PUT":
                     System.out.println("PUT res request received");
+                    response=handlePutRequest(exchange,paths);
                     break;
 
                 case "DELETE":
@@ -49,7 +48,7 @@ public class RestaurantsHandler implements HttpHandler {
 
                 default:
                     response = "Invalid res request";
-                    statusCode = 405;
+
             }
         }
         catch (Exception e) {
@@ -70,11 +69,13 @@ public class RestaurantsHandler implements HttpHandler {
                 JSONObject jsonobject = getJsonObject(exchange);
                 String token = JwtUtil.get_token_from_server(exchange);
 
+
                 if (token == null || !JwtUtil.validateToken(token))
                     throw new InvalidTokenexception();
 
                 if (!JwtUtil.extractRole(token).equals("seller"))
                     throw new ForbiddenroleException();
+
 
 
                 String phone = JwtUtil.extractSubject(token);
@@ -184,18 +185,24 @@ public class RestaurantsHandler implements HttpHandler {
                 JSONObject jsonobject = getJsonObject(exchange);
                 Long Id = Long.parseLong(paths[2]);
                 String token = JwtUtil.get_token_from_server(exchange);
-                String phone = JwtUtil.extractSubject(token);
+
                 if(!JwtUtil.validateToken(token)){
                     throw new InvalidTokenexception();
                 }
+
+                String phone = JwtUtil.extractSubject(token);
+
                 if(!JwtUtil.extractRole(token).equals("seller")){
                     throw new ForbiddenroleException();
                 }
+
                 Seller seller = sellerDAO.getSeller(phone);
+
                 if(seller.getRestaurant()!=null  && !seller.getRestaurant().getId().equals(Id)){
                     throw new InvalidTokenexception();
                 }
 
+                System.out.println(Id);
                 RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject,phone);
                 update_req.update();
                 RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone);
@@ -274,6 +281,8 @@ public class RestaurantsHandler implements HttpHandler {
         errorJson.put("error", error);
         return errorJson.toString();
     }
+
+
 
     public void send_Response(HttpExchange exchange, String response) throws IOException {
         try(OutputStream os = exchange.getResponseBody()) {
