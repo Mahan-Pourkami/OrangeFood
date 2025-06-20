@@ -63,12 +63,16 @@ public class RestaurantsHandler implements HttpHandler {
     public String handlePostRequest (HttpExchange exchange , String[] paths) throws IOException{
 
         String response = "";
-        try {
+        JSONObject jsonobject = getJsonObject(exchange);
+        String token = JwtUtil.get_token_from_server(exchange);
+        if(paths.length == 2 && paths[1].equals("restaurants")) {
+            try {
 
-            if (paths.length == 2 && paths[1].equals("restaurants")) {
-                JSONObject jsonobject = getJsonObject(exchange);
-                String token = JwtUtil.get_token_from_server(exchange);
 
+
+                if (!invalid_input_restaurant(jsonobject).isEmpty()) {
+                    throw new InvalidInputException(invalid_input_restaurant(jsonobject));
+                }
 
                 if (token == null || !JwtUtil.validateToken(token))
                     throw new InvalidTokenexception();
@@ -76,10 +80,8 @@ public class RestaurantsHandler implements HttpHandler {
                 if (!JwtUtil.extractRole(token).equals("seller"))
                     throw new ForbiddenroleException();
 
-
-
                 String phone = JwtUtil.extractSubject(token);
-                RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject,phone);
+                RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject, phone);
                 restaurantDTO.register();
                 System.out.println("Restaurant added");
                 RestaurantDTO.Addrestaurant_response restaurant_response = new RestaurantDTO.Addrestaurant_response(phone);
@@ -88,45 +90,97 @@ public class RestaurantsHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
 
-            }
-            else {
+            } catch (ForbiddenroleException e) {
 
-                response = "Invalid request";
+                response = generate_error("Forbidden request");
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(405, response.getBytes().length);
+                exchange.sendResponseHeaders(403, response.getBytes().length);
+            } catch (InvalidTokenexception e) {
+
+                response = generate_error("Unauthorized request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(401, response.getBytes().length);
+
+            } catch (DuplicatedUserexception e) {
+
+                response = generate_error("Conflict request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(409, response.getBytes().length);
+
+            } catch (UnsupportedMediaException e) {
+
+                response = generate_error("Unsupported media type");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(415, response.getBytes().length);
+
+            } catch (InvalidInputException e) {
+
+                response = generate_error("Invalid " + invalid_input_restaurant(jsonobject));
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(400, response.getBytes().length);
             }
         }
-        catch (ForbiddenroleException e) {
 
-            response = generate_error("Forbidden request");
+        else if (paths.length==4 && paths[1].equals("restaurants") && paths[3].equals("item")) {
+
+            SellerDAO sellerDAO = new SellerDAO();
+            try {
+
+            if(!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+
+            if(!JwtUtil.extractRole(token).equals("seller")){
+                throw new ForbiddenroleException();
+            }
+
+            String phone = JwtUtil.extractSubject(token);
+            Seller seller = sellerDAO.getSeller(phone);
+            Long res_id = Long.parseLong(paths[2]);
+            if(!seller.getRestaurant().getId().equals(res_id)) {
+                throw new InvalidTokenexception();
+            }
+
+            RestaurantDTO.Add_Item_request req = new RestaurantDTO.Add_Item_request(jsonobject,res_id);
+            System.out.println("Item added");
+            RestaurantDTO.Add_item_response res = new RestaurantDTO.Add_item_response(jsonobject.getString("name"),res_id);
+            System.out.println("Response received");
+            response = res.response(res_id);
             Headers headers = exchange.getResponseHeaders();
             headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(403, response.getBytes().length);
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+
+
+            }
+            catch (InvalidTokenexception e) {
+                response = generate_error("Unauthorized request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(401, response.getBytes().length);
+            }
+
+            catch (ForbiddenroleException e) {
+                response = generate_error("Forbidden request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(403, response.getBytes().length);
+            }
+
+            catch (DuplicatedItemexception e){
+
+                response = generate_error("Conflict request");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(409, response.getBytes().length);
+            }
+
         }
-        catch (InvalidTokenexception e) {
 
-            response = generate_error("Unauthorized request");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(401, response.getBytes().length);
-
-        } catch (DuplicatedUserexception e) {
-
-            response = generate_error("Conflict request");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(409, response.getBytes().length);
-
-        }
-        catch (UnsupportedMediaException e) {
-
-            response=generate_error("Unsupported media type");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(415, response.getBytes().length);
-
-        }
         return response;
     }
 
@@ -190,7 +244,10 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
+                System.out.println(Id);
+
                 String phone = JwtUtil.extractSubject(token);
+                System.out.println(phone);
 
                 if(!JwtUtil.extractRole(token).equals("seller")){
                     throw new ForbiddenroleException();
@@ -204,7 +261,6 @@ public class RestaurantsHandler implements HttpHandler {
 
                 System.out.println(Id);
                 RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject,phone);
-                update_req.update();
                 RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone);
                 response = update_response.response();
                 Headers headers = exchange.getResponseHeaders();
@@ -242,10 +298,16 @@ public class RestaurantsHandler implements HttpHandler {
            exchange.sendResponseHeaders(415, response.getBytes().length);
         }
 
+        catch (Exception e){
+            response = generate_error("Internal Server Error");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(500, response.getBytes().length);
+        }
+
         return response;
 
     }
-
 
     private static String invalid_input_restaurants(JSONObject jsonObject) {
 
@@ -292,8 +354,24 @@ public class RestaurantsHandler implements HttpHandler {
     }
 
 
+    private  String invalid_input_restaurant(JSONObject jsonObject) {
 
+        String result = "" ;
 
+        String []keywords = {"name","phone","address","tax_fee","additional_fee","logoBase64"};
+
+        for (String keyword : keywords) {
+            if(!jsonObject.has(keyword)) {
+                return keyword;
+            }
+        }
+
+        if(jsonObject.getString("name").isEmpty()) return keywords[0];
+        if(jsonObject.getString("phone").isEmpty()) return keywords[1];
+        if(jsonObject.getString("address").isEmpty()) return keywords[2];
+
+        return result;
+    }
 }
 
 

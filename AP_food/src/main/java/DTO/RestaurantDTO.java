@@ -1,11 +1,17 @@
 package DTO;
 
 import DAO.*;
+import Exceptions.DuplicatedItemexception;
 import Exceptions.DuplicatedUserexception;
 import Exceptions.NosuchRestaurantException;
 import Exceptions.UnsupportedMediaException;
 import Model.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantDTO {
 
@@ -62,7 +68,7 @@ public class RestaurantDTO {
 
     public static class Addrestaurant_response {
 
-        UserDAO userDAO = new UserDAO() ;
+        UserDAO userDAO = new UserDAO();
         SellerDAO sellerDAO = new SellerDAO() ;
         RestaurantDAO restaurantDAO = new RestaurantDAO() ;
 
@@ -78,6 +84,7 @@ public class RestaurantDTO {
 
             Seller seller = sellerDAO.getSeller(phone);
             Restaurant res = seller.getRestaurant();
+
             if(res == null){
                 throw new NosuchRestaurantException();
             }
@@ -135,39 +142,144 @@ public class RestaurantDTO {
         public  UpdateRestaurant_request(JSONObject json,String phone) throws NosuchRestaurantException, UnsupportedMediaException {
 
             String logo_img = json.getString("logoBase64");
-
             Seller seller = sellerDAO.getSeller(phone);
-
+            System.out.println(seller.getfullname());
             if(seller.getRestaurant() == null){
                 throw new NosuchRestaurantException();
             }
-
+            System.out.println("Done 1");
             if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
                 throw new UnsupportedMediaException();
             }
-
             this.name = json.getString("name");
             this.address = json.getString("address");
             this.phone = json.getString("phone");
-
-            if(json.getString("logoBase64")==null || json.getString("logoBase64").isEmpty()) {
+            if(json.getString("logoBase64")!=null && !json.getString("logoBase64").isEmpty()) {
                 this.logoBase64 = json.getString("logoBase64");
             }
-
             else this.logoBase64 = "default.png";
-
             this.tax_fee = json.getInt("tax_fee");
             this.additional_fee = json.getInt("additional_fee");
+            Restaurant res = seller.getRestaurant();
+
+            if(res == null) throw new NosuchRestaurantException();
+
+
+            res = restaurantDAO.get_restaurant(res.getId());
+
+            if(!this.name.isEmpty())res.setName(this.name);
+            if(!this.address.isEmpty())res.setAddress(this.address);
+            if(!this.phone.isEmpty())res.setPhone(this.phone);
+            if(!this.logoBase64.isEmpty())res.setLogoUrl(this.logoBase64);
+
+            res.setTax_fee(this.tax_fee);
+            res.setAdditional_fee(this.additional_fee);
+
+            restaurantDAO.updateRestaurant(res);
+
 
         }
 
         public void update() throws NosuchRestaurantException {
+
             Seller seller = sellerDAO.getSeller(phone);
-            Restaurant res = restaurantDAO.get_restaurant(seller.getRestaurant().getId());
-            if(res == null){
-                throw new NosuchRestaurantException();
-            }
-            restaurantDAO.updateRestaurant(res);
         }
     }
+
+
+    public static class Add_Item_request {
+
+        SellerDAO sellerDAO = new SellerDAO() ;
+        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
+        FoodDAO foodDAO = new FoodDAO() ;
+
+        public String name ;
+        public String logoBase64 ;
+        public String description ;
+        public int price;
+        public int supply;
+        public List<String> keywords ;
+
+        public Add_Item_request(JSONObject json,long id) throws IOException {
+
+            System.out.println("Done 1");
+            this.name = json.getString("name");
+            this.logoBase64 = json.getString("imageBase64");
+            this.description = json.getString("description");
+            this.price = json.getInt("price");
+            this.supply = json.getInt("supply");
+            System.out.println("Done 3");
+            this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
+            System.out.println("Done 2");
+
+            if(foodDAO.findFoodByName(name,id)!=null){
+              throw new DuplicatedItemexception();
+            }
+
+            Food food = new Food(name,id,description,logoBase64,price,supply);
+            food.setkeywords(keywords);
+            foodDAO.saveFood(food);
+        }
+    }
+
+    public static class Add_item_response {
+
+        FoodDAO foodDAO = new FoodDAO() ;
+
+        public Long id ;
+        public String name ;
+        public String logoBase64 ;
+        public String description ;
+        public int price;
+        public int supply;
+        public JSONArray keywords ;
+
+        public Add_item_response(String name , long id){
+
+            Food food = foodDAO.findFoodByName(name,id);
+            this.id = food.getId();
+            this.name = food.getName();
+            this.logoBase64=food.getPictureUrl();
+            this.description = food.getDescription();
+            this.price = food.getPrice();
+            this.supply = food.getSupply();
+            this.keywords=convertlisttojsonarray(food.getKeywords());
+            System.out.println("data fetched");
+        }
+
+        public String response(long res_id){
+
+            JSONObject json = new JSONObject();
+            json.put("id", this.id);
+            json.put("name", this.name);
+            json.put("logoBase64",this.logoBase64);
+            json.put("description",this.description);
+            json.put("vendor_id",res_id);
+            json.put("price", this.price);
+            json.put("supply", this.supply);
+            System.out.println("data added to json");
+            json.put("keywords", this.keywords);
+            System.out.println("data added to json");
+            return json.toString();
+
+        }
+    }
+
+    public static <T> List<T> convertjsonarraytolist(JSONArray js){
+
+        List <T> list = new ArrayList<>();
+        for(int i=0;i<js.length();i++){
+            list.add((T)js.get(i));
+        }
+        return list;
+    }
+
+    public static <T> JSONArray convertlisttojsonarray(List<T> list){
+        JSONArray json = new JSONArray();
+        for(int i=0;i<list.size();i++){
+            json.put(list.get(i));
+        }
+        return json;
+    }
+
 }
