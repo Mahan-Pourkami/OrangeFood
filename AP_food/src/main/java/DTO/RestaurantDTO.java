@@ -6,6 +6,8 @@ import Exceptions.DuplicatedUserexception;
 import Exceptions.NosuchRestaurantException;
 import Exceptions.UnsupportedMediaException;
 import Model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -232,22 +234,21 @@ public class RestaurantDTO {
         public String description ;
         public int price;
         public int supply;
-        public JSONArray keywords ;
+        public List<String> keywords ;
 
-        public Add_item_response(String name , long id){
+        public Add_item_response(String name , long res_id){
 
-            Food food = foodDAO.findFoodByName(name,id);
+            Food food = foodDAO.findFoodByName(name,res_id);
             this.id = food.getId();
             this.name = food.getName();
             this.logoBase64=food.getPictureUrl();
             this.description = food.getDescription();
             this.price = food.getPrice();
             this.supply = food.getSupply();
-            this.keywords=convertlisttojsonarray(food.getKeywords());
-            System.out.println("data fetched");
+            this.keywords = food.getKeywords();
         }
 
-        public String response(long res_id){
+        public String response(long res_id) throws JsonProcessingException {
 
             JSONObject json = new JSONObject();
             json.put("id", this.id);
@@ -257,9 +258,8 @@ public class RestaurantDTO {
             json.put("vendor_id",res_id);
             json.put("price", this.price);
             json.put("supply", this.supply);
-            System.out.println("data added to json");
-            json.put("keywords", this.keywords);
-            System.out.println("data added to json");
+//   todo         System.out.println("Done`");
+//            json.put("keywords", convertlisttojsonarray(this.keywords));`
             return json.toString();
 
         }
@@ -274,12 +274,46 @@ public class RestaurantDTO {
         return list;
     }
 
-    public static <T> JSONArray convertlisttojsonarray(List<T> list){
-        JSONArray json = new JSONArray();
-        for(int i=0;i<list.size();i++){
-            json.put(list.get(i));
+    public static  String convertlisttojsonarray(List<String> list) throws JsonProcessingException {
+
+         ObjectMapper obj = new ObjectMapper();
+
+        String msg = obj.writeValueAsString(list);
+        System.out.println(msg);
+
+        return msg;
+
+    }
+
+    public static class Update_Item_request {
+
+        FoodDAO foodDAO = new FoodDAO() ;
+        public String name ;
+        public String logoBase64 ;
+        public String description ;
+        public int price;
+        public int supply;
+        public List<String> keywords ;
+
+        public Update_Item_request(JSONObject json,long id) throws IOException {
+
+            Food food = foodDAO.getFood(id);
+            this.name = json.getString("name");
+            this.logoBase64 = json.getString("imageBase64");
+            this.description = json.getString("description");
+            this.price = json.getInt("price");
+            this.supply = json.getInt("supply");
+            this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
+
+
+            food.setName(this.name);
+            food.setDescription(this.description);
+            food.setPrice(this.price);
+            food.setSupply(this.supply);
+            food.setPictureUrl(this.logoBase64);
+            food.setkeywords(this.keywords);
+            foodDAO.updateFood(food);
         }
-        return json;
     }
 
 }

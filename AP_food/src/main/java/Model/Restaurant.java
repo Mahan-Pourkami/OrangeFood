@@ -1,8 +1,11 @@
 package Model;
 
+import DAO.FoodDAO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -32,6 +35,9 @@ public class Restaurant {
     @OneToOne
     private Seller seller;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    public List<String> menu_titles ;
+
     public Restaurant() {}
 
     public Restaurant(String name, String address, String phone ,String logoUrl,Integer tax_fee , Integer additional_fee, Seller seller) {
@@ -45,6 +51,7 @@ public class Restaurant {
         this.seller = seller;
         this.tax_fee = tax_fee;
         this.additional_fee = additional_fee;
+        this.menu_titles = new ArrayList<>();
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -64,6 +71,24 @@ public class Restaurant {
         }
         this.address = address;
     }
+
+    public void add_menu_title(String title) {
+        this.menu_titles.add(title);
+    }
+
+    public void remove_menu_title(String title) {
+        this.menu_titles.remove(title);
+    }
+
+    public List<String> get_menu_titles() {
+        return menu_titles;
+    }
+
+    public void set_menu_titles(List<String> menu_titles) {
+        this.menu_titles = menu_titles;
+    }
+
+
 }
 
 

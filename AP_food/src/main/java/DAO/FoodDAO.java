@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodDAO {
@@ -131,11 +132,59 @@ public class FoodDAO {
         }
     }
 
+    public List<Food> getFoodsByRestaurantId(Long restaurantId) {
+        List<Food> result = new ArrayList<Food>();
+        List<Food> foods = getAllFoods();
+        for (Food food : foods) {
+            if(food.getRestaurant().getId().equals(restaurantId)) {
+                result.add(food);
+            }
+        }
+        return result;
+    }
+
+    public List<Food> getFoodsByMenu(Long restaurantId, String menu_title) {
+        List <Food> result = new ArrayList<>();
+        List<Food> foods = getAllFoods();
+        for (Food food : foods) {
+            if(food.getRestaurant().getId().equals(restaurantId) && food.getMenuTitle().equals(menu_title)) {
+                result.add(food);
+            }
+
+        }
+        return result;
+    }
+
+
+    public Food findFoodByName(String name,long restaurantId) {
+        List<Food> foods = getAllFoods();
+
+        for (Food food : foods) {
+            if(food.getName().equals(name) && food.getRestaurantId().equals(restaurantId)) {
+                return food;
+            }
+        }
+        return null;
+    }
+
+    public void deletfrommenu (String menu_title , long restaurantId) {
+        List<Food> foods = getAllFoods();
+        for (Food food : foods) {
+            if(food.getMenuTitle()!=null && food.getMenuTitle().equals(menu_title) && food.getRestaurantId().equals(restaurantId)) {
+                food.setMenuTitle(null);
+                updateFood(food);
+            }
+        }
+    }
+
+
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
         }
     }
+
+
 
 
 
