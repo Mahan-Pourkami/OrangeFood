@@ -235,10 +235,12 @@ public class RestaurantDTO {
         public int price;
         public int supply;
         public List<String> keywords ;
+        private long res_id;
 
         public Add_item_response(String name , long res_id){
 
             Food food = foodDAO.findFoodByName(name,res_id);
+            this.res_id = res_id;
             this.id = food.getId();
             this.name = food.getName();
             this.logoBase64=food.getPictureUrl();
@@ -248,18 +250,17 @@ public class RestaurantDTO {
             this.keywords = food.getKeywords();
         }
 
-        public String response(long res_id) throws JsonProcessingException {
+        public String response() throws JsonProcessingException {
 
             JSONObject json = new JSONObject();
             json.put("id", this.id);
             json.put("name", this.name);
             json.put("logoBase64",this.logoBase64);
             json.put("description",this.description);
-            json.put("vendor_id",res_id);
+            json.put("vendor_id",this.res_id);
             json.put("price", this.price);
             json.put("supply", this.supply);
-//   todo         System.out.println("Done`");
-//            json.put("keywords", convertlisttojsonarray(this.keywords));`
+            json.put("keywords", convertlisttojsonarray(this.keywords));
             return json.toString();
 
         }
@@ -274,12 +275,16 @@ public class RestaurantDTO {
         return list;
     }
 
-    public static  String convertlisttojsonarray(List<String> list) throws JsonProcessingException {
+    public static String convertlisttojsonarray(List<String> list)  {
 
-         ObjectMapper obj = new ObjectMapper();
-
-        String msg = obj.writeValueAsString(list);
-        System.out.println(msg);
+        String msg = null;
+        try {
+            ObjectMapper obj = new ObjectMapper();
+            msg = obj.writeValueAsString(list);
+            System.out.println(msg);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         return msg;
 
