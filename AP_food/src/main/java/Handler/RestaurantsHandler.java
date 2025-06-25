@@ -62,6 +62,7 @@ public class RestaurantsHandler implements HttpHandler {
         }
         catch (Exception e) {
             response = "Methode not allowed res";
+            e.printStackTrace();
         }
         finally {
             send_Response(exchange, response);
