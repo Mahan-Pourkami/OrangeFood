@@ -348,6 +348,14 @@ public class RestaurantsHandler implements HttpHandler {
 
             }
 
+
+        catch (NumberFormatException e) {
+                response = generate_error("Invalid Input");
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(400, response.getBytes().length);
+        }
+
         catch(InvalidTokenexception e){
 
             response = generate_error("Unauthorized request");
@@ -429,6 +437,13 @@ public class RestaurantsHandler implements HttpHandler {
 
             }
 
+            catch (NumberFormatException e) {
+
+                response = generate_error("Invalid Input");
+                http_code = 400;
+
+            }
+
             catch (InvalidTokenexception e) {
                 response = generate_error("Unauthorized request");
                 http_code=401;
@@ -507,7 +522,7 @@ public class RestaurantsHandler implements HttpHandler {
                 response = generate_msg("Item with Id :" + item_id + " added to menu with title " + menu_title + " successfully");
                 http_code = 200;
             }
-            catch (InvalidInputException | IllegalArgumentException e) {
+            catch (InvalidInputException | NumberFormatException e) {
                 response = generate_error("Invalid item_id");
                 http_code=400;
             }
