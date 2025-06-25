@@ -16,9 +16,6 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
-    public static String main_token = "";
-    private static long expiry_time = 0;
-    final private long LIMIT = 15 * 60 * 1000; // 15 minutes
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

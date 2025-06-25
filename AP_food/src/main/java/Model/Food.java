@@ -1,13 +1,19 @@
 package Model;
 
+import DAO.RestaurantDAO;
 import jakarta.persistence.*;
-import java.util.Arrays;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "foods")
 public class Food {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,69 +28,49 @@ public class Food {
     @Column(name = "price" , nullable = false)
     private int price;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "Restaurant_id" , referencedColumnName = "id")
-    private Restaurant restaurant;
-
+    @Getter
     @Column(name = "stockQuantity" , nullable = false)
-    private int stockQuantity;
+    private int supply;
 
-    @Column(name = "category" , nullable = true)
-    private String category;
-
-    @Column(name = "keyWords" , nullable = true)
-    private String keyWords;
-
-    @Column(name = "description" , nullable = true)
+    @Column
     private String description;
 
-    @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY) // 'mappedBy' points to the 'foods' field in Basket
-    private List<Basket> baskets;
+    @Column (name = "menu_title")
+    private String menuTitle;
 
+    @Column (name = "restaurant_id")
+    private Long restaurantId;
+
+    @ElementCollection
+    private List<String> keywords;
 
 
     public Food() {}
 
-    public Food(String name,Restaurant res,String pictureUrl, int price, int stockQuantity, String category, String description) {
+    public Food(String name, long res_id,String description,String pictureUrl, int price, int supply) {
         if (price <= 0) {
             throw new IllegalArgumentException("Invalid price");
         }
-        if (stockQuantity < 0) {
+        if (supply < 0) {
             throw new IllegalArgumentException("Invalid stockQuantity");
         }
 
         this.name = name;
         this.pictureUrl = pictureUrl;
         this.price = price;
-        this.restaurant = res ;
-        this.stockQuantity = stockQuantity;
-        this.category = category;
+        this.supply = supply;
+        this.restaurantId = res_id ;
         this.description = description;
+        this.keywords = new ArrayList<String>();
 
     }
 
-    public String getName() {
-        return name;
-    }
-    public String getPictureUrl() { return pictureUrl; }
-    public int getPrice() { return price; }
-    public String getRestaurantName() { return restaurant.getName(); }
-    public int getStockQuantity() { return stockQuantity; }
-    public String getCategory() { return category; }
-    public List<String> getKeyWords() { return Arrays.asList(keyWords.split(",")); } // Convert string to list
-    public String getDescription() { return description; }
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
         this.name = name;
-    }
-
-    public Long getId() { return id; }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
     }
 
     public void setPrice(int price) {
@@ -94,29 +80,27 @@ public class Food {
         this.price = price;
     }
 
-    public void setStockQuantity(int stockQuantity) {
+    public void setSupply(int stockQuantity) {
         if (stockQuantity < 0) {
             throw new IllegalArgumentException("Invalid stock quantity");
         }
-        this.stockQuantity = stockQuantity;
+        this.supply = stockQuantity;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+
+    public void setMenuTitle(String menuTitle) {
+
+        this.menuTitle = menuTitle;
     }
 
-    public void setKeyWords(List<String> keyWords) {
-        this.keyWords = String.join(",", keyWords);
+    public void setkeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDetail(){
-        String detail = "";
-        detail = detail + name + "," + pictureUrl + "," + price + "," + restaurant.getName() + "," + stockQuantity + "," + category + "," + keyWords + "," + description;
-        return detail;
+    public Restaurant getRestaurant() {
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
+        Restaurant restaurant = restaurantDAO.get_restaurant(restaurantId);
+        return restaurant;
     }
 
 }
