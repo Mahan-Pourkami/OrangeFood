@@ -275,18 +275,14 @@ public class RestaurantDTO {
         return list;
     }
 
-    public static String convertlisttojsonarray(List<String> list)  {
+    public static JSONArray convertlisttojsonarray(List<String> list) throws JsonProcessingException {
 
-        String msg = null;
-        try {
-            ObjectMapper obj = new ObjectMapper();
-            msg = obj.writeValueAsString(list);
-            System.out.println(msg);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        JSONArray jsonArray = new JSONArray();
+        for(int i=0;i<list.size();i++){
+            jsonArray.put(list.get(i));
         }
 
-        return msg;
+        return jsonArray;
 
     }
 

@@ -17,6 +17,7 @@ public class Buyer extends User{
     @Column(name = "wallet" )
     private  Integer Token ;
 
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Long> favorite_restaurants;
 
@@ -49,6 +50,10 @@ public class Buyer extends User{
 
     public void remove_tofavorite_restaurants(long id) {
         favorite_restaurants.remove(id);
+    }
+
+    public List<Long> getFavorite_restaurants() {
+        return favorite_restaurants;
     }
 
     public List<Restaurant> getfavorite_restaurants() {

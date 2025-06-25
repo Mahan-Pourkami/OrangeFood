@@ -41,7 +41,7 @@ public class Food {
     @Column (name = "restaurant_id")
     private Long restaurantId;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> keywords;
 
 
@@ -74,9 +74,6 @@ public class Food {
     }
 
     public void setPrice(int price) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("Invalid price");
-        }
         this.price = price;
     }
 

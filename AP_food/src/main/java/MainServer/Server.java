@@ -1,6 +1,7 @@
 package MainServer;
 
 import Handler.AuthHandler;
+import Handler.FavoriteHandler;
 import Handler.RestaurantsHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -18,6 +19,7 @@ public class Server {
 
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
+            server.createContext("/favorites" , new FavoriteHandler());
 
             server.start();
            System.out.println("MainServer.Server started at http://localhost:8080");
