@@ -124,6 +124,7 @@ public class RestaurantsHandler implements HttpHandler {
             }
 
             finally {
+
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(http_code, response.length());
