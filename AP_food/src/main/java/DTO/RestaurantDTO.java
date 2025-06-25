@@ -20,7 +20,7 @@ public class RestaurantDTO {
     public static class AddRestaurantDTO {
 
         SellerDAO sellerDAO = new SellerDAO() ;
-        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
 
         public String name;
         public String address;
@@ -149,7 +149,7 @@ public class RestaurantDTO {
             if(seller.getRestaurant() == null){
                 throw new NosuchRestaurantException();
             }
-            System.out.println("Done 1");
+
             if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
                 throw new UnsupportedMediaException();
             }
@@ -275,7 +275,7 @@ public class RestaurantDTO {
         return list;
     }
 
-    public static JSONArray convertlisttojsonarray(List<String> list) throws JsonProcessingException {
+    public static <T>JSONArray convertlisttojsonarray(List<T> list) throws JsonProcessingException {
 
         JSONArray jsonArray = new JSONArray();
         for(int i=0;i<list.size();i++){
@@ -306,12 +306,16 @@ public class RestaurantDTO {
             this.supply = json.getInt("supply");
             this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
 
+            if(!name.equals(food.getName()) && foodDAO.findFoodByName(name,food.getRestaurantId())!=null){
+                throw new DuplicatedItemexception();
+            }
 
-            food.setName(this.name);
-            food.setDescription(this.description);
+            if(!name.isEmpty()) food.setName(this.name);
+
+            if(!description.isEmpty()) food.setDescription(this.description);
             food.setPrice(this.price);
             food.setSupply(this.supply);
-            food.setPictureUrl(this.logoBase64);
+            if(logoBase64!=null && !logoBase64.isEmpty() && !logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg"))  food.setPictureUrl(this.logoBase64);
             food.setkeywords(this.keywords);
             foodDAO.updateFood(food);
         }
