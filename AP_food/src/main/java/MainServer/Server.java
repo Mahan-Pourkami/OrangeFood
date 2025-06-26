@@ -1,5 +1,6 @@
 package MainServer;
 
+import DAO.SellerDAO;
 import Handler.AuthHandler;
 import Handler.FavoriteHandler;
 import Handler.RestaurantsHandler;
@@ -20,7 +21,7 @@ public class Server {
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
             server.createContext("/favorites" , new FavoriteHandler());
-
+            SellerDAO sellerDAO = new SellerDAO();
             server.start();
            System.out.println("MainServer.Server started at http://localhost:8080");
 
