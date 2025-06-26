@@ -24,6 +24,7 @@ public class Server {
             server.createContext("/favorites" , new FavoriteHandler());
             server.createContext("/admin",new AdminHandler());
             server.start();
+
            System.out.println("MainServer.Server started at http://localhost:8080");
 
         } catch (IOException e) {
