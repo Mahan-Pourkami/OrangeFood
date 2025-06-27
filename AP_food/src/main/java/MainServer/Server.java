@@ -9,15 +9,23 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Server {
+
+
+    private static final int THREAD_POOL_SIZE = 50;
 
     public static void main(String[] args) {
 
 
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+            ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+            server.setExecutor(executor);
 
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
