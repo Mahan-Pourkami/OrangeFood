@@ -125,6 +125,7 @@ public class AdminHandler implements HttpHandler {
         int http_code = 200 ;
 
         if(paths.length==5 && paths[2].equals("users") && paths[4].equals("status")){
+
             try{
                 if (!jsonObject.has("status")) {
                     throw new InvalidInputException("status");
@@ -162,6 +163,10 @@ public class AdminHandler implements HttpHandler {
                 response = generate_msg("Status of User :" + paths[3] + " is " + status);
                 http_code = 200;
 
+            }
+            catch (InvalidInputException e){
+                response = generate_error(e.getMessage());
+                http_code = 400;
             }
 
             catch (InvalidTokenexception e){

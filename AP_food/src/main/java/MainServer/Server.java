@@ -1,13 +1,10 @@
 package MainServer;
 
 
-import DAO.CouponDAO;
-import DAO.CourierDAO;
 import Handler.AdminHandler;
 import Handler.AuthHandler;
 import Handler.FavoriteHandler;
 import Handler.RestaurantsHandler;
-import Model.Courier;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -23,8 +20,6 @@ public class Server {
 
     public static void main(String[] args) {
 
-        CouponDAO  couponDAO = new CouponDAO();
-        CourierDAO courierDAO = new CourierDAO();
 
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);

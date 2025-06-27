@@ -311,7 +311,7 @@ public class AuthHandler implements HttpHandler {
             catch (ForbiddenroleException e){
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
-                response = generate_error(e.getMessage());
+                response = generate_error("Your account is pending to be approved by admin");
                 exchange.sendResponseHeaders(403, response.getBytes().length);
             }
             catch (Exception e){
