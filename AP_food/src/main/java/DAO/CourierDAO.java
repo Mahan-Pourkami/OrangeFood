@@ -1,7 +1,9 @@
 package DAO;
 
+import Model.Bankinfo;
 import Model.Courier;
 import Model.Seller;
+import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -17,7 +19,10 @@ public class CourierDAO {
 
     private final SessionFactory sessionFactory;
     public CourierDAO() {
-        sessionFactory = new Configuration().configure().buildSessionFactory();
+        sessionFactory = new Configuration()
+                .addAnnotatedClass(Courier.class)
+                .addAnnotatedClass(Bankinfo.class)
+                .addAnnotatedClass(User.class).configure().buildSessionFactory();
     }
 
     public void saveCourier(Courier courier) {

@@ -1,7 +1,8 @@
 package Handler;
 
-import Model.User;
-import Model.Validator;
+import DAO.CourierDAO;
+import DAO.SellerDAO;
+import Model.*;
 import Utils.JwtUtil;
 import DTO.UserDTO;
 import Exceptions.*;
@@ -9,6 +10,7 @@ import Exceptions.*;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.hibernate.Session;
 import org.json.JSONObject;
 import java.io.*;
 
@@ -16,6 +18,8 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
+    CourierDAO courierDAO = new CourierDAO();
+    SellerDAO  sellerDAO = new SellerDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -209,12 +213,13 @@ public class AuthHandler implements HttpHandler {
 
         else if(paths.length == 3 && paths[2].equals("login")) {
 
-            System.out.println("Login request received");
+            try{
+                System.out.println("Login request received");
 
                 JSONObject jsonobject = getJsonObject(exchange);
-                if(invalid_input_login(jsonobject).isEmpty()){
+                if (invalid_input_login(jsonobject).isEmpty()) {
 
-                    if(!jsonobject.get("phone").equals("admin")){
+                    if (!jsonobject.get("phone").equals("admin")) {
 
                         UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
                                 jsonobject.getString("phone"),
@@ -232,6 +237,23 @@ public class AuthHandler implements HttpHandler {
                             exchange.sendResponseHeaders(404, response.getBytes().length);
 
                         } else {
+
+                            if (user.role.equals(Role.courier)) {
+
+                                Courier courier = courierDAO.getCourier(user.getPhone());
+                                if (courier.getStatue()==null || !courier.getStatue().equals(Userstatue.approved)) {
+
+                                    throw new ForbiddenroleException();
+                                }
+                            }
+
+                            if (user.role.equals(Role.seller)) {
+
+                                Seller seller = sellerDAO.getSeller(user.getPhone());
+                                if (seller.getStatue()==null || !seller.getStatue().equals(Userstatue.approved)) {
+                                    throw new ForbiddenroleException();
+                                }
+                            }
 
                             String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
                             JSONObject json = new JSONObject();
@@ -256,24 +278,20 @@ public class AuthHandler implements HttpHandler {
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);
                             response = json.toString();
                         }
-                    }
+                    } else {
 
-                    else {
-
-                        if(!jsonobject.get("password").equals("adminpass")){
+                        if (!jsonobject.get("password").equals("adminpass")) {
 
                             response = generate_error("Invlid password");
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(500, response.getBytes().length);
 
-                        }
-
-                        else {
+                        } else {
 
                             JSONObject json = new JSONObject();
-                            json.put("message","Welcome dear admin!");
-                            json.put("token",JwtUtil.generateToken("admin","admin"));
+                            json.put("message", "Welcome dear admin!");
+                            json.put("token", JwtUtil.generateToken("admin", "admin"));
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);
@@ -281,16 +299,24 @@ public class AuthHandler implements HttpHandler {
                         }
 
                     }
-                }
-                else {
+                } else {
                     String invalid_part = invalid_input_login(jsonobject);
-                    response = generate_error("Invalid "+invalid_part);
+                    response = generate_error("Invalid " + invalid_part);
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(400, response.length());
                 }
 
-
+            }
+            catch (ForbiddenroleException e){
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error(e.getMessage());
+                exchange.sendResponseHeaders(403, response.getBytes().length);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         else if(paths.length == 3 && paths[2].equals("logout")) {

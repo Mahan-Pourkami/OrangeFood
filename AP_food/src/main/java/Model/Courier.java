@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table
+@Table(name = "couriers")
 @Getter
 @Setter
 public class Courier extends User {
