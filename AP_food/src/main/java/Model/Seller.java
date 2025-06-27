@@ -20,6 +20,9 @@ public class Seller extends User  {
     @JoinColumn(name = "Restaurant_id",referencedColumnName = "id")
     private Restaurant restaurant ;
 
+    @Column
+    private Userstatue statue;
+
 
     public Seller() {}
 
@@ -69,6 +72,14 @@ public class Seller extends User  {
 
         this.restaurant = restaurant;
         this.brand_name = restaurant.getName();
+    }
+
+    public Userstatue getStatue() {
+        return statue;
+    }
+
+    public void setStatue(String statue) {
+        this.statue = Userstatue.valueOf(statue);
     }
 
 }

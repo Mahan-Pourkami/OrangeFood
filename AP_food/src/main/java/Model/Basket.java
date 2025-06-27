@@ -1,21 +1,17 @@
 package Model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
 @Table(name = "baskets")
+
 public class Basket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
 
     @Column(name = "address", length = 255)
     private String address;
@@ -26,15 +22,15 @@ public class Basket {
     @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "basket_foods_join", joinColumns = @JoinColumn(name = "basket_id"), inverseJoinColumns = @JoinColumn(name = "food_id"))
-    private List<Food> foods;
+    @ElementCollection
+    private Map<Long,Integer> items;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Restaurant restaurant;
+    @Column
+    private long res_id ;
 
-//    @Column(name = "State")
-//    private StateofCart stateofCart;  //TODO go to the Order
+
+    @Column(name = "State")
+    private StateofCart stateofCart;
 
 
 
@@ -46,7 +42,7 @@ public class Basket {
         this.address = buyer.getAddress();
         this.buyerPhone = buyer.getPhone();
         this.buyerName = buyer.getfullname();
-        this.foods=new ArrayList<>();
+
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -89,10 +85,6 @@ public class Basket {
             throw new IllegalArgumentException("Buyer name cannot be null or empty.");
         }
         this.buyerName = buyerName;
-    }
-
-    public void addFood(Food food) {
-        this.foods.add(food);
     }
 
     @Override

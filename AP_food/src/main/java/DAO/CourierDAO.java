@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.Courier;
+import Model.Seller;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -36,7 +37,27 @@ public class CourierDAO {
         }
     }
 
-    public List<Courier> getAllUsers() {
+
+    public Courier getCourier(String phone) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+           Courier courier = session.get(Courier.class, phone);
+            if (courier != null) {
+                return courier;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get courier",e);
+        }
+    }
+
+
+    public List<Courier> getAllCouriers() {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -56,6 +77,20 @@ public class CourierDAO {
                 transaction.rollback();
             }
             throw new UserDAO.DataAccessException("Failed to retrieve couriers", e);
+        }
+    }
+
+
+    public void updateCourier(Courier courier) {
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(courier);
+            transaction.commit();
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to update courier",e);
         }
     }
 

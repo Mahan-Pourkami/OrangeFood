@@ -16,9 +16,6 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
-    public static String main_token = "";
-    private static long expiry_time = 0;
-    final private long LIMIT = 15 * 60 * 1000; // 15 minutes
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -217,46 +214,72 @@ public class AuthHandler implements HttpHandler {
                 JSONObject jsonobject = getJsonObject(exchange);
                 if(invalid_input_login(jsonobject).isEmpty()){
 
-                    UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
-                            jsonobject.getString("phone"),
-                            jsonobject.getString("password"));
+                    if(!jsonobject.get("phone").equals("admin")){
 
-                    System.out.println("UserDTO made");
-                    User user = userDTOlogin.getUserByPhoneAndPass();
-                    System.out.println("User found");
+                        UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
+                                jsonobject.getString("phone"),
+                                jsonobject.getString("password"));
 
-                    if (user == null) {
+                        System.out.println("UserDTO made");
+                        User user = userDTOlogin.getUserByPhoneAndPass();
+                        System.out.println("User found");
 
-                        response = generate_error("User not found");
-                        Headers headers = exchange.getResponseHeaders();
-                        headers.add("Content-Type", "application/json");
-                        exchange.sendResponseHeaders(404, response.getBytes().length);
+                        if (user == null) {
 
+                            response = generate_error("User not found");
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(404, response.getBytes().length);
+
+                        } else {
+
+                            String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
+                            JSONObject json = new JSONObject();
+                            json.put("message", "Login successful");
+                            json.put("token", token);
+                            JSONObject userJson = new JSONObject();
+                            userJson.put("id", user.getPhone().substring(2));
+                            userJson.put("full_name", user.getfullname());
+                            userJson.put("phone", user.getPhone());
+                            userJson.put("email", user.getEmail());
+                            userJson.put("role", user.role);
+                            userJson.put("address", user.getAddress());
+                            userJson.put("profileImageBase64", user.getProfile());
+                            JSONObject bankInfo = new JSONObject();
+                            bankInfo.put("bank_name", user.getBankinfo().getBankName());
+                            bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
+                            userJson.put("bank_info", bankInfo);
+                            json.put("user", userJson);
+
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(200, json.toString().getBytes().length);
+                            response = json.toString();
+                        }
                     }
+
                     else {
 
-                        String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
-                        JSONObject json = new JSONObject();
-                        json.put("message", "Login successful");
-                        json.put("token", token);
-                        JSONObject userJson = new JSONObject();
-                        userJson.put("id", user.getPhone().substring(2));
-                        userJson.put("full_name", user.getfullname());
-                        userJson.put("phone", user.getPhone());
-                        userJson.put("email", user.getEmail());
-                        userJson.put("role", user.role);
-                        userJson.put("address", user.getAddress());
-                        userJson.put("profileImageBase64", user.getProfile());
-                        JSONObject bankInfo = new JSONObject();
-                        bankInfo.put("bank_name", user.getBankinfo().getBankName());
-                        bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
-                        userJson.put("bank_info", bankInfo);
-                        json.put("user", userJson);
+                        if(!jsonobject.get("password").equals("adminpass")){
 
-                        Headers headers = exchange.getResponseHeaders();
-                        headers.add("Content-Type", "application/json");
-                        exchange.sendResponseHeaders(200, json.toString().getBytes().length);
-                        response = json.toString();
+                            response = generate_error("Invlid password");
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(500, response.getBytes().length);
+
+                        }
+
+                        else {
+
+                            JSONObject json = new JSONObject();
+                            json.put("message","Welcome dear admin!");
+                            json.put("token",JwtUtil.generateToken("admin","admin"));
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(200, json.toString().getBytes().length);
+                            response = json.toString();
+                        }
+
                     }
                 }
                 else {
@@ -404,7 +427,7 @@ public class AuthHandler implements HttpHandler {
             }
         }
 
-        if(!Validator.validatePhone(jsonObject.getString("phone"))){
+        if(!Validator.validatePhone(jsonObject.getString("phone")) && !jsonObject.getString("phone").equals("admin")){
             result = "Invalid phone";
         }
         if(jsonObject.getString("password").isEmpty()|| jsonObject.getString("password") == null){
