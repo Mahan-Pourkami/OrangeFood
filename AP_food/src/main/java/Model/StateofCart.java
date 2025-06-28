@@ -4,6 +4,8 @@ public enum StateofCart {
 
      accepted ,
      rejected ,
-     served
+     served,
+     received ,
+     delivered
 
 }

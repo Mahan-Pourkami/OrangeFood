@@ -2,10 +2,15 @@ package DAO;
 
 import Model.Coupon;
 import Model.Seller;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.List;
 
 public class CouponDAO {
 
@@ -58,6 +63,40 @@ public class CouponDAO {
                 throw new RuntimeException("seller not found");
             }
         }
+    }
+
+
+    public List<Coupon> getAllCoupons(){
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Coupon> cq = cb.createQuery(Coupon.class);
+            Root<Coupon> root = cq.from(Coupon.class);
+            cq.select(root);
+
+            List<Coupon> coupons = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return coupons;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new UserDAO.DataAccessException("Failed to retrieve all coupons", e);
+        }
+    }
+
+    public Coupon findCouponByCode(String code) {
+        List<Coupon> coupons = getAllCoupons();
+        for (Coupon coupon : coupons) {
+            if (coupon.getCode().equals(code)) {
+                return coupon;
+            }
+        }
+        return null;
     }
 
 }
