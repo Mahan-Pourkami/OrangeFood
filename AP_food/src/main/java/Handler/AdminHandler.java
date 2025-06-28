@@ -50,7 +50,8 @@ public class AdminHandler implements HttpHandler {
                     break;
 
                 case "DELETE":
-                    //TODO
+                    System.out.println("DELETE request received");
+                    response = handleDeleteRequest(exchange,paths);
                     break;
 
                 case "PATCH" :
@@ -247,6 +248,66 @@ public class AdminHandler implements HttpHandler {
 
         return  response;
     }
+
+
+    private String handleDeleteRequest(HttpExchange exchange , String [] paths) throws IOException {
+
+        String response = "";
+        int http_code = 200 ;
+        String token = JwtUtil.get_token_from_server(exchange);
+
+        if(paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                Coupon coupon = couponDAO.getCoupon(coupon_id);
+                if (coupon == null) {
+                    throw new NosuchItemException();
+                }
+
+                couponDAO.deleteCoupon(coupon_id);
+                http_code = 200;
+                response = generate_msg("Coupon deleted successfully");
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid coupon id");
+                http_code = 400;
+            }
+
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (NosuchItemException e){
+                response = generate_error("Coupon not found");
+                http_code = 404;
+            }
+        }
+
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+
+        try (OutputStream os = exchange.getResponseBody()){
+            os.write(response.getBytes());
+        }
+
+
+        return response;
+    }
+
+
 
     private String handlePatchRequest(HttpExchange exchange , String [] paths) throws IOException {
 

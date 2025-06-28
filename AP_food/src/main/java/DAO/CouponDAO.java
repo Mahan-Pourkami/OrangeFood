@@ -73,12 +73,12 @@ public class CouponDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Seller seller = session.get(Seller.class, id);
-            if (seller != null) {
-                session.remove(seller);
+            Coupon coupon= session.get(Coupon.class, id);
+            if (coupon != null) {
+                session.remove(coupon);
                 transaction.commit();
             } else {
-                throw new RuntimeException("seller not found");
+                throw new RuntimeException("coupon not found");
             }
         }
     }
