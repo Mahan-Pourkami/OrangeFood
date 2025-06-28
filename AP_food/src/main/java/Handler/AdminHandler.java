@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 
@@ -46,7 +47,8 @@ public class AdminHandler implements HttpHandler {
                     break;
 
                 case "PUT":
-                    //TODO
+                    System.out.println("PUT request received");
+                    response = handlePutRequest(exchange,paths);
                     break;
 
                 case "DELETE":
@@ -126,6 +128,60 @@ public class AdminHandler implements HttpHandler {
             os.write(response.getBytes());
         }
 
+
+        return  response;
+    }
+
+
+    private String handlePutRequest(HttpExchange exchange , String [] paths) throws IOException {
+
+        String response = "";
+        int http_code = 200;
+        JSONObject jsonObject = getJsonObject(exchange);
+        String token = JwtUtil.get_token_from_server(exchange);
+
+        if(paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                AdminDTO.Update_coupon_request update_req = new AdminDTO.Update_coupon_request(jsonObject, couponDAO, coupon_id);
+                AdminDTO.Create_coupon_response update_res = new AdminDTO.Create_coupon_response(couponDAO, couponDAO.getCoupon(coupon_id).getCode());
+                response = update_res.getResponse();
+                http_code = 200;
+
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid input");
+                http_code = 400;
+            }
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (DuplicatedItemexception e){
+                response = generate_error(e.getMessage());
+                http_code = 409;
+            }
+
+        }
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
 
         return  response;
     }

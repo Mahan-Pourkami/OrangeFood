@@ -3,11 +3,14 @@ package DTO;
 import DAO.CouponDAO;
 import Exceptions.DuplicatedItemexception;
 import Exceptions.InvalidInputException;
+import Exceptions.NosuchItemException;
 import Model.Coupon;
+import Model.Coupontype;
 import Model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AdminDTO {
@@ -179,6 +182,63 @@ public class AdminDTO {
         }
         public String getResponse() {
             return response;
+        }
+    }
+
+    public static class Update_coupon_request{
+
+        private String coupon_code;
+        private String type;
+        private Number value;
+        private int min_price;
+        private int user_count;
+        private String start_time;
+        private String end_time;
+
+        public Update_coupon_request(JSONObject jsonObject, CouponDAO couponDAO , long id) throws IOException {
+
+
+            Coupon coupon = couponDAO.getCoupon(id);
+
+            if(jsonObject.has("coupon_code"))this.coupon_code = jsonObject.getString("coupon_code");
+            else this.coupon_code = coupon.getCode();
+
+            if(jsonObject.has("type")) this.type = jsonObject.getString("type");
+            else this.type=coupon.getType().toString();
+
+            if(jsonObject.has("value"))this.value = jsonObject.getNumber("value");
+            else this.value=coupon.getValue();
+
+            if(jsonObject.has("min_price")) this.min_price = jsonObject.getInt("min_price");
+            else this.min_price=coupon.getMin_price();
+
+            if(jsonObject.has("user_count")) this.user_count = jsonObject.getInt("user_count");
+            else this.user_count=coupon.getUser_counts();
+
+            if(jsonObject.has("start_time")) this.start_time = jsonObject.getString("start_date");
+            else this.start_time=coupon.getStart_time();
+
+            if(jsonObject.has("end_time")) this.end_time = jsonObject.getString("end_date");
+            else this.end_time=coupon.getEnd_time();
+
+
+
+            if(coupon==null){
+                throw new NosuchItemException();
+            }
+
+            if(couponDAO.findCouponByCode(coupon_code)!=null && !coupon_code.equals(coupon.getCode())){
+                throw new DuplicatedItemexception();
+            }
+
+            coupon.setCode(coupon_code);
+            coupon.setType(Coupontype.valueOf(type));
+            coupon.setMin_price(min_price);
+            coupon.setUser_counts(user_count);
+            coupon.setValue(value);
+            coupon.setStart_time(start_time);
+            coupon.setEnd_time(end_time);
+            couponDAO.updateCoupon(coupon);
         }
     }
 }
