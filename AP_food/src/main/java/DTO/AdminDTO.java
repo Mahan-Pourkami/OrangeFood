@@ -84,28 +84,13 @@ public class AdminDTO {
             }
 
 
-
             this.code = jsonObject.getString("coupon_code");
             this.type = jsonObject.getString("type");
             this.value = jsonObject.getNumber("value");
             this.min_price = jsonObject.getInt("min_price");
             this.user_count = jsonObject.getInt("user_count");
 
-            boolean start_time_validation = false;
-            boolean end_time_validation =false ;
-
-
-
-            if(jsonObject.has("start_date" )&& jsonObject.getString("start_date").matches("//d{4}-//d{2}-//d{2}")) {
-
-                    start_time_validation = true;
-
-        }
-            if(jsonObject.has("end_date") && jsonObject.getString("end_date").matches("//d{4}-//d{2}-//d{2}")) {
-                end_time_validation = true;
-            }
-
-            if(start_time_validation && end_time_validation){
+            if(jsonObject.has("start_date") && jsonObject.has("end_date")){
 
                 this.start_time = jsonObject.getString("start_time");
                 this.end_time = jsonObject.getString("end_time");
@@ -215,10 +200,10 @@ public class AdminDTO {
             if(jsonObject.has("user_count")) this.user_count = jsonObject.getInt("user_count");
             else this.user_count=coupon.getUser_counts();
 
-            if(jsonObject.has("start_time")) this.start_time = jsonObject.getString("start_date");
+            if(jsonObject.has("start_date")) this.start_time = jsonObject.getString("start_date");
             else this.start_time=coupon.getStart_time();
 
-            if(jsonObject.has("end_time")) this.end_time = jsonObject.getString("end_date");
+            if(jsonObject.has("end_date")) this.end_time = jsonObject.getString("end_date");
             else this.end_time=coupon.getEnd_time();
 
 
@@ -236,8 +221,8 @@ public class AdminDTO {
             coupon.setMin_price(min_price);
             coupon.setUser_counts(user_count);
             coupon.setValue(value);
-            coupon.setStart_time(start_time);
-            coupon.setEnd_time(end_time);
+            coupon.set_start_time(start_time);
+            coupon.set_end_time(end_time);
             couponDAO.updateCoupon(coupon);
         }
     }
