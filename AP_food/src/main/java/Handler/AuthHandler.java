@@ -1,7 +1,8 @@
 package Handler;
 
-import Model.User;
-import Model.Validator;
+import DAO.CourierDAO;
+import DAO.SellerDAO;
+import Model.*;
 import Utils.JwtUtil;
 import DTO.UserDTO;
 import Exceptions.*;
@@ -9,6 +10,7 @@ import Exceptions.*;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.hibernate.Session;
 import org.json.JSONObject;
 import java.io.*;
 
@@ -16,6 +18,8 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
+    CourierDAO courierDAO = new CourierDAO();
+    SellerDAO  sellerDAO = new SellerDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -209,62 +213,110 @@ public class AuthHandler implements HttpHandler {
 
         else if(paths.length == 3 && paths[2].equals("login")) {
 
-            System.out.println("Login request received");
+            try{
+                System.out.println("Login request received");
 
                 JSONObject jsonobject = getJsonObject(exchange);
-                if(invalid_input_login(jsonobject).isEmpty()){
+                if (invalid_input_login(jsonobject).isEmpty()) {
 
-                    UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
-                            jsonobject.getString("phone"),
-                            jsonobject.getString("password"));
+                    if (!jsonobject.get("phone").equals("admin")) {
 
-                    System.out.println("UserDTO made");
-                    User user = userDTOlogin.getUserByPhoneAndPass();
-                    System.out.println("User found");
+                        UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
+                                jsonobject.getString("phone"),
+                                jsonobject.getString("password"));
 
-                    if (user == null) {
+                        System.out.println("UserDTO made");
+                        User user = userDTOlogin.getUserByPhoneAndPass();
+                        System.out.println("User found");
 
-                        response = generate_error("User not found");
-                        Headers headers = exchange.getResponseHeaders();
-                        headers.add("Content-Type", "application/json");
-                        exchange.sendResponseHeaders(404, response.getBytes().length);
+                        if (user == null) {
+
+                            response = generate_error("User not found");
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(404, response.getBytes().length);
+
+                        } else {
+
+                            if (user.role.equals(Role.courier)) {
+
+                                Courier courier = courierDAO.getCourier(user.getPhone());
+                                if (courier.getStatue()==null || !courier.getStatue().equals(Userstatue.approved)) {
+
+                                    throw new ForbiddenroleException();
+                                }
+                            }
+
+                            if (user.role.equals(Role.seller)) {
+
+                                Seller seller = sellerDAO.getSeller(user.getPhone());
+                                if (seller.getStatue()==null || !seller.getStatue().equals(Userstatue.approved)) {
+                                    throw new ForbiddenroleException();
+                                }
+                            }
+
+                            String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
+                            JSONObject json = new JSONObject();
+                            json.put("message", "Login successful");
+                            json.put("token", token);
+                            JSONObject userJson = new JSONObject();
+                            userJson.put("id", user.getPhone().substring(2));
+                            userJson.put("full_name", user.getfullname());
+                            userJson.put("phone", user.getPhone());
+                            userJson.put("email", user.getEmail());
+                            userJson.put("role", user.role);
+                            userJson.put("address", user.getAddress());
+                            userJson.put("profileImageBase64", user.getProfile());
+                            JSONObject bankInfo = new JSONObject();
+                            bankInfo.put("bank_name", user.getBankinfo().getBankName());
+                            bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
+                            userJson.put("bank_info", bankInfo);
+                            json.put("user", userJson);
+
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(200, json.toString().getBytes().length);
+                            response = json.toString();
+                        }
+                    } else {
+
+                        if (!jsonobject.get("password").equals("adminpass")) {
+
+                            response = generate_error("Invlid password");
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(500, response.getBytes().length);
+
+                        } else {
+
+                            JSONObject json = new JSONObject();
+                            json.put("message", "Welcome dear admin!");
+                            json.put("token", JwtUtil.generateToken("admin", "admin"));
+                            Headers headers = exchange.getResponseHeaders();
+                            headers.add("Content-Type", "application/json");
+                            exchange.sendResponseHeaders(200, json.toString().getBytes().length);
+                            response = json.toString();
+                        }
 
                     }
-                    else {
-
-                        String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
-                        JSONObject json = new JSONObject();
-                        json.put("message", "Login successful");
-                        json.put("token", token);
-                        JSONObject userJson = new JSONObject();
-                        userJson.put("id", user.getPhone().substring(2));
-                        userJson.put("full_name", user.getfullname());
-                        userJson.put("phone", user.getPhone());
-                        userJson.put("email", user.getEmail());
-                        userJson.put("role", user.role);
-                        userJson.put("address", user.getAddress());
-                        userJson.put("profileImageBase64", user.getProfile());
-                        JSONObject bankInfo = new JSONObject();
-                        bankInfo.put("bank_name", user.getBankinfo().getBankName());
-                        bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
-                        userJson.put("bank_info", bankInfo);
-                        json.put("user", userJson);
-
-                        Headers headers = exchange.getResponseHeaders();
-                        headers.add("Content-Type", "application/json");
-                        exchange.sendResponseHeaders(200, json.toString().getBytes().length);
-                        response = json.toString();
-                    }
-                }
-                else {
+                } else {
                     String invalid_part = invalid_input_login(jsonobject);
-                    response = generate_error("Invalid "+invalid_part);
+                    response = generate_error("Invalid " + invalid_part);
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(400, response.length());
                 }
 
-
+            }
+            catch (ForbiddenroleException e){
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error("Your account is pending to be approved by admin");
+                exchange.sendResponseHeaders(403, response.getBytes().length);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         else if(paths.length == 3 && paths[2].equals("logout")) {
@@ -401,7 +453,7 @@ public class AuthHandler implements HttpHandler {
             }
         }
 
-        if(!Validator.validatePhone(jsonObject.getString("phone"))){
+        if(!Validator.validatePhone(jsonObject.getString("phone")) && !jsonObject.getString("phone").equals("admin")){
             result = "Invalid phone";
         }
         if(jsonObject.getString("password").isEmpty()|| jsonObject.getString("password") == null){
