@@ -38,6 +38,24 @@ public class CouponDAO {
         }
     }
 
+    public Coupon getCoupon(long id) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Coupon coupon = session.get(Coupon.class, id);
+            if (coupon != null) {
+                return coupon;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get coupon",e);
+        }
+    }
+
     public void updateCoupon(Coupon coupon) {
         Transaction transaction = null ;
         try (Session session = sessionFactory.openSession()) {

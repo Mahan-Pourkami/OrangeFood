@@ -6,10 +6,7 @@ import DAO.CourierDAO;
 import DAO.SellerDAO;
 import DAO.UserDAO;
 import DTO.AdminDTO;
-import Exceptions.DuplicatedItemexception;
-import Exceptions.ForbiddenroleException;
-import Exceptions.InvalidInputException;
-import Exceptions.InvalidTokenexception;
+import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.Headers;
@@ -194,6 +191,49 @@ public class AdminHandler implements HttpHandler {
                 http_code = 403;
             }
 
+        }
+
+        else if (paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                Coupon coupon = couponDAO.getCoupon(coupon_id);
+
+                if(coupon == null){
+                    throw new NosuchItemException();
+                }
+
+                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, coupon.getCode());
+                response = res.getResponse();
+                http_code = 200;
+            }
+
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid coupon id");
+                http_code = 400;
+            }
+
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+
+            catch (NosuchItemException e){
+                response = generate_error("Coupon not found");
+                http_code = 404;
+            }
         }
 
         Headers headers = exchange.getResponseHeaders();
