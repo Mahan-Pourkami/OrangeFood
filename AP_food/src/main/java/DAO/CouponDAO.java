@@ -1,7 +1,6 @@
 package DAO;
 
 import Model.Coupon;
-import Model.Seller;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
