@@ -28,6 +28,8 @@ public class Server {
             server.createContext("/favorites" , new FavoriteHandler());
             server.createContext("/admin",new AdminHandler());
             server.createContext("/rating" , new RatingHandler());
+            server.createContext("/wallet" , new WalletHandler());
+
 
             server.start();
 
