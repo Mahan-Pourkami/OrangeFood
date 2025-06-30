@@ -39,6 +39,8 @@ public class RatingHandler implements HttpHandler {
                     break;
 
                 case "PUT":
+                    System.out.println("PUT request received");
+                    response = handlePutRequest(exchange,paths);
                     break;
 
                 case "DELETE":
@@ -114,6 +116,79 @@ public class RatingHandler implements HttpHandler {
         }
         return response;
     }
+
+
+    private String handlePutRequest(HttpExchange exchange , String []paths) throws IOException {
+        String response = "";
+        String token = JwtUtil.get_token_from_server(exchange);
+        JSONObject jsonObject = getJsonObject(exchange);
+        int http_code = 200 ;
+
+        if(paths.length == 3){
+
+            Long comment_id = Long.parseLong(paths[2]);
+            Rating rating = ratingDAO.getRating(comment_id);
+
+            try{
+                if (rating == null) {
+                    throw new NosuchItemException();
+                }
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = JwtUtil.extractSubject(token);
+
+                if (!rating.getAuthor_phone().equals(phone)) {
+                    throw new InvalidTokenexception();
+                }
+
+                RatingDTO.Update_Rating_Req update_req = new RatingDTO.Update_Rating_Req(jsonObject, ratingDAO, comment_id);
+                RatingDTO.Update_Rating_Response update_res = new RatingDTO.Update_Rating_Response(comment_id, ratingDAO);
+                response = update_res.getResponse();
+                http_code = 200;
+            }
+            catch(IllegalArgumentException e){
+                response = generate_error("Invalid comment id");
+                http_code = 400;
+            }
+
+            catch (InvalidInputException e ) {
+                response = generate_error(e.getMessage());
+                http_code = 400;
+            }
+            catch (InvalidTokenexception e) {
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e) {
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+
+            catch (NosuchItemException e){
+                response = generate_error("Comment not found");
+                http_code = 404;
+            }
+            catch (UnsupportedMediaException e) {
+                response = generate_error(e.getMessage());
+                http_code = 415;
+            }
+        }
+
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+
+        return response;
+    }
+
 
 
     private String handleGetRequest(HttpExchange exchange , String []paths) throws IOException {

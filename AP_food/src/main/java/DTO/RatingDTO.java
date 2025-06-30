@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List ;
 
@@ -155,6 +157,88 @@ public class RatingDTO {
         public String getResponse() {
             return response;
         }
+    }
+
+    public static class Update_Rating_Req {
+
+        private RatingDAO ratingDAO;
+
+        public Update_Rating_Req(JSONObject jsonObject ,RatingDAO ratingDAO , long comment_id) throws IOException {
+
+            this.ratingDAO = ratingDAO;
+            Rating rating = ratingDAO.getRating(comment_id);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+
+
+            if(jsonObject.has("rating")){
+
+                if(jsonObject.getInt("rating")<0 || jsonObject.getInt("rating")>5) {
+                    throw new InvalidInputException("rating");
+                }
+
+
+                rating.setRating(jsonObject.getInt("rating"));
+                rating.setDate_added(now.format(formatter));
+            }
+
+            if(jsonObject.has("comment")){
+                rating.setComment(jsonObject.getString("comment"));
+            }
+
+            if(jsonObject.has("imageBase64")){
+                JSONArray jsonArray = jsonObject.getJSONArray("imageBase64");
+                List<String> imageBase64 = new ArrayList<>();
+                for(int i = 0; i < jsonArray.length(); i++) {
+
+                   String imageBase64Item = jsonArray.getString(i);
+                    if(!imageBase64Item.endsWith(".png") && !imageBase64Item.endsWith(".jpg") && !imageBase64Item.endsWith(".jpeg")) {
+                        throw new UnsupportedMediaException();
+                    }
+                    imageBase64.add(imageBase64Item);
+                }
+                rating.setImageBase64(imageBase64);
+            }
+            ratingDAO.updateRating(rating);
+        }
+    }
+
+    public static class Update_Rating_Response {
+
+        private RatingDAO ratingDAO;
+
+        private String response ;
+
+        public Update_Rating_Response(long commentid ,RatingDAO ratingDAO) throws IOException {
+
+            this.ratingDAO = ratingDAO;
+
+            Rating rating = ratingDAO.getRating(commentid);
+            if(rating == null) {
+                throw new NosuchItemException();
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+
+            jsonObject.put("id", rating.getId());
+            jsonObject.put("item_id", commentid);
+            jsonObject.put("rating", rating.getRating());
+
+            for (String photo : rating.getImageBase64() ) {
+                jsonArray.put(photo);
+            }
+            jsonObject.put("imageBase64",jsonArray);
+            jsonObject.put("user_name",rating.getAuthor_name());
+            jsonObject.put("created_at",rating.getDate_added());
+
+            this.response = jsonObject.toString();
+
+        }
+        public String getResponse() {
+            return response;
+        }
+
     }
 
 }
