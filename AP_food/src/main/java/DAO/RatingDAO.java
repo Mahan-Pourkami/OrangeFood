@@ -95,9 +95,9 @@ public class RatingDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Coupon coupon= session.get(Coupon.class, id);
-            if (coupon != null) {
-                session.remove(coupon);
+            Rating rating= session.get(Rating.class, id);
+            if (rating != null) {
+                session.remove(rating);
                 transaction.commit();
             } else {
                 throw new RuntimeException("Rating not found");
@@ -116,5 +116,18 @@ public class RatingDAO {
             }
         }
         return results;
+    }
+
+
+    public double calculate_avg_rating(long item_id) {
+
+        List<Rating> ratings = getRatingsByitemId(item_id);
+        double avg_rating = 0 ;
+
+        for(Rating rating : ratings) {
+            avg_rating += rating.getRating();
+        }
+        avg_rating /= ratings.size();
+        return avg_rating;
     }
 }

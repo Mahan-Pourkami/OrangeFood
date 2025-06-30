@@ -5,6 +5,7 @@ import DAO.RatingDAO;
 import DAO.UserDAO;
 import DTO.RatingDTO;
 import Exceptions.*;
+import Model.Rating;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -28,6 +29,8 @@ public class RatingHandler implements HttpHandler {
         try{
             switch (method) {
                 case "GET":
+                    System.out.println("GET request received");
+                    response = handleGetRequest(exchange, paths);
                     break;
 
                 case "POST":
@@ -39,6 +42,8 @@ public class RatingHandler implements HttpHandler {
                     break;
 
                 case "DELETE":
+                    System.out.println("DELETE request received");
+                    response = handleDeleteRequest(exchange,paths);
                     break;
 
                 default:
@@ -49,6 +54,7 @@ public class RatingHandler implements HttpHandler {
             e.printStackTrace();
         }
         finally{
+
             send_Response(exchange,response);
         }
     }
@@ -98,7 +104,6 @@ public class RatingHandler implements HttpHandler {
                 response = generate_error(e.getMessage());
                 http_code = 415;
             }
-
         }
 
         exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -107,6 +112,144 @@ public class RatingHandler implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
+        return response;
+    }
+
+
+    private String handleGetRequest(HttpExchange exchange , String []paths) throws IOException {
+
+        String response = "";
+        String token = JwtUtil.get_token_from_server(exchange);
+        int http_code = 200 ;
+        if(paths.length == 4 && paths[2].equals("items")){
+
+            try{
+                Long item_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO);
+                response = get_req.getResponse();
+                http_code = 200;
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid item id");
+                http_code = 400;
+            }
+
+            catch(InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+        }
+        else if (paths.length == 3){
+            try{
+                Long item_id = Long.parseLong(paths[2]);
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                RatingDTO.Get_Rating_by_id get_res = new RatingDTO.Get_Rating_by_id(item_id, ratingDAO);
+                response = get_res.getResponse();
+                http_code = 200;
+            }
+
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid item id");
+                http_code = 400;
+            }
+
+            catch(InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (NosuchItemException e){
+                response = generate_error("Rating not found");
+                http_code = 404;
+            }
+        }
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+
+        return response;
+    }
+
+    private String handleDeleteRequest(HttpExchange exchange , String []paths) throws IOException {
+
+        String response = "";
+        String token = JwtUtil.get_token_from_server(exchange);
+        int http_code = 200 ;
+
+        if(paths.length == 3){
+
+            try{
+                Long comment_id = Long.parseLong(paths[2]);
+                Rating rating = ratingDAO.getRating(comment_id);
+
+                if (rating == null) {
+                    throw new NosuchItemException();
+                }
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = JwtUtil.extractSubject(token);
+
+                if (!rating.getAuthor_phone().equals(phone)) {
+                    throw new InvalidTokenexception();
+                }
+
+                ratingDAO.deleteCRating(comment_id);
+                response = generate_msg("Comment deleted");
+                http_code = 200;
+            }
+             catch (IllegalArgumentException e){
+                response = generate_error("Invalid item id");
+                http_code = 400;
+             }
+            catch(InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (NosuchItemException e){
+                response = generate_error("Rating not found");
+                http_code = 404;
+            }
+        }
+
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+
         return response;
     }
 

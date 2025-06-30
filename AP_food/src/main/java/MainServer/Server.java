@@ -1,7 +1,5 @@
 package MainServer;
 
-
-import DAO.RatingDAO;
 import Handler.*;
 import com.sun.net.httpserver.HttpServer;
 
@@ -30,11 +28,13 @@ public class Server {
             server.createContext("/favorites" , new FavoriteHandler());
             server.createContext("/admin",new AdminHandler());
             server.createContext("/rating" , new RatingHandler());
+
             server.start();
 
            System.out.println("MainServer.Server started at http://localhost:8080");
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

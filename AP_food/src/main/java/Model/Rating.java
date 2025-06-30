@@ -36,7 +36,7 @@ public class Rating {
     private String date_added;
 
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> imageBase64;
 
 
