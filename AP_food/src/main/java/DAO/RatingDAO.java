@@ -21,7 +21,7 @@ public class RatingDAO {
     }
 
     public void saveRating(Rating rating) {
-        Transaction transaction = sessionFactory.getCurrentSession().beginTransaction();
+        Transaction transaction = null ;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
             session.persist(rating);

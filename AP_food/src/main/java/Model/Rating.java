@@ -1,5 +1,7 @@
 package Model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Rating {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,14 +26,29 @@ public class Rating {
     @Column
     private String comment;
 
+    @Column
+    private String author_phone;
+
+    @Column
+    private String author_name;
+
+    @Column
+    private String date_added;
+
+
     @ElementCollection
     private List<String> imageBase64;
 
 
     public Rating() {}
 
-    public Rating(long item_id , int rating, String comment, List<String> imageBase64) {
+    public Rating(String phone , String name ,long item_id , int rating, String comment, List<String> imageBase64) {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        this.date_added = now.format(formatter);
+        this.author_phone = phone;
+        this.author_name = name;
         this.item_id = item_id;
         this.rating = rating;
         this.comment = comment;
