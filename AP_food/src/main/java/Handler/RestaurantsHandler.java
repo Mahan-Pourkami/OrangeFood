@@ -411,7 +411,6 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
                 String phone = JwtUtil.extractSubject(token);
-                FoodDAO foodDAO = new FoodDAO();
                 Seller seller = sellerDAO.getSeller(phone);
 
                 if (!seller.getRestaurant().getId().equals(res_id)) {
@@ -580,7 +579,6 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
                 String phone = JwtUtil.extractSubject(token);
-                FoodDAO foodDAO = new FoodDAO();
                 Food food = foodDAO.getFood(food_id);
 
                 if(food==null){

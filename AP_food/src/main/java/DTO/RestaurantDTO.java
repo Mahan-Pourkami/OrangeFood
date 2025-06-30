@@ -153,9 +153,11 @@ public class RestaurantDTO {
             if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
                 throw new UnsupportedMediaException();
             }
+
             this.name = json.getString("name");
             this.address = json.getString("address");
             this.phone = json.getString("phone");
+
             if(json.getString("logoBase64")!=null && !json.getString("logoBase64").isEmpty()) {
                 this.logoBase64 = json.getString("logoBase64");
             }

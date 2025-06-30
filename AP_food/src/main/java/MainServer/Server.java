@@ -1,10 +1,6 @@
 package MainServer;
 
-
-import Handler.AdminHandler;
-import Handler.AuthHandler;
-import Handler.FavoriteHandler;
-import Handler.RestaurantsHandler;
+import Handler.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -31,13 +27,15 @@ public class Server {
             server.createContext("/restaurants",new RestaurantsHandler());
             server.createContext("/favorites" , new FavoriteHandler());
             server.createContext("/admin",new AdminHandler());
+            server.createContext("/rating" , new RatingHandler());
+
             server.start();
 
            System.out.println("MainServer.Server started at http://localhost:8080");
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

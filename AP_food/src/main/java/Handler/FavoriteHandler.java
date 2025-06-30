@@ -255,9 +255,6 @@ public class FavoriteHandler implements HttpHandler {
         }
 
 
-
-
-
     private String generate_error(String error) {
 
         JSONObject errorJson = new JSONObject();

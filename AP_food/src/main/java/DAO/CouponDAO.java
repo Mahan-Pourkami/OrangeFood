@@ -1,11 +1,15 @@
 package DAO;
 
 import Model.Coupon;
-import Model.Seller;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.List;
 
 public class CouponDAO {
 
@@ -33,6 +37,24 @@ public class CouponDAO {
         }
     }
 
+    public Coupon getCoupon(long id) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Coupon coupon = session.get(Coupon.class, id);
+            if (coupon != null) {
+                return coupon;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to get coupon",e);
+        }
+    }
+
     public void updateCoupon(Coupon coupon) {
         Transaction transaction = null ;
         try (Session session = sessionFactory.openSession()) {
@@ -50,14 +72,48 @@ public class CouponDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Seller seller = session.get(Seller.class, id);
-            if (seller != null) {
-                session.remove(seller);
+            Coupon coupon= session.get(Coupon.class, id);
+            if (coupon != null) {
+                session.remove(coupon);
                 transaction.commit();
             } else {
-                throw new RuntimeException("seller not found");
+                throw new RuntimeException("coupon not found");
             }
         }
+    }
+
+
+    public List<Coupon> getAllCoupons(){
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Coupon> cq = cb.createQuery(Coupon.class);
+            Root<Coupon> root = cq.from(Coupon.class);
+            cq.select(root);
+
+            List<Coupon> coupons = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return coupons;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new UserDAO.DataAccessException("Failed to retrieve all coupons", e);
+        }
+    }
+
+    public Coupon findCouponByCode(String code) {
+        List<Coupon> coupons = getAllCoupons();
+        for (Coupon coupon : coupons) {
+            if (coupon.getCode().equals(code)) {
+                return coupon;
+            }
+        }
+        return null;
     }
 
 }

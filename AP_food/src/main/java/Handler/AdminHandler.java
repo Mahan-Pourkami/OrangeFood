@@ -1,13 +1,12 @@
 package Handler;
 
 
+import DAO.CouponDAO;
 import DAO.CourierDAO;
 import DAO.SellerDAO;
 import DAO.UserDAO;
 import DTO.AdminDTO;
-import Exceptions.ForbiddenroleException;
-import Exceptions.InvalidInputException;
-import Exceptions.InvalidTokenexception;
+import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.Headers;
@@ -23,6 +22,8 @@ public class AdminHandler implements HttpHandler {
     UserDAO userDAO = new UserDAO();
     SellerDAO sellerDAO = new SellerDAO();
     CourierDAO courierDAO = new CourierDAO();
+    CouponDAO couponDAO = new CouponDAO();
+
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {
@@ -40,15 +41,18 @@ public class AdminHandler implements HttpHandler {
                     break;
 
                 case "POST":
-                    //TODO
+                    System.out.println("POST request received");
+                    response = handlePostRequest(exchange,paths);
                     break;
 
                 case "PUT":
-                    //TODO
+                    System.out.println("PUT request received");
+                    response = handlePutRequest(exchange,paths);
                     break;
 
                 case "DELETE":
-                    //TODO
+                    System.out.println("DELETE request received");
+                    response = handleDeleteRequest(exchange,paths);
                     break;
 
                 case "PATCH" :
@@ -56,6 +60,11 @@ public class AdminHandler implements HttpHandler {
                     response = handlePatchRequest(exchange,paths);
                     break;
 
+                default:
+                    System.out.println("Unsupported request method");
+                    response = generate_error("Unsupported request method");
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(405, response.getBytes().length);
             }
         }
         catch (Exception e){
@@ -63,21 +72,135 @@ public class AdminHandler implements HttpHandler {
         }
 
         finally {
-
             send_Response(exchange,response);
         }
     }
 
+
+    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException {
+
+        String response = "";
+        int http_code = 200;
+        JSONObject json = getJsonObject(exchange);
+
+
+        if(paths.length == 3 && paths[2].equals("coupons")){
+
+            try{
+                String token = JwtUtil.get_token_from_server(exchange);
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                AdminDTO.Create_coupon_request req = new AdminDTO.Create_coupon_request(json, couponDAO);
+                req.submit_coupon();
+                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO,json.getString("coupon_code"));
+                response = res.getResponse();
+                http_code = 201;
+            }
+            catch (InvalidInputException e){
+                response = generate_error(e.getMessage());
+                http_code = 400;
+            }
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+
+            catch (DuplicatedItemexception e){
+                response = generate_error(e.getMessage());
+                http_code = 409;
+            }
+
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+
+
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+
+
+        return  response;
+    }
+
+
+    private String handlePutRequest(HttpExchange exchange , String [] paths) throws IOException {
+
+        String response = "";
+        int http_code = 200;
+        JSONObject jsonObject = getJsonObject(exchange);
+        String token = JwtUtil.get_token_from_server(exchange);
+
+        if(paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                AdminDTO.Update_coupon_request update_req = new AdminDTO.Update_coupon_request(jsonObject, couponDAO, coupon_id);
+                AdminDTO.Create_coupon_response update_res = new AdminDTO.Create_coupon_response(couponDAO, couponDAO.getCoupon(coupon_id).getCode());
+                response = update_res.getResponse();
+                http_code = 200;
+
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid input");
+                http_code = 400;
+            }
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (DuplicatedItemexception e){
+                response = generate_error(e.getMessage());
+                http_code = 409;
+            }
+
+        }
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+
+        return  response;
+    }
+
+
+
     private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException {
 
-        UserDAO userDAO = new UserDAO();
+
         String response = "";
         int http_code = 200 ;
+        String token = JwtUtil.get_token_from_server(exchange);
         if(paths.length == 3 && paths[2].equals("users")){
 
             try{
-
-             String token = JwtUtil.get_token_from_server(exchange);
 
             if(!JwtUtil.validateToken(token)){
                 throw new InvalidTokenexception();
@@ -105,6 +228,75 @@ public class AdminHandler implements HttpHandler {
 
         }
 
+        else if (paths.length == 3 && paths[2].equals("coupons")){
+
+            try{
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                List<Coupon> coupons = couponDAO.getAllCoupons();
+                AdminDTO.Get_coupons_response getcoupons = new AdminDTO.Get_coupons_response(coupons);
+                response = getcoupons.getResponse();
+                http_code = 200;
+            }
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+
+        }
+
+        else if (paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                Coupon coupon = couponDAO.getCoupon(coupon_id);
+
+                if(coupon == null){
+                    throw new NosuchItemException();
+                }
+
+                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, coupon.getCode());
+                response = res.getResponse();
+                http_code = 200;
+            }
+
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid coupon id");
+                http_code = 400;
+            }
+
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+
+            catch (NosuchItemException e){
+                response = generate_error("Coupon not found");
+                http_code = 404;
+            }
+        }
+
         Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.getBytes().length);
@@ -116,6 +308,66 @@ public class AdminHandler implements HttpHandler {
 
         return  response;
     }
+
+
+    private String handleDeleteRequest(HttpExchange exchange , String [] paths) throws IOException {
+
+        String response = "";
+        int http_code = 200 ;
+        String token = JwtUtil.get_token_from_server(exchange);
+
+        if(paths.length == 4 && paths[2].equals("coupons")){
+
+            try{
+                Long coupon_id = Long.parseLong(paths[3]);
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                Coupon coupon = couponDAO.getCoupon(coupon_id);
+                if (coupon == null) {
+                    throw new NosuchItemException();
+                }
+
+                couponDAO.deleteCoupon(coupon_id);
+                http_code = 200;
+                response = generate_msg("Coupon deleted successfully");
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error("Invalid coupon id");
+                http_code = 400;
+            }
+
+            catch (InvalidTokenexception e){
+                response = generate_error(e.getMessage());
+                http_code = 401;
+            }
+            catch (ForbiddenroleException e){
+                response = generate_error(e.getMessage());
+                http_code = 403;
+            }
+            catch (NosuchItemException e){
+                response = generate_error("Coupon not found");
+                http_code = 404;
+            }
+        }
+
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(http_code, response.length());
+
+        try (OutputStream os = exchange.getResponseBody()){
+            os.write(response.getBytes());
+        }
+
+
+        return response;
+    }
+
+
 
     private String handlePatchRequest(HttpExchange exchange , String [] paths) throws IOException {
 
