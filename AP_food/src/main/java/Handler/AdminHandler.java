@@ -14,7 +14,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.io.*;
 import java.util.List;
 
@@ -61,6 +60,11 @@ public class AdminHandler implements HttpHandler {
                     response = handlePatchRequest(exchange,paths);
                     break;
 
+                default:
+                    System.out.println("Unsupported request method");
+                    response = generate_error("Unsupported request method");
+                    exchange.getResponseHeaders().set("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(405, response.getBytes().length);
             }
         }
         catch (Exception e){
