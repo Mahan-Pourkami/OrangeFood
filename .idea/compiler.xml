@@ -11,5 +11,8 @@
         <module name="AP_food (1)" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="AP_food" target="23" />
+    </bytecodeTargetLevel>
   </component>
 </project>
