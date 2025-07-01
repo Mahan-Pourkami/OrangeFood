@@ -2,10 +2,10 @@ package Exceptions;
 
 import java.io.IOException;
 
-public class ForbiddenroleException extends IOException {
+public class ForbiddenroleException extends OrangeException {
     public ForbiddenroleException() {
 
-        super("Forbidden request");
+        super("Forbidden request",403);
 
     }
 }

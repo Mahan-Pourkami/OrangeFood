@@ -1,8 +1,9 @@
 package Exceptions;
 
-public class EmailException extends Exception {
+public class EmailException extends OrangeException {
+
     public EmailException() {
 
-        super("Email Already exists");
+        super("Email Already exists", 409);
     }
 }

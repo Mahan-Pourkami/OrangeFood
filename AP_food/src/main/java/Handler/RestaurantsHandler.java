@@ -97,32 +97,11 @@ public class RestaurantsHandler implements HttpHandler {
                 response = restaurant_response.response();
                 http_code = 200;
 
-            } catch (ForbiddenroleException e) {
-
-                response = generate_error("Forbidden request");
-                http_code = 403;
-
-            } catch (InvalidTokenexception e) {
-
-                response = generate_error("Unauthorized request");
-                http_code = 401;
-
-            } catch (DuplicatedUserexception e) {
-
-                response = generate_error("Conflict request");
-                http_code = 409;
-
-            } catch (UnsupportedMediaException e) {
-
-                response = generate_error("Unsupported media type");
-                http_code = 415;
-
-            } catch (InvalidInputException e) {
-
-                response = generate_error("Invalid " + invalid_input_restaurant(jsonobject));
-                http_code = 400 ;
             }
-
+            catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
             finally {
 
                 Headers headers = exchange.getResponseHeaders();
@@ -160,21 +139,15 @@ public class RestaurantsHandler implements HttpHandler {
 
 
             }
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code = 401;
 
+            catch (IllegalArgumentException e) {
+                response = generate_error("Invalid price");
+                http_code = 400;
             }
 
-            catch (ForbiddenroleException e) {
-                response = generate_error("Forbidden request");
-                http_code = 403;
-            }
-
-            catch (DuplicatedItemexception e){
-
-                response = generate_error("Conflict request");
-                http_code = 409;
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
 
             finally {
@@ -225,27 +198,10 @@ public class RestaurantsHandler implements HttpHandler {
                 http_code = 200;
             }
 
-            catch (InvalidInputException e) {
-                response = generate_error("Invalid title");
-                http_code = 400;
-            }
+            catch (OrangeException e){
 
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e) {
-                response = generate_error("Forbidden request");
-                http_code = 403;
-            }
-            catch (NosuchRestaurantException e) {
-                response = generate_error("No such restaurant found");
-                http_code = 404;
-            }
-
-            catch (DuplicatedItemexception e){
-                response = generate_error("Conflict request");
-                http_code = 409;
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
 
             finally {
@@ -293,18 +249,11 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(404, response.getBytes().length);
             }
         }
-        catch (NosuchRestaurantException e) {
-            response = generate_error("No restaurant found");
+        catch (OrangeException e) {
+            response = generate_error(e.getMessage());
             Headers headers = exchange.getResponseHeaders();
             headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(405, response.getBytes().length);
-
-        }
-        catch (InvalidTokenexception e) {
-            response = generate_error("Unauthorized request");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(401, response.getBytes().length);
+            exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
         }
         return response;
     }
@@ -350,39 +299,17 @@ public class RestaurantsHandler implements HttpHandler {
 
 
         catch (NumberFormatException e) {
-                response = generate_error("Invalid Input");
+            response = generate_error("Invalid Input");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(400, response.getBytes().length);
+        }
+
+        catch (OrangeException e) {
+                response = generate_error(e.getMessage());
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(400, response.getBytes().length);
-        }
-
-        catch(InvalidTokenexception e){
-
-            response = generate_error("Unauthorized request");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(401, response.getBytes().length);
-        }
-
-        catch(ForbiddenroleException e){
-            response = generate_error("Forbidden request");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(403, response.getBytes().length);
-        }
-
-        catch(NosuchRestaurantException e){
-            response = generate_error("No restaurant found");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(404, response.getBytes().length);
-        }
-
-        catch(UnsupportedMediaException e){
-            response = generate_error("Unsupported media type");
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(415, response.getBytes().length);
+                exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
         }
 
         catch(Exception e){
@@ -442,29 +369,10 @@ public class RestaurantsHandler implements HttpHandler {
                 http_code = 400;
 
             }
-
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code=401;
-
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
-            catch (ForbiddenroleException e){
-
-                response = generate_error("Forbidden request");
-                http_code=403;
-
-            }
-
-            catch (NosuchRestaurantException e){
-                response = generate_error("Food not found");
-                http_code=404;
-            }
-
-            catch (DuplicatedItemexception e){
-                response = generate_error("conflict request");
-                http_code=409;
-            }
-
             finally {
 
                 Headers headers = exchange.getResponseHeaders();
@@ -525,22 +433,10 @@ public class RestaurantsHandler implements HttpHandler {
                 response = generate_error("Invalid item_id");
                 http_code=400;
             }
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code=401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error("Forbidden request");
-                http_code=403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("not found");
-                http_code=404;
-            }
 
-            catch (DuplicatedItemexception e){
-                response = generate_error("conflict request");
-                http_code=409;
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code=e.http_code;
             }
 
             finally {
@@ -602,17 +498,10 @@ public class RestaurantsHandler implements HttpHandler {
                 http_code = 200 ;
             }
 
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code=401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error("Forbidden request");
-                http_code=403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Food not found");
-                http_code=404;
+            catch (OrangeException e){
+
+                response = generate_error(e.getMessage());
+                http_code=e.http_code;
             }
 
             finally {
@@ -653,17 +542,9 @@ public class RestaurantsHandler implements HttpHandler {
                 http_code = 200;
 
             }
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code=401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error("Forbidden request");
-                http_code=403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Food not found");
-                http_code=404;
+            catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code=e.http_code;
             }
             finally {
                 Headers headers = exchange.getResponseHeaders();
@@ -709,17 +590,9 @@ public class RestaurantsHandler implements HttpHandler {
                 response = generate_msg("Item with Id " + food_id + " deleted from menu with title :" + menu_title + " successfully");
                 http_code = 200;
             }
-            catch (InvalidTokenexception e) {
-                response = generate_error("Unauthorized request");
-                http_code=401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error("Forbidden request");
-                http_code=403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Food not found");
-                http_code=404;
+            catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code=e.http_code;
             }
             finally {
 

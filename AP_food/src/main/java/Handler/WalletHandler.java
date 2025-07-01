@@ -4,6 +4,7 @@ import DAO.BuyerDAO;
 import Exceptions.ForbiddenroleException;
 import Exceptions.InvalidInputException;
 import Exceptions.InvalidTokenexception;
+import Exceptions.OrangeException;
 import Model.Buyer;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.HttpExchange;
@@ -77,18 +78,9 @@ public class WalletHandler implements HttpHandler {
                 http_code = 200;
                 response = generate_msg("Your wallet toned up successfully");
             }
-
-           catch(InvalidInputException e){
+           catch(OrangeException e){
                response = generate_error(e.getMessage());
-               http_code = 400;
-           }
-           catch(InvalidTokenexception e){
-               response = generate_error(e.getMessage());
-               http_code = 401;
-           }
-           catch(ForbiddenroleException e){
-               response = generate_error(e.getMessage());
-               http_code = 403;
+               http_code = e.http_code;
            }
         }
 

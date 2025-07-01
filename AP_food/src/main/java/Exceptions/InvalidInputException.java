@@ -1,9 +1,9 @@
 package Exceptions;
 
-import java.io.IOException;
 
-public class InvalidInputException extends IOException {
+public class InvalidInputException extends OrangeException{
     public InvalidInputException(String message) {
-        super("Invalid " + message);
+
+        super("Invalid " + message , 400);
     }
 }
