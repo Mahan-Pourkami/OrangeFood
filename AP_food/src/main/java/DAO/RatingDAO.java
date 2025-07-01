@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Coupon;
 import Model.Rating;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -86,7 +85,7 @@ public class RatingDAO {
             transaction.commit();
         }
         catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
+            if(transaction!=null)  transaction.rollback();
             throw new RuntimeException("failed to update rating",e);
         }
     }

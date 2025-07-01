@@ -101,26 +101,11 @@ public class AdminHandler implements HttpHandler {
                 response = res.getResponse();
                 http_code = 201;
             }
-            catch (InvalidInputException e){
-                response = generate_error(e.getMessage());
-                http_code = 400;
-            }
-            catch (InvalidTokenexception e){
-                response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
 
-            catch (DuplicatedItemexception e){
-                response = generate_error(e.getMessage());
-                http_code = 409;
-            }
+            catch (OrangeException e){
 
-            catch (Exception e){
-                e.printStackTrace();
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
         }
 
@@ -167,17 +152,9 @@ public class AdminHandler implements HttpHandler {
                 response = generate_error("Invalid input");
                 http_code = 400;
             }
-            catch (InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (DuplicatedItemexception e){
-                response = generate_error(e.getMessage());
-                http_code = 409;
+                http_code = e.http_code;
             }
 
         }
@@ -281,19 +258,9 @@ public class AdminHandler implements HttpHandler {
                 response = generate_error("Invalid coupon id");
                 http_code = 400;
             }
-
-            catch (InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-
-            catch (NosuchItemException e){
-                response = generate_error("Coupon not found");
-                http_code = 404;
+                http_code = e.http_code;
             }
         }
 
@@ -304,7 +271,6 @@ public class AdminHandler implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
-
 
         return  response;
     }
@@ -341,18 +307,9 @@ public class AdminHandler implements HttpHandler {
                 response = generate_error("Invalid coupon id");
                 http_code = 400;
             }
-
-            catch (InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Coupon not found");
-                http_code = 404;
+                http_code = e.http_code;
             }
         }
 
@@ -395,9 +352,10 @@ public class AdminHandler implements HttpHandler {
                 String phone = "09" + paths[3];
                 User user = userDAO.getUserByPhone(phone);
 
-                if (user instanceof Buyer) {
-                    throw new ForbiddenroleException();
+                if (user == null ) {
+                    throw new NosuchItemException("User not found");
                 }
+
                 if (user.role.equals(Role.seller)) {
                     Seller seller = sellerDAO.getSeller(phone);
                     seller.setStatue(status);
@@ -416,21 +374,9 @@ public class AdminHandler implements HttpHandler {
                 http_code = 200;
 
             }
-            catch (InvalidInputException e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 400;
-            }
-
-            catch (InvalidTokenexception e){
-                response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (IllegalArgumentException e){
-                response = generate_error("Invalid status");
+                http_code = e.http_code;
             }
         }
 

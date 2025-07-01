@@ -86,25 +86,11 @@ public class RatingHandler implements HttpHandler {
                 http_code = 200;
                 response = generate_msg("Rating submitted");
             }
-            catch (InvalidInputException e ) {
-                response = generate_error(e.getMessage());
-                http_code = 400;
-            }
-            catch (InvalidTokenexception e) {
-                response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e) {
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error(e.getMessage());
-                http_code = 404;
-            }
-            catch (UnsupportedMediaException e) {
-                response = generate_error(e.getMessage());
-                http_code = 415;
+
+            catch (OrangeException e){
+
+                response = generate_msg(e.getMessage());
+                http_code = e.http_code;
             }
         }
 
@@ -157,26 +143,9 @@ public class RatingHandler implements HttpHandler {
                 http_code = 400;
             }
 
-            catch (InvalidInputException e ) {
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 400;
-            }
-            catch (InvalidTokenexception e) {
-                response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e) {
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-
-            catch (NosuchItemException e){
-                response = generate_error("Comment not found");
-                http_code = 404;
-            }
-            catch (UnsupportedMediaException e) {
-                response = generate_error(e.getMessage());
-                http_code = 415;
+                http_code = e.http_code;
             }
         }
 
@@ -216,14 +185,9 @@ public class RatingHandler implements HttpHandler {
                 response = generate_error("Invalid item id");
                 http_code = 400;
             }
-
-            catch(InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
+                http_code = e.http_code;
             }
         }
         else if (paths.length == 3){
@@ -246,17 +210,9 @@ public class RatingHandler implements HttpHandler {
                 http_code = 400;
             }
 
-            catch(InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Rating not found");
-                http_code = 404;
+                http_code = e.http_code;
             }
         }
         exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -281,7 +237,7 @@ public class RatingHandler implements HttpHandler {
                 Rating rating = ratingDAO.getRating(comment_id);
 
                 if (rating == null) {
-                    throw new NosuchItemException();
+                    throw new NosuchItemException("Rating not found");
                 }
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
@@ -304,17 +260,9 @@ public class RatingHandler implements HttpHandler {
                 response = generate_error("Invalid item id");
                 http_code = 400;
              }
-            catch(InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            }
-            catch (NosuchItemException e){
-                response = generate_error("Rating not found");
-                http_code = 404;
+                http_code = e.http_code;
             }
         }
 

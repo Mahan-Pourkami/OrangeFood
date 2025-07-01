@@ -2,8 +2,8 @@ package Exceptions;
 
 import java.io.IOException;
 
-public class DuplicatedItemexception extends IOException {
+public class DuplicatedItemexception extends OrangeException {
     public DuplicatedItemexception() {
-        super("Conflict request");
+        super("Conflict request" , 409);
     }
 }

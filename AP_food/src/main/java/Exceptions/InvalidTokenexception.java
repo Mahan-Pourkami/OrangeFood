@@ -1,10 +1,10 @@
 package Exceptions;
 
-import java.io.IOException;
 
-public class InvalidTokenexception extends IOException {
+
+public class InvalidTokenexception extends OrangeException {
     public InvalidTokenexception() {
 
-        super("Unauthorized request");
+        super("Unauthorized request",401);
     }
 }

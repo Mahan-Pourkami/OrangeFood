@@ -90,18 +90,12 @@ public class FavoriteHandler implements HttpHandler {
                     restaurantsArray.put(restaurantJson);
 
                 }
-
                 response = restaurantsArray.toString();
                 httpCode = 200;
-            } catch (InvalidTokenexception e) {
+            }
+            catch (OrangeException e) {
                 response = generate_error(e.getMessage());
-                httpCode = 401;
-            } catch (ForbiddenroleException e) {
-                response = generate_error(e.getMessage());
-                httpCode = 403;
-            } catch (Exception e) {
-                response = generate_error(e.getMessage());
-                httpCode = 500;
+                httpCode = e.http_code;
             }
         } else {
             response = generate_error("Invalid path");
@@ -160,23 +154,9 @@ public class FavoriteHandler implements HttpHandler {
                 http_code = 400;
             }
 
-
-            catch (InvalidTokenexception e){
+            catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            }
-            catch (ForbiddenroleException e){
-                response = generate_error(e.getMessage());
-                http_code = 403 ;
-            }
-            catch (NosuchRestaurantException e){
-                response = generate_error(e.getMessage());
-                http_code = 404 ;
-            }
-
-            catch (DuplicatedItemexception e){
-                response = generate_error(e.getMessage());
-                http_code = 409 ;
+                http_code = e.http_code;
             }
 
             catch (Exception e){
@@ -226,15 +206,9 @@ public class FavoriteHandler implements HttpHandler {
             } catch (NumberFormatException e) {
                 response = generate_error("Invalid restaurant id");
                 http_code = 400;
-            } catch (InvalidTokenexception e) {
+            } catch (OrangeException e){
                 response = generate_error(e.getMessage());
-                http_code = 401;
-            } catch (ForbiddenroleException e) {
-                response = generate_error(e.getMessage());
-                http_code = 403;
-            } catch (NosuchRestaurantException e) {
-                response = generate_error(e.getMessage());
-                http_code = 404;
+                http_code = e.http_code;
             }
         }
         else {
