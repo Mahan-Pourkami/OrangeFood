@@ -196,6 +196,13 @@ public class AuthHandler implements HttpHandler {
                     exchange.sendResponseHeaders(400, response.length());
                 }
             }
+            catch (IllegalArgumentException e){
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error(e.getMessage());
+                exchange.sendResponseHeaders(400, response.getBytes().length);
+            }
+
             catch (UnsupportedMediaException e){
 
                 Headers headers = exchange.getResponseHeaders();
