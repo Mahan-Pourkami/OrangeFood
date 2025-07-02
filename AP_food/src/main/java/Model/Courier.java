@@ -22,6 +22,7 @@ public class Courier extends User {
 
     public Courier(String phone , String fullname, String password , String email , String address , String prof) {
         super(phone,fullname,password,email,Role.courier,address,prof);
+        this.statue = Userstatue.requested;
     }
 
     public Userstatue getStatue() {

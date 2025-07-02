@@ -29,6 +29,7 @@ public class Seller extends User  {
     public Seller(String phone,String fullname ,String password,String email ,String address , String prof) {
 
         super(phone,fullname,password,email,Role.seller,address,prof);
+        this.statue = Userstatue.requested;
     }
 
 

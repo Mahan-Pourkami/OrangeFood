@@ -2,7 +2,6 @@ package DAO;
 
 import Model.Bankinfo;
 import Model.Courier;
-import Model.Seller;
 import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;

@@ -16,11 +16,12 @@ public class Server {
 
     public static void main(String[] args) {
 
-
         try {
+
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
             server.setExecutor(executor);
 
             server.createContext("/auth" , new AuthHandler());
@@ -30,6 +31,7 @@ public class Server {
             server.createContext("/rating" , new RatingHandler());
             server.createContext("/wallet" , new WalletHandler());
             server.createContext("/coupon" , new CouponHandler());
+
 
 
 
