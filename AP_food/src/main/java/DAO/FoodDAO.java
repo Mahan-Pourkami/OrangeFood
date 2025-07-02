@@ -150,7 +150,6 @@ public class FoodDAO {
             if(food.getRestaurant().getId().equals(restaurantId) && food.getMenuTitle().equals(menu_title)) {
                 result.add(food);
             }
-
         }
         return result;
     }
@@ -167,7 +166,7 @@ public class FoodDAO {
         return null;
     }
 
-    public void deletfrommenu (String menu_title , long restaurantId) {
+    public void delet_from_menu(String menu_title , long restaurantId) {
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
             if(food.getMenuTitle()!=null && food.getMenuTitle().equals(menu_title) && food.getRestaurantId().equals(restaurantId)) {

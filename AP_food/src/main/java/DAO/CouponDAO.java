@@ -1,5 +1,6 @@
 package DAO;
 
+import Exceptions.InvalidInputException;
 import Model.Coupon;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -114,6 +115,16 @@ public class CouponDAO {
             }
         }
         return null;
+    }
+
+    public void use_Coupon(long id) throws InvalidInputException {
+        Coupon coupon = getCoupon(id);
+        if(coupon.getUser_counts()<=0){
+            throw new InvalidInputException("Coupon");
+        }
+        coupon.setUser_counts(coupon.getUser_counts() - 1);
+        updateCoupon(coupon);
+
     }
 
 }

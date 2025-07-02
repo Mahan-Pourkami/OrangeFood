@@ -29,6 +29,8 @@ public class Server {
             server.createContext("/admin",new AdminHandler());
             server.createContext("/rating" , new RatingHandler());
             server.createContext("/wallet" , new WalletHandler());
+            server.createContext("/coupon" , new CouponHandler());
+
 
 
             server.start();

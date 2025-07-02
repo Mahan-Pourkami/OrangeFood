@@ -9,7 +9,6 @@ import Model.Food;
 import Model.Restaurant;
 import Model.Seller;
 import Utils.JwtUtil;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -536,7 +535,7 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
                 restaurant.menu_titles.remove(menu_title);
-                foodDAO.deletfrommenu(menu_title,res_id);
+                foodDAO.delet_from_menu(menu_title,res_id);
                 restaurantDAO.updateRestaurant(restaurant);
                 response = generate_msg("menu with title " + menu_title + " deleted successfully");
                 http_code = 200;

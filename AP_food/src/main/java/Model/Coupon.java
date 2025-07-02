@@ -65,12 +65,12 @@ public class Coupon {
                 LocalDateTime end = LocalDateTime.parse(end_time, DATE_FORMATTER);
                 LocalDateTime now = LocalDateTime.now();
                 return now.isAfter(start) && now.isBefore(end) &&
-                        this.user_counts > 0 && price >= this.min_price;
+                        this.user_counts >= 0 && price >= this.min_price;
             } catch (DateTimeParseException e) {
                 return false;
             }
         }
-        return this.user_counts > 0 && price >= this.min_price;
+        return this.user_counts >= 0 && price >= this.min_price;
     }
 
     public void set_start_time(String start_time) {
