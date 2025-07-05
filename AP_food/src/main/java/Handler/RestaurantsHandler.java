@@ -131,7 +131,7 @@ public class RestaurantsHandler implements HttpHandler {
 
             RestaurantDTO.Add_Item_request req = new RestaurantDTO.Add_Item_request(jsonobject,res_id);
             System.out.println("Item added");
-            RestaurantDTO.Add_item_response res = new RestaurantDTO.Add_item_response(jsonobject.getString("name"),res_id);
+            RestaurantDTO.Get_item_response res = new RestaurantDTO.Get_item_response(jsonobject.getString("name"),res_id);
             System.out.println("Response received");
             response = res.response();
             http_code = 200;
@@ -356,7 +356,7 @@ public class RestaurantsHandler implements HttpHandler {
 
 
                 RestaurantDTO.Update_Item_request updateItemRequest = new RestaurantDTO.Update_Item_request(jsonObject, food_id);
-                RestaurantDTO.Add_item_response updateItemrepsonse = new RestaurantDTO.Add_item_response(jsonObject.getString("name"), res_id);
+                RestaurantDTO.Get_item_response updateItemrepsonse = new RestaurantDTO.Get_item_response(jsonObject.getString("name"), res_id);
                 response = updateItemrepsonse.response();
                 http_code = 200 ;
 

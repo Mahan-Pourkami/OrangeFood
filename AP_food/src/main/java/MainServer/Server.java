@@ -24,6 +24,7 @@ public class Server {
 
             server.setExecutor(executor);
 
+            
             server.createContext("/auth" , new AuthHandler());
             server.createContext("/restaurants",new RestaurantsHandler());
             server.createContext("/favorites" , new FavoriteHandler());
