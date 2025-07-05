@@ -7,7 +7,6 @@ import Exceptions.NosuchRestaurantException;
 import Exceptions.UnsupportedMediaException;
 import Model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -226,7 +225,7 @@ public class RestaurantDTO {
         }
     }
 
-    public static class Add_item_response {
+    public static class Get_item_response {
 
         FoodDAO foodDAO = new FoodDAO() ;
 
@@ -239,7 +238,7 @@ public class RestaurantDTO {
         public List<String> keywords ;
         private long res_id;
 
-        public Add_item_response(String name , long res_id){
+        public Get_item_response(String name , long res_id){
 
             Food food = foodDAO.findFoodByName(name,res_id);
             this.res_id = res_id;
