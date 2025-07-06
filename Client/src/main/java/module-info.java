@@ -10,6 +10,6 @@ module org.example.client {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 
-    opens org.example.client to javafx.fxml;
-    exports org.example.client;
+    opens org to javafx.fxml;
+    exports org;
 }
