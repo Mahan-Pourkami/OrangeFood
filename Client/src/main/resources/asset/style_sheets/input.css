@@ -1,0 +1,60 @@
+.light-peach-glass-pane {
+    /* Solid light peach color */
+    -fx-background-color: #FFE5B4;  /* Light Peach */
+    
+    /* Glass effect styling */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10, 0, 0, 0);
+    
+    /* Optional: Adds subtle inner glow for more glass-like appearance */
+    -fx-background-insets: 0;
+}
+
+/* More transparent version */
+.light-peach-glass-pane-translucent {
+    -fx-background-color: rgba(255, 229, 180, 0.85);  /* Light Peach with 85% opacity */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0),
+                innershadow(gaussian, rgba(255, 255, 255, 0.3), 15, 0, 0, 0);
+}
+
+.glass-gradient-button {
+    /* Light gradient with transparency */
+    -fx-background-color: linear-gradient(to bottom, 
+        rgba(255, 235, 214, 0.9), 
+        rgba(255, 216, 177, 0.9));
+    
+    /* Text styling */
+    -fx-text-fill: #8B4513;
+    -fx-font-weight: bold;
+    
+    /* Glass effect */
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+    
+    /* Hover effect */
+    -fx-cursor: hand;
+}
+.glass-gradient-button:hover {
+    -fx-background-color: linear-gradient(to bottom, 
+        rgba(255, 216, 177, 0.95), 
+        rgba(255, 192, 141, 0.95));
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 3);
+}
+
+/* Pressed effect */
+.glass-gradient-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, 
+        rgba(255, 192, 141, 0.9), 
+        rgba(255, 160, 122, 0.9));
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 1);
+}
