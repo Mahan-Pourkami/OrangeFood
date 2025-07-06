@@ -12,4 +12,6 @@ module org.example.client {
 
     opens org to javafx.fxml;
     exports org;
+    exports Controller;
+    opens Controller to javafx.fxml;
 }
