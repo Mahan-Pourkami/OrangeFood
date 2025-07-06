@@ -8,13 +8,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class OrangeApp extends Application {
-    @Override
 
+    @Override
     public void start(Stage stage) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        Scene scene = new Scene(fxmlLoader.load(), 1400, 900);
+        stage.setTitle("Orange Food");
         stage.setScene(scene);
         stage.show();
     }

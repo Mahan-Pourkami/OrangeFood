@@ -1,16 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="Controller.LoginController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <PasswordField layoutX="283.0" layoutY="322.0" stylesheets="../asset/style_sheets/input.css">
+            <styleClass>
+                <String fx:value="light-peach-glass-pane" />
+                <String fx:value="light-peach-glass-pane-translucent" />
+            </styleClass>
+        </PasswordField>
+        <Label layoutX="223.0" layoutY="326.0" text="password" />
+        <TextField fx:id="phonefield" accessibleRole="BUTTON" layoutX="283.0" layoutY="277.0" prefHeight="25.0" prefWidth="149.0" stylesheets="../asset/style_sheets/input.css">
+            <styleClass>
+                <String fx:value="light-peach-glass-pane-translucent" />
+                <String fx:value="light-peach-glass-pane-translucent" />
+                <String fx:value="light-peach-glass-pane" />
+            </styleClass>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+        </TextField>
+        <Label layoutX="223.0" layoutY="282.0" text="phone" />
+        <Hyperlink layoutX="577.0" layoutY="311.0" prefHeight="23.0" prefWidth="95.0" text="Create one" textFill="WHITE" />
+        <Label layoutX="448.0" layoutY="314.0" text="don't have an account ?" />
+        <Label layoutX="283.0" layoutY="23.0" prefHeight="98.0" prefWidth="818.0" text="Welcome to Orange Food !">
+            <font>
+                <Font name="System Bold" size="58.0" />
+            </font>
+            <textFill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="0.9736841917037964" green="0.7464912533760071" blue="0.4868420958518982" />
+                            </color>
+                        </Stop>
+                        <Stop offset="0.006711409395973154">
+                            <color>
+                                <Color red="1.0" green="0.9373456835746765" blue="0.8657407164573669" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color red="1.0" green="0.9935185313224792" blue="0.9861111044883728" />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </textFill>
+        </Label>
+        <ImageView fitHeight="269.0" fitWidth="342.0" layoutX="770.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true" rotate="18.4">
+            <image>
+                <Image url="@../asset/images/Pizza_PNG_Vector_Clipart.png" />
+            </image>
+            <effect>
+                <Blend />
+            </effect>
+        </ImageView>
+        <Label layoutX="129.0" layoutY="129.0" prefHeight="27.0" prefWidth="188.0" text="Login">
+            <font>
+                <Font name="System Bold" size="44.0" />
+            </font>
+            <textFill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="0.9736841917037964" green="0.7464912533760071" blue="0.4868420958518982" />
+                            </color>
+                        </Stop>
+                        <Stop offset="0.006711409395973154">
+                            <color>
+                                <Color red="1.0" green="0.9373456835746765" blue="0.8657407164573669" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color red="1.0" green="0.9935185313224792" blue="0.9861111044883728" />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </textFill>
+        </Label>
+        <Button layoutX="170.0" layoutY="386.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Login" />
+        <Button layoutX="338.0" layoutY="386.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
+      <ImageView fitHeight="282.0" fitWidth="260.0" layoutX="1023.0" layoutY="259.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/Daco_4436871.png" />
+         </image></ImageView>
+      <ImageView fitHeight="489.0" fitWidth="489.0" layoutX="306.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/ai-generated-3d-delivery-cartoon-character-with-scooter-isolated-on-transparent-background-free-png.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="result" layoutX="324.0" layoutY="442.0" textFill="#dd0000" />
+    </children>
+    <styleClass>
+        <String fx:value="glass-gradient-pane-translucent" />
+        <String fx:value="glass-gradient-pane-translucent" />
+    </styleClass>
+   <stylesheets>
+      <URL value="@../asset/style_sheets/input.css" />
+      <URL value="@../asset/style_sheets/style.css" />
+   </stylesheets>
+</Pane>
