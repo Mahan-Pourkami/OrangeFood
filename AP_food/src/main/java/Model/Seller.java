@@ -7,8 +7,6 @@ import jakarta.persistence.*;
 
 public class Seller extends User  {
 
-    @Column(name = "address", nullable = true)
-    private String address;
 
     @Column(name = "brand", nullable = true)
     private String brand_name;
@@ -32,17 +30,6 @@ public class Seller extends User  {
         this.statue = Userstatue.requested;
     }
 
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        if (address == null || address.isEmpty()) {
-            throw new IllegalArgumentException("The address cannot be empty!");
-        }
-        this.address = address;
-    }
 
     public String getBrand_name() {
         return brand_name;

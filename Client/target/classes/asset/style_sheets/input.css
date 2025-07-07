@@ -56,3 +56,13 @@
         rgba(255, 160, 122, 0.9));
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 1);
 }
+
+.text-field:focused {
+    -fx-background-color: #FFB347; /* Dark peach */
+    -fx-text-fill: #FFFF00; /* Yellow text */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}

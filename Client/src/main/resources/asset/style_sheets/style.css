@@ -28,3 +28,19 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
                 innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
 }
+
+/* Add this to your input.css */
+.wobbly-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.1, 0, 0);
+    -fx-transition: all 0.5s ease-in-out;
+}
+
+.wobbly-image:hover {
+    -fx-translate-x: 2px;
+    -fx-translate-y: 2px;
+}
+
+.wobbly-image:pressed {
+    -fx-translate-x: -2px;
+    -fx-translate-y: -2px;
+}
