@@ -32,6 +32,7 @@ public class Server {
             server.createContext("/rating" , new RatingHandler());
             server.createContext("/wallet" , new WalletHandler());
             server.createContext("/coupon" , new CouponHandler());
+            server.createContext("/vendors" , new VendorHandler());
 
 
 
