@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantDAO {
@@ -94,6 +95,19 @@ public class RestaurantDAO {
             }
             throw new UserDAO.DataAccessException("Failed to retrieve Restaurants", e);
         }
+    }
+
+    public List<Restaurant> findbyfilters(String name) {
+
+        List<Restaurant> vendors = getAllRestaurants();
+        List<Restaurant> filteredVendors = new ArrayList<Restaurant>();
+        for (Restaurant vendor : vendors) {
+
+            if(vendor.getName().toLowerCase().contains(name.toLowerCase())){
+                filteredVendors.add(vendor);
+            }
+        }
+        return filteredVendors;
     }
 
 }

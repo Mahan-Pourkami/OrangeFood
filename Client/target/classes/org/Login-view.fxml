@@ -128,7 +128,7 @@
         </Label>
         <ImageView fitHeight="269.0" fitWidth="342.0" layoutX="670.0" layoutY="578.0" pickOnBounds="true" preserveRatio="true" rotate="18.4" styleClass="wobbly-image">
             <image>
-                <Image url="@../asset/images/Pizza_PNG_Vector_Clipart.png" />
+                <Image url="@../asset/images/pizza.png" />
             </image>
             <effect>
                 <Blend />
@@ -174,11 +174,11 @@
         <Button layoutX="338.0" layoutY="386.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
       <ImageView fitHeight="282.0" fitWidth="260.0" layoutX="911.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
-            <Image url="@../asset/images/Daco_4436871.png" />
+            <Image url="@../asset/images/hambergur.png" />
          </image></ImageView>
       <ImageView fitHeight="440.0" fitWidth="432.0" layoutX="295.0" layoutY="448.0" pickOnBounds="true" preserveRatio="true" rotate="4.8" styleClass="wobbly-image">
          <image>
-            <Image url="@../asset/images/ai-generated-3d-delivery-cartoon-character-with-scooter-isolated-on-transparent-background-free-png.png" />
+            <Image url="@../asset/images/delivery.png" />
          </image>
       </ImageView>
       <Label fx:id="result" layoutX="324.0" layoutY="442.0" textFill="#dd0000" />
