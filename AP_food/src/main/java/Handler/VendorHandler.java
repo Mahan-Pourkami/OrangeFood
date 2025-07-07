@@ -1,24 +1,25 @@
 package Handler;
 
+import DAO.FoodDAO;
 import DAO.RestaurantDAO;
 import DTO.VendorDTO;
 import Exceptions.ForbiddenroleException;
-import Exceptions.InvalidInputException;
 import Exceptions.InvalidTokenexception;
+import Exceptions.NosuchRestaurantException;
 import Exceptions.OrangeException;
-import Model.Restaurant;
 import Utils.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VendorHandler implements HttpHandler {
 
     RestaurantDAO restaurantDAO = new RestaurantDAO();
+    FoodDAO foodDAO = new FoodDAO();
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {
@@ -30,6 +31,8 @@ public class VendorHandler implements HttpHandler {
         try{
             switch (method) {
                 case "GET":
+                    System.out.println("GET request received");
+                    response = handleGetRequest(exchange,paths);
                     break;
 
                 case "POST":
@@ -47,6 +50,49 @@ public class VendorHandler implements HttpHandler {
             send_Response(exchange, response);
         }
 
+    }
+
+    private String handleGetRequest(HttpExchange exchange, String []paths) throws IOException {
+
+        String response = "";
+        int http_code = 200;
+
+        if(paths.length == 3){
+
+            try{
+                Long res_id = Long.parseLong(paths[2]);
+                String token = JwtUtil.get_token_from_server(exchange);
+
+                if (restaurantDAO.get_restaurant(res_id) == null) {
+                    throw new NosuchRestaurantException();
+                }
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                VendorDTO.See_vendor_menu vendorMenu = new VendorDTO.See_vendor_menu(restaurantDAO, foodDAO, res_id);
+                ObjectMapper mapper = new ObjectMapper();
+                response = mapper.writeValueAsString(vendorMenu);
+                http_code = 200;
+            }
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(http_code, response.length());
+
+            try(OutputStream os = exchange.getResponseBody()){
+                os.write(response.getBytes());
+            }
+        }
+
+        return response;
     }
 
 

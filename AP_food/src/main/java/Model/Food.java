@@ -1,6 +1,7 @@
 package Model;
 
 import DAO.RestaurantDAO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,15 +31,18 @@ public class Food {
 
     @Getter
     @Column(name = "stockQuantity" , nullable = false)
+    @JsonIgnore
     private int supply;
 
     @Column
     private String description;
 
     @Column (name = "menu_title")
+    @JsonIgnore
     private String menuTitle;
 
     @Column (name = "restaurant_id")
+    @JsonIgnore
     private Long restaurantId;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -94,8 +98,11 @@ public class Food {
         this.keywords = keywords;
     }
 
+    @JsonIgnore
     public Restaurant getRestaurant() {
         RestaurantDAO restaurantDAO = new RestaurantDAO();
+
+
         Restaurant restaurant = restaurantDAO.get_restaurant(restaurantId);
         return restaurant;
     }
