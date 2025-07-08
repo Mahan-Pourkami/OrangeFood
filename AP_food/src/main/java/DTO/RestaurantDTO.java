@@ -205,7 +205,8 @@ public class RestaurantDTO {
 
         public Add_Item_request(JSONObject json,long id) throws IOException {
 
-            System.out.println("Done 1");
+
+
             this.name = json.getString("name");
             this.logoBase64 = json.getString("imageBase64");
             this.description = json.getString("description");
@@ -213,7 +214,7 @@ public class RestaurantDTO {
             this.supply = json.getInt("supply");
             System.out.println("Done 3");
             this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
-            System.out.println("Done 2");
+            System.out.println("Done");
 
             if(foodDAO.findFoodByName(name,id)!=null){
               throw new DuplicatedItemexception();
