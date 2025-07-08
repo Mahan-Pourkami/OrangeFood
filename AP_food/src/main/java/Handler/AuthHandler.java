@@ -98,17 +98,12 @@ public class AuthHandler implements HttpHandler {
                     }
 
                 }
-                catch (EmailException e){
+
+                catch (OrangeException e) {
                     response = generate_error(e.getMessage());
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
-                    exchange.sendResponseHeaders(409, response.getBytes().length);
-                }
-                catch (UnsupportedMediaException e){
-                    response = generate_error(e.getMessage());
-                    Headers headers = exchange.getResponseHeaders();
-                    headers.add("Content-Type", "application/json");
-                    exchange.sendResponseHeaders(415, response.getBytes().length);
+                    exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
                 }
             }
 
@@ -410,19 +405,13 @@ public class AuthHandler implements HttpHandler {
 
     private static String invalid_input_update(JSONObject jsonObject) {
 
-        String[] fields = {"full_name", "phone", "email", "role", "address", "profileImageBase64","id"};
+        String[] fields = {"full_name", "phone", "email", "address", "profileImageBase64"};
         for (String field : fields) {
             if (!jsonObject.has(field)) {
                 return field;
             }
         }
 
-        if(jsonObject.getString("role").equals("buyer")
-                && jsonObject.getString("role").equals("seller")
-                && jsonObject.getString("role").equals("courier")) {
-
-            return "role";
-        }
 
         if (!jsonObject.getString("email").isEmpty() && !Validator.validateEmail(jsonObject.getString("email"))) {
             return "email";

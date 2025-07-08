@@ -8,4 +8,9 @@ public class ForbiddenroleException extends OrangeException {
         super("Forbidden request",403);
 
     }
+
+    public ForbiddenroleException(String message) {
+        super(message, 403);
+    }
 }
+

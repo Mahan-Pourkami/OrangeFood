@@ -16,8 +16,8 @@
 /* If you want the glass effect to be more pronounced with transparency */
 .glass-gradient-pane-translucent {
     /* Gradient with transparency */
-    -fx-background-color: linear-gradient(to right, 
-        rgba(255, 218, 185, 0.7),
+    -fx-background-color: linear-gradient(to right,
+    rgba(248, 237, 230, 0.7),
     rgba(214, 156, 130, 0.7),
         rgba(255, 140, 0, 0.7));
     
@@ -43,4 +43,10 @@
 .wobbly-image:pressed {
     -fx-translate-x: -2px;
     -fx-translate-y: -2px;
+}
+
+.button-bar {
+    -fx-background-color: linear-gradient(to right, #401b1b, #840101, #b14411, #3e2e2e);
+    -fx-background-radius: 10px
+;
 }
