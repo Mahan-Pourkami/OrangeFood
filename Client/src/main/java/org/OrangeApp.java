@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -17,6 +18,9 @@ public class OrangeApp extends Application {
 
     @FXML
     private TextField phonefield;
+
+    @FXML
+    private PasswordField passwordfield;
 
     private boolean buttonWasClicked = false;
 

@@ -31,7 +31,6 @@ public class Food {
 
     @Getter
     @Column(name = "stockQuantity" , nullable = false)
-    @JsonIgnore
     private int supply;
 
     @Column
