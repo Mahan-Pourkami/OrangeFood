@@ -47,6 +47,7 @@ public class RestaurantDTO {
             else this.logoBase64 = "default.png";
 
 
+
             this.tax_fee = json.getInt("tax_fee");
             this.additional_fee = json.getInt("additional_fee");
             this.seller_phone = seller_phone;
@@ -220,6 +221,10 @@ public class RestaurantDTO {
               throw new DuplicatedItemexception();
             }
 
+            if(!this.logoBase64.endsWith("png") && !this.logoBase64.endsWith("jpeg") && !this.logoBase64.endsWith("jpg")) {
+                throw new UnsupportedMediaException();
+            }
+
             Food food = new Food(name,id,description,logoBase64,price,supply);
             food.setkeywords(keywords);
             foodDAO.saveFood(food);
@@ -299,6 +304,7 @@ public class RestaurantDTO {
         public List<String> keywords ;
 
         public Update_Item_request(JSONObject json,long id) throws IOException {
+
 
             Food food = foodDAO.getFood(id);
             this.name = json.getString("name");

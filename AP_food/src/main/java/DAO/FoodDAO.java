@@ -1,5 +1,6 @@
 package DAO;
 
+import Exceptions.ForbiddenroleException;
 import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -176,12 +177,26 @@ public class FoodDAO {
         }
     }
 
+    public void add_to_cart(long foodid , int quantity) throws ForbiddenroleException {
+
+        Food food = getFood(foodid);
+
+        if(food.getSupply() - quantity < 0) {
+            throw new ForbiddenroleException("Insufficient food supply");
+        }
+
+        food.setSupply(food.getSupply()-quantity);
+        updateFood(food);
+    }
+
 
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
         }
     }
+
+
 
 
 

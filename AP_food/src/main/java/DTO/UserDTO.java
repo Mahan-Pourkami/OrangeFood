@@ -51,7 +51,7 @@ public class UserDTO {
 
         }
 
-        public void register() throws DuplicatedUserexception {
+        public void register() throws DuplicatedUserexception, InvalidInputException {
 
             if(userDAO.getUserByPhone(phone) == null) {
                 if (role.equals("seller")) {
@@ -190,7 +190,7 @@ public class UserDTO {
         UserDAO userDAO = new UserDAO();
 
 
-       public Userupdateprof(String phone , JSONObject jsonObject ) throws EmailException, UnsupportedMediaException {
+       public Userupdateprof(String phone , JSONObject jsonObject ) throws EmailException, UnsupportedMediaException, InvalidInputException {
 
             User user = userDAO.getUserByPhone(phone);
             if(!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email"))!=null && !jsonObject.getString("email").isEmpty()) {

@@ -1,5 +1,6 @@
 package Model;
 
+import Exceptions.InvalidInputException;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,13 +23,13 @@ public class Bankinfo {
 
     public Bankinfo() {}
 
-    public Bankinfo(String bankName, String accountNumber) {
+    public Bankinfo(String bankName, String accountNumber) throws InvalidInputException {
 
         if(bankName.length()<3)
-            throw new IllegalArgumentException("Bank name must be at least 3 characters");
+            throw new InvalidInputException("Invalid Bank name");
 
         if(accountNumber.length()!=16)
-            throw new IllegalArgumentException("Account number must be 16 characters");
+            throw new InvalidInputException("Account number must be 16 characters");
 
         this.setBankName(bankName);
         this.setAccountNumber(accountNumber);

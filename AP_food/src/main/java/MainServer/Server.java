@@ -41,8 +41,8 @@ public class Server {
            System.out.println("MainServer.Server started at http://localhost:8080");
 
         }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

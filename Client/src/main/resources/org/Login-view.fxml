@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <PasswordField layoutX="283.0" layoutY="322.0" stylesheets="../asset/style_sheets/input.css">
             <styleClass>
@@ -126,7 +134,7 @@
             </RadialGradient>
             </textFill>
         </Label>
-        <ImageView fitHeight="269.0" fitWidth="342.0" layoutX="670.0" layoutY="578.0" pickOnBounds="true" preserveRatio="true" rotate="18.4" styleClass="wobbly-image">
+        <ImageView fitHeight="269.0" fitWidth="342.0" layoutX="695.0" layoutY="543.0" pickOnBounds="true" preserveRatio="true" rotate="18.4" styleClass="wobbly-image">
             <image>
                 <Image url="@../asset/images/pizza.png" />
             </image>
@@ -171,7 +179,7 @@
             </textFill>
         </Label>
         <Button fx:id="loginbutton" layoutX="170.0" layoutY="386.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Login" />
-        <Button layoutX="338.0" layoutY="386.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
+        <Button layoutX="370.0" layoutY="386.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
       <ImageView fitHeight="282.0" fitWidth="260.0" layoutX="911.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
             <Image url="@../asset/images/hambergur.png" />
@@ -181,7 +189,7 @@
             <Image url="@../asset/images/delivery.png" />
          </image>
       </ImageView>
-      <Label fx:id="result" layoutX="324.0" layoutY="442.0" textFill="#dd0000" />
+      <Label fx:id="erro_lable" layoutX="324.0" layoutY="442.0" textFill="#dd0000" />
     </children>
     <styleClass>
         <String fx:value="glass-gradient-pane-translucent" />
