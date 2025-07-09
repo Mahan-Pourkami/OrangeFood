@@ -2,8 +2,12 @@ package Controller;
 
 import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.Objects;
 
 public class SceneManager {
 
@@ -24,6 +28,19 @@ public class SceneManager {
             ftIn.setToValue(1.0);
             ftIn.play();
         });
+    }
+
+    private static void showAlert(String title, String message, Alert.AlertType type) {
+
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void showErrorAlert(String title, String message) {
+        showAlert(title, message, Alert.AlertType.ERROR);
     }
 
 
