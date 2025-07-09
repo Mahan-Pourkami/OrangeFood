@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" styleClass="glass-gradient-pane" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" styleClass="glass-gradient-pane" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.IntroController">
    <children>
       <ImageView fitHeight="201.0" fitWidth="202.0" layoutX="21.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
@@ -64,7 +64,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label layoutX="97.0" layoutY="412.0" prefHeight="105.0" prefWidth="724.0" styleClass="wobbly-image" text="✨ Why Choose Orange Food?">
+      <Label layoutX="97.0" layoutY="412.0" prefHeight="105.0" prefWidth="724.0" text="✨ Why Choose Orange Food?">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
@@ -313,12 +313,12 @@
             </LinearGradient>
          </fill>
       </Circle>
-      <Button layoutX="843.0" layoutY="238.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" stylesheets="@../asset/style_sheets/input.css" text="Continiue">
+      <Button fx:id="continueButton" layoutX="843.0" layoutY="238.0" mnemonicParsing="false" onMousePressed="#handle_continue_button" prefHeight="36.0" prefWidth="145.0" stylesheets="@../asset/style_sheets/input.css" text="Continue">
          <styleClass>
             <String fx:value="glass-gradient-button" />
             <String fx:value="wobbly-image" />
          </styleClass></Button>
-      <Label layoutX="249.0" layoutY="199.0" prefHeight="105.0" prefWidth="594.0" styleClass="wobbly-image" text="Hungry? Let’s get started! Order now and taste the difference ">
+      <Label layoutX="249.0" layoutY="199.0" prefHeight="105.0" prefWidth="594.0" text="Hungry? Let’s get started! Order now and taste the difference ">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -369,15 +369,19 @@
             <Image url="@../asset/images/pizza.png" />
          </image>
       </ImageView>
-      <ToolBar layoutX="954.0" layoutY="-6.0" prefHeight="40.0" prefWidth="352.0" styleClass="button-bar">
+      <ToolBar layoutX="964.0" layoutY="-6.0" prefHeight="40.0" prefWidth="326.0" styleClass="button-bar">
          <items>
-            <Hyperlink styleClass="wobbly-image" text="   About us" textFill="WHITE">
+            <Hyperlink fx:id="aboutus" onMouseClicked="#handle_aboutus" prefHeight="29.0" prefWidth="111.0" text="  About us" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Hyperlink>
-            <Hyperlink prefHeight="23.0" prefWidth="27.0" />
-            <Hyperlink styleClass="wobbly-image" text="Support" textFill="WHITE">
+            <Hyperlink fx:id="support" onMouseClicked="#handle_support" prefHeight="29.0" prefWidth="86.0" text="Support" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="community" onMousePressed="#handle_community" prefHeight="29.0" prefWidth="107.0" text="Community" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
