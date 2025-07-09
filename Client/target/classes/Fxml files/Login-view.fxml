@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <PasswordField layoutX="283.0" layoutY="322.0" stylesheets="../asset/style_sheets/input.css">
+            <styleClass>
+                <String fx:value="light-peach-glass-pane" />
+                <String fx:value="light-peach-glass-pane-translucent" />
+            </styleClass>
+        </PasswordField>
+        <Label layoutX="183.0" layoutY="322.0" text="password">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.2621951219512195">
+                     <color>
+                        <Color red="1.0" green="0.9958333373069763" blue="0.9861111044883728" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.6951219512195123">
+                     <color>
+                        <Color red="1.0" green="0.9567129611968994" blue="0.8472222089767456" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill></Label>
+        <TextField fx:id="phonefield" accessibleRole="BUTTON" layoutX="283.0" layoutY="277.0" prefHeight="25.0" prefWidth="149.0" stylesheets="../asset/style_sheets/input.css">
+            <styleClass>
+                <String fx:value="light-peach-glass-pane" />
+                <String fx:value="text-field" />
+            <String fx:value="light-peach-glass-pane" />
+            </styleClass>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+        </TextField>
+        <Label layoutX="183.0" layoutY="277.0" prefHeight="27.0" prefWidth="54.0" text="phone">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.7580246925354004" blue="0.48148149251937866" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.2646048109965636">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5162899534572758">
+                     <color>
+                        <Color red="0.9736841917037964" green="0.9526478052139282" blue="0.9286062121391296" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.7079037800687286">
+                     <color>
+                        <Color red="1.0" green="0.874691367149353" blue="0.7314814925193787" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+        <Hyperlink layoutX="593.0" layoutY="309.0" prefHeight="23.0" prefWidth="95.0" text="Create one" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Hyperlink>
+        <Label layoutX="448.0" layoutY="314.0" text="don't have an account ?">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+        <Label layoutX="283.0" layoutY="23.0" prefHeight="98.0" prefWidth="818.0" text="Welcome to Orange Food !">
+            <font>
+                <Font name="System Bold" size="58.0" />
+            </font>
+            <textFill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9736841917037964" green="0.7464912533760071" blue="0.4868420958518982" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="1.0" green="0.8941357731819153" blue="0.7731481194496155" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+            </textFill>
+        </Label>
+        <ImageView fitHeight="269.0" fitWidth="342.0" layoutX="695.0" layoutY="543.0" pickOnBounds="true" preserveRatio="true" rotate="18.4" styleClass="wobbly-image">
+            <image>
+                <Image url="@../asset/images/pizza.png" />
+            </image>
+            <effect>
+                <Blend />
+            </effect>
+        </ImageView>
+        <Label layoutX="129.0" layoutY="129.0" prefHeight="27.0" prefWidth="188.0" text="Login">
+            <font>
+                <Font name="System Bold" size="44.0" />
+            </font>
+            <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.7580246925354004" blue="0.48148149251937866" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.2646048109965636">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5162899534572758">
+                     <color>
+                        <Color red="0.9736841917037964" green="0.9526478052139282" blue="0.9286062121391296" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.7079037800687286">
+                     <color>
+                        <Color red="1.0" green="0.874691367149353" blue="0.7314814925193787" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+            </textFill>
+        </Label>
+        <Button fx:id="loginbutton" layoutX="170.0" layoutY="386.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Login" />
+        <Button layoutX="370.0" layoutY="386.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
+      <ImageView fitHeight="282.0" fitWidth="260.0" layoutX="911.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+         <image>
+            <Image url="@../asset/images/hambergur.png" />
+         </image></ImageView>
+      <ImageView fitHeight="440.0" fitWidth="432.0" layoutX="295.0" layoutY="448.0" pickOnBounds="true" preserveRatio="true" rotate="4.8" styleClass="wobbly-image">
+         <image>
+            <Image url="@../asset/images/delivery.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="erro_lable" layoutX="324.0" layoutY="442.0" textFill="#dd0000" />
+    </children>
+    <styleClass>
+        <String fx:value="glass-gradient-pane-translucent" />
+        <String fx:value="glass-gradient-pane-translucent" />
+    </styleClass>
+   <stylesheets>
+      <URL value="@../asset/style_sheets/input.css" />
+      <URL value="@../asset/style_sheets/style.css" />
+   </stylesheets>
+</Pane>

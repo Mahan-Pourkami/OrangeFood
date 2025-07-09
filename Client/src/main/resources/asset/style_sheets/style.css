@@ -50,3 +50,17 @@
     -fx-background-radius: 10px
 ;
 }
+
+.login_bar {
+    -fx-background-color: linear-gradient(to right,
+    rgba(248, 237, 230, 0.7),
+    rgba(214, 156, 130, 0.7),
+    rgba(255, 140, 0, 0.7));
+
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
+    innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
+}
