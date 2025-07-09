@@ -313,7 +313,7 @@
             </LinearGradient>
          </fill>
       </Circle>
-      <Button fx:id="continueButton" layoutX="843.0" layoutY="238.0" mnemonicParsing="false" onMouseClicked="#handleButtonClick" prefHeight="36.0" prefWidth="145.0" stylesheets="@../asset/style_sheets/input.css" text="Continiue">
+      <Button fx:id="continueButton" layoutX="843.0" layoutY="238.0" mnemonicParsing="false" onMousePressed="#handle_continue_button" prefHeight="36.0" prefWidth="145.0" stylesheets="@../asset/style_sheets/input.css" text="Continue">
          <styleClass>
             <String fx:value="glass-gradient-button" />
             <String fx:value="wobbly-image" />
@@ -371,13 +371,17 @@
       </ImageView>
       <ToolBar layoutX="964.0" layoutY="-6.0" prefHeight="40.0" prefWidth="326.0" styleClass="button-bar">
          <items>
-            <Hyperlink fx:id="aboutus" onMouseClicked="#handle_aboutus" text="  About us" textFill="WHITE">
+            <Hyperlink fx:id="aboutus" onMouseClicked="#handle_aboutus" prefHeight="29.0" prefWidth="111.0" text="  About us" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Hyperlink>
-            <Hyperlink prefHeight="23.0" prefWidth="27.0" />
-            <Hyperlink fx:id="support" onMouseClicked="#handle_support" text="Support" textFill="WHITE">
+            <Hyperlink fx:id="support" onMouseClicked="#handle_support" prefHeight="29.0" prefWidth="86.0" text="Support" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="community" onMousePressed="#handle_community" prefHeight="29.0" prefWidth="107.0" text="Community" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

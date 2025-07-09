@@ -19,7 +19,7 @@
 
 <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
     <children>
-      <Pane layoutX="81.0" layoutY="49.0" prefHeight="493.0" prefWidth="565.0" styleClass="login_bar">
+      <Pane layoutX="87.0" layoutY="49.0" prefHeight="493.0" prefWidth="565.0" styleClass="login_bar">
          <children>
             <Button fx:id="loginbutton" layoutX="88.0" layoutY="291.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Login" />
             <PasswordField fx:id="passwordfield" layoutX="239.0" layoutY="233.0" stylesheets="../asset/style_sheets/input.css">
@@ -100,7 +100,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="signup_button" layoutX="325.0" layoutY="291.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
+            <Button fx:id="signup_button" layoutX="325.0" layoutY="291.0" mnemonicParsing="false" onMousePressed="#handlesignup_button" prefHeight="27.0" prefWidth="157.0" styleClass="glass-gradient-button" stylesheets="../asset/style_sheets/input.css" text="Sign up" />
             <Label layoutX="188.0" layoutY="369.0" text="don't have an account ?">
                <font>
                   <Font name="System Bold" size="13.0" />
@@ -200,6 +200,11 @@
                </color>
             </DropShadow>
          </effect>
+      </Label>
+      <Label layoutX="1023.0" layoutY="176.0" text="Fresh, Fast &amp; Delicious!" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
       </Label>
     </children>
     <styleClass>

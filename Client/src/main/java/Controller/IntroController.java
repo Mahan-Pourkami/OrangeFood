@@ -1,6 +1,5 @@
 package Controller;
 
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -30,6 +28,9 @@ public class IntroController {
     @FXML
     Hyperlink support;
 
+    @FXML
+    Hyperlink community;
+
 
 
     public void handle_aboutus(MouseEvent mouseEvent) throws URISyntaxException, IOException {
@@ -39,7 +40,11 @@ public class IntroController {
         Desktop.getDesktop().browse(new URI("https://github.com/parsa0s0a"));
     }
 
-    public void handleButtonClick(MouseEvent mouseEvent) throws IOException {
+    public void handle_community(MouseEvent mouseEvent) throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://www.linkedin.com/in/mahan-fathollahpour-89941722a/"));
+    }
+
+    public void handle_continue_button(MouseEvent mouseEvent) throws IOException {
 
         FXMLLoader newView = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/org/Login-view.fxml")));
         Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
