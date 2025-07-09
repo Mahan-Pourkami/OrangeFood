@@ -16,7 +16,9 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="860.0" prefWidth="1280.0" styleClass="glass-gradient-pane" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SignupController ">
+
+<?import javafx.collections.FXCollections?>
+<AnchorPane prefHeight="860.0" prefWidth="1280.0" styleClass="glass-gradient-pane" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SignupController">
    <children>
       <TextField fx:id="phonefield" layoutX="145.0" layoutY="176.0" prefHeight="36.0" prefWidth="190.0" promptText="09XXXXXXXXX" stylesheets="@../asset/style_sheets/input.css">
          <styleClass>
@@ -198,9 +200,11 @@
             <Font name="System Bold" size="28.0" />
          </font>
       </Label>
-      <ComboBox fx:id="rolechooser" layoutX="145.0" layoutY="246.0" prefHeight="36.0" prefWidth="190.0" stylesheets="@../asset/style_sheets/input.css">
+      <ComboBox fx:id="rolechooser" layoutX="145.0" layoutY="246.0" prefHeight="36.0" prefWidth="190.0" stylesheets="@../asset/style_sheets/input.css" AnchorPane.topAnchor="246.0">
          <styleClass>
+
             <String fx:value="light-peach-glass-pane" />
+            <String fx:value="glass-gradient-pane" />
             <String fx:value="light-peach-glass-pane-translucent" />
          </styleClass>
       </ComboBox>
@@ -235,7 +239,7 @@
             <Font name="System Bold" size="28.0" />
          </font>
       </Label>
-      <ImageView fx:id="homebutton" fitHeight="201.0" fitWidth="202.0" layoutX="927.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="homebutton" fitHeight="201.0" fitWidth="202.0" layoutX="927.0" layoutY="54.0" onMousePressed="#handlehomebutton" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/logo.png" />
          </image>
@@ -415,12 +419,12 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Hyperlink fx:id="loginlink" layoutX="1027.0" layoutY="559.0" text="Login" textFill="#bfcaf8">
+      <Hyperlink fx:id="loginlink" layoutX="1027.0" layoutY="559.0" onMousePressed="#handleloginlink" text="Login" textFill="#bfcaf8">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Hyperlink>
-      <Label layoutX="919.0" layoutY="273.0" text="Orange Food !">
+      <Label layoutX="919.0" layoutY="273.0" styleClass="wobbly-image" text="Orange Food !">
          <font>
             <Font name="System Bold" size="40.0" />
          </font>
@@ -453,7 +457,7 @@
             </DropShadow>
          </effect>
       </Label>
-      <Label layoutX="1053.0" layoutY="334.0" text="Fresh, Fast &amp; Delicious!" textFill="WHITE">
+      <Label layoutX="1053.0" layoutY="334.0" styleClass="wobbly-image" text="Fresh, Fast &amp; Delicious!" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

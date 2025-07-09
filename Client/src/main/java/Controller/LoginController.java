@@ -49,6 +49,7 @@ public class LoginController {
 
     @FXML
     void handlesignup_button (MouseEvent event) throws IOException {
+
         FXMLLoader signup = new FXMLLoader(getClass().getResource("/org/Signup-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = signup.load();

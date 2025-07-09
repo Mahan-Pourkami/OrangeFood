@@ -106,7 +106,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <Hyperlink fx:id="signup_link" layoutX="341.0" layoutY="366.0" prefHeight="23.0" prefWidth="95.0" text="Create one" textFill="WHITE">
+            <Hyperlink fx:id="signup_link" layoutX="341.0" layoutY="366.0" onMousePressed="#handlesignup_button" prefHeight="23.0" prefWidth="95.0" text="Create one" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
