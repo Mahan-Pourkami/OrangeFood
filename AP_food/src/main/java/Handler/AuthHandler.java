@@ -170,6 +170,10 @@ public class AuthHandler implements HttpHandler {
                             bankobject.getString("bank_name"),
                             bankobject.getString("account_number"));
 
+                    if(jsonobject.getString("password").length()<8){
+                        throw new InvalidInputException("password");
+                    }
+
                     userDTOreg.register();
                     UserDTO.UserRegResponseDTO userRegResponseDTO = new UserDTO.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
                     Headers headers = exchange.getResponseHeaders();
@@ -204,6 +208,13 @@ public class AuthHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(409, response.getBytes().length);
+            }
+
+            catch (OrangeException e) {
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error(e.getMessage());
+                exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
             }
         }
 
