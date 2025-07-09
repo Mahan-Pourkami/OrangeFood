@@ -45,7 +45,7 @@ public class UserDTO {
             if(userDAO.getUserByEmail(email) != null && !email.isEmpty())
                 throw new EmailException();
 
-            if(!profileImageBase64.endsWith("jpg") && !profileImageBase64.endsWith("jpeg") && !profileImageBase64.endsWith("png") && !profileImageBase64.endsWith("png"))
+            if(profileImageBase64!=null && !profileImageBase64.isBlank() && !profileImageBase64.endsWith("jpg") && !profileImageBase64.endsWith("jpeg") && !profileImageBase64.endsWith("png") && !profileImageBase64.endsWith("png"))
                 throw new UnsupportedMediaException();
 
 
@@ -56,22 +56,28 @@ public class UserDTO {
             if(userDAO.getUserByPhone(phone) == null) {
                 if (role.equals("seller")) {
                     Seller seller = new Seller(phone, fullName, password, email, address, profileImageBase64);
-                    Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
-                    seller.setBankinfo(sellerBankinfo);
+                    if(!bankinfo.bankName.isBlank() && !bankinfo.accountNumber.isBlank()) {
+                        Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
+                        seller.setBankinfo(sellerBankinfo);
+                    }
                     sellerDAO.saveSeller(seller);
                 }
                 if (role.equals("buyer")) {
                     Buyer buyer = new Buyer(phone, fullName, password, email, address, profileImageBase64);
-                    Bankinfo buyerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
-                    buyer.setBankinfo(buyerBankinfo);
+                    if(!bankinfo.bankName.isBlank() && !bankinfo.accountNumber.isBlank()) {
+                        Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
+                        buyer.setBankinfo(sellerBankinfo);
+                    }
                     buyerDAO.saveBuyer(buyer);
                 }
 
                 if (role.equals("courier")) {
 
                     Courier courier = new Courier(phone, fullName, password, email, address, profileImageBase64);
-                    Bankinfo courierBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
-                    courier.setBankinfo(courierBankinfo);
+                    if(!bankinfo.bankName.isBlank() && !bankinfo.accountNumber.isBlank()) {
+                        Bankinfo sellerBankinfo = new Bankinfo(bankinfo.bankName, bankinfo.accountNumber);
+                        courier.setBankinfo(sellerBankinfo);
+                    }
                     courierDAO.saveCourier(courier);
                 }
             }
@@ -197,7 +203,7 @@ public class UserDTO {
                 throw new EmailException();
             }
             String prof = jsonObject.getString("profileImageBase64");
-            if(!prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
+            if(prof!=null && !prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
                 throw new UnsupportedMediaException();
             }
 
@@ -206,8 +212,10 @@ public class UserDTO {
             user.setAddress(jsonObject.getString("address"));
             user.setProfile(jsonObject.getString("profileImageBase64"));
             JSONObject bankobject = jsonObject.optJSONObject("bank_info");
+           if(!bankobject.getString("bank_name").isEmpty() && !bankobject.getString("account_number").isEmpty()) {
             Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
             user.setBankinfo(bankinfo);
+            }
             userDAO.updateUser(user);
 
         }

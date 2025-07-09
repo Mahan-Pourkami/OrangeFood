@@ -143,24 +143,13 @@ public class UserDAO {
             }
 
     public User getUserByEmail(String email) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            String hql = "FROM User U WHERE U.email = :email";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setParameter("email", email);
-            User user = query.uniqueResult(); // Attempts to get a single result, or null if none
-            transaction.commit(); // Commit the read transaction
-            return user;
-        } catch (NoResultException e) {
-            // No user found with the given email
-            if(transaction!=null && transaction.isActive()) transaction.rollback();
-            return null;
-        } catch (Exception e) {
-            // General exception during database operation
-            if(transaction!=null && transaction.isActive()) transaction.rollback();
-            throw new DataAccessException("Failed to get user by email", e);
+        List<User> users = getAllUsers();
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
         }
+        return null;
     }
 
 

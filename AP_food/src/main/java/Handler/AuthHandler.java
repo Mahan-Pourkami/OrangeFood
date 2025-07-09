@@ -53,13 +53,7 @@ public class AuthHandler implements HttpHandler {
             }
         }
         catch (Exception e) {
-
-            JSONObject errorJson = new JSONObject();
-            errorJson.put("error", "Internal server error");
-            response = errorJson.toString();
-            Headers headers = exchange.getResponseHeaders();
-            headers.add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(500, response.getBytes().length);
+            e.printStackTrace();
         }
         finally {
 
