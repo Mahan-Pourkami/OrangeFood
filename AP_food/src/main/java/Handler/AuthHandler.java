@@ -244,7 +244,6 @@ public class AuthHandler implements HttpHandler {
                             }
 
                             if (user.role.equals(Role.seller)) {
-
                                 Seller seller = sellerDAO.getSeller(user.getPhone());
                                 if (seller.getStatue()==null || !seller.getStatue().equals(Userstatue.approved)) {
                                     throw new ForbiddenroleException();
@@ -297,7 +296,7 @@ public class AuthHandler implements HttpHandler {
                     }
                 } else {
                     String invalid_part = invalid_input_login(jsonobject);
-                    response = generate_error("Invalid " + invalid_part);
+                    response = generate_error(invalid_part);
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(400, response.length());
