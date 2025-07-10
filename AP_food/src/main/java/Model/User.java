@@ -11,13 +11,14 @@ import lombok.Setter;
 public class User {
 
 
-    // Getters and setters
     @Setter
     @Getter
     @Id
     @Column(name = "phone" ,length = 11)
     private String phone;
 
+    @Setter
+    @Getter
     @Column(name = "id")
     private String id ;
 
@@ -27,7 +28,7 @@ public class User {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "email", unique = true,nullable = true, length = 100)
+    @Column(name = "email",nullable = true, length = 100)
     private String email;
 
     @Column(name = "role")
@@ -50,11 +51,6 @@ public class User {
 
     public User(String phone, String fullname, String password, String email , Role role, String address , String profile) {
 
-        if(!Validator.validatePhone(phone))
-            throw new IllegalArgumentException("Invalid phone number");
-
-        if(email!= null && !Validator.validateEmail(email))
-            throw new IllegalArgumentException("Invalid email format");
 
         this.phone = phone;
         this.password = password;

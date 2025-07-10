@@ -1,9 +1,8 @@
 package DAO;
 
 import Model.Bankinfo;
-import Model.Buyer;
-import Model.Seller;
 import Model.User;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -11,12 +10,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
-
 
 public class UserDAO {
 
@@ -99,7 +96,7 @@ public class UserDAO {
         }
     }
 
-    // it creates a new user if it doesn't exists
+    // it creates a new user if it doesn't exist
     public void updateUser(User user) {
         executeInTransaction(session -> session.merge(user));
     }
@@ -109,11 +106,9 @@ public class UserDAO {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, phone);
-
             if (user == null) {
                 throw new DataAccessException("User with phone " + phone + " not found");
             }
-
             session.remove(user);
             transaction.commit();
         } catch (Exception e) {
@@ -147,6 +142,16 @@ public class UserDAO {
             }
             }
 
+    public User getUserByEmail(String email) {
+        List<User> users = getAllUsers();
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
@@ -154,7 +159,6 @@ public class UserDAO {
         }
     }
 
-    // Custom exception for better error handling
     public static class DataAccessException extends RuntimeException {
         public DataAccessException(String message) {
             super(message);
@@ -164,5 +168,4 @@ public class UserDAO {
             super(message, cause);
         }
     }
-
 }

@@ -1,0 +1,66 @@
+.glass-gradient-pane {
+    /* Gradient background from peach to orange */
+    -fx-background-color: linear-gradient(to right, #FFDAB9, #FFA07A, #FF8C00);
+    
+    /* Glass effect styling */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+    
+    /* For the frosted glass overlay effect */
+    -fx-background-insets: 0;
+}
+
+/* If you want the glass effect to be more pronounced with transparency */
+.glass-gradient-pane-translucent {
+    /* Gradient with transparency */
+    -fx-background-color: linear-gradient(to right,
+    rgba(248, 237, 230, 0.7),
+    rgba(214, 156, 130, 0.7),
+        rgba(255, 140, 0, 0.7));
+    
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
+                innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
+}
+
+/* Add this to your input.css */
+.wobbly-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.1, 0, 0);
+    -fx-transition: all 0.5s ease-in-out;
+}
+
+.wobbly-image:hover {
+    -fx-translate-x: 2px;
+    -fx-translate-y: 2px;
+}
+
+.wobbly-image:pressed {
+    -fx-translate-x: -2px;
+    -fx-translate-y: -2px;
+}
+
+.button-bar {
+    -fx-background-color: linear-gradient(to right, #401b1b, #840101, #b14411, #3e2e2e);
+    -fx-background-radius: 10px
+;
+}
+
+.login_bar {
+    -fx-background-color: linear-gradient(to right,
+    rgba(248, 237, 230, 0.7),
+    rgba(214, 156, 130, 0.7),
+    rgba(255, 140, 0, 0.7));
+
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
+    innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
+}

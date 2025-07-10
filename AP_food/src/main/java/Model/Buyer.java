@@ -1,6 +1,8 @@
 package Model;
 
+import DAO.RestaurantDAO;
 import jakarta.persistence.*;
+import java.util.*;
 
 /**
  * @author Mahan Pourkami
@@ -11,11 +13,14 @@ import jakarta.persistence.*;
 
 public class Buyer extends User{
 
+
     @Column(name = "wallet" )
     private  Integer Token ;
 
-//    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-//    private List<Basket> carts ;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Long> favorite_restaurants;
+
 
     public Buyer(){}
 
@@ -39,11 +44,29 @@ public class Buyer extends User{
             throw new ArithmeticException("Not enough money");
     }
 
-//    public List<Basket> getcarts() {
-//        return carts;
-//    }
-//    public void addCart(Basket cart) {
-//        carts.add(cart);
-//    }
+    public void add_tofavorite_restaurants(long id) {
+        favorite_restaurants.add(id);
+    }
+
+    public void remove_tofavorite_restaurants(long id) {
+        favorite_restaurants.remove(id);
+    }
+
+    public List<Long> getFavorite_restaurants() {
+        return favorite_restaurants;
+    }
+
+    public List<Restaurant> getfavorite_restaurants() {
+
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
+        List<Restaurant> result = new ArrayList<>();
+
+        for (Long id : favorite_restaurants) {
+
+            result.add(restaurantDAO.get_restaurant(id));
+        }
+        return result;
+    }
+
 
 }

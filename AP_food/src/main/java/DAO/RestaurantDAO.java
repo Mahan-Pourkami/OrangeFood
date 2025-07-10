@@ -1,10 +1,16 @@
 package DAO;
 
 import Model.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantDAO {
 
@@ -49,7 +55,7 @@ public class RestaurantDAO {
         }
     }
 
-    public Restaurant get(Long id) {
+    public Restaurant get_restaurant(Long id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -65,6 +71,43 @@ public class RestaurantDAO {
             if(transaction!=null)transaction.rollback();
             throw new RuntimeException("failed to get seller",e);
         }
+    }
+
+
+    public List<Restaurant> getAllRestaurants() {
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Restaurant> cq = cb.createQuery(Restaurant.class);
+            Root<Restaurant> root = cq.from(Restaurant.class);
+            cq.select(root);
+
+            List<Restaurant> vendors = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return vendors;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new UserDAO.DataAccessException("Failed to retrieve Restaurants", e);
+        }
+    }
+
+    public List<Restaurant> findbyfilters(String name) {
+
+        List<Restaurant> vendors = getAllRestaurants();
+        List<Restaurant> filteredVendors = new ArrayList<Restaurant>();
+        for (Restaurant vendor : vendors) {
+
+            if(vendor.getName().toLowerCase().contains(name.toLowerCase())){
+                filteredVendors.add(vendor);
+            }
+        }
+        return filteredVendors;
     }
 
 }

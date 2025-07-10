@@ -1,79 +1,64 @@
 package Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table
+@Getter
+@Setter
 public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private boolean confirmed;
-
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private String phone;
 
     private String logoUrl;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Food> foods;
+    private Integer tax_fee ;
+
+    private  Integer additional_fee ;
 
     @OneToOne
+    @JsonIgnore
     private Seller seller;
 
-    //TODO list of baskets
-
+    @ElementCollection(fetch = FetchType.EAGER)
+    public List<String> menu_titles ;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String address, String logoUrl, Seller seller) {
-        if (isNullOrEmpty(name) || isNullOrEmpty(address) ) {
+    public Restaurant(String name, String address, String phone ,String logoUrl,Integer tax_fee , Integer additional_fee, Seller seller) {
+        if (isNullOrEmpty(name) || isNullOrEmpty(address)) {
             throw new IllegalArgumentException("Restaurant name, address, and working hour are required.");
         }
-        this.confirmed = false;
         this.name = name;
         this.address = address;
+        this.phone = phone;
         this.logoUrl = logoUrl;
-        this.foods = new ArrayList<>();
         this.seller = seller;
+        this.tax_fee = tax_fee;
+        this.additional_fee = additional_fee;
+        this.menu_titles = new ArrayList<>();
     }
 
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
 
-    // Getters
-//    public String getFormattedWorkingHour() {
-//        return workingHour.format(dateFormatter);
-//    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-
-    public String getLogoUrl() {
-        return logoUrl;
-    }
-
-//    public HashSet<Food> getFoodList() {
-//        return new HashSet<>(foodList); // Return a copy to avoid external modification
-//    }
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    // Setters
     public void setName(String name) {
         if (isNullOrEmpty(name)) {
             throw new IllegalArgumentException("Restaurant name cannot be null or empty.");
@@ -88,49 +73,23 @@ public class Restaurant {
         this.address = address;
     }
 
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+    public void add_menu_title(String title) {
+        this.menu_titles.add(title);
     }
 
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
+    public void remove_menu_title(String title) {
+        this.menu_titles.remove(title);
     }
 
-    // Food-related methods
-    public void addFood(Food food) {
-       if (food == null) {
-           throw new IllegalArgumentException("Food cannot be null.");
-        }
-        foods.add(food);
+    public List<String> get_menu_titles() {
+        return menu_titles;
+    }
+
+    public void set_menu_titles(List<String> menu_titles) {
+        this.menu_titles = menu_titles;
     }
 
 
-    public void removeFood(long id) {
-
-        foods.removeIf(food -> food.getId().equals(id));
-    }
-
-    public Food findFoodByName(String name) {
-        if (isNullOrEmpty(name)) return null;
-        for (Food food : foods) {
-            if (food.getName().equalsIgnoreCase(name)) {
-                return food;
-            }
-        }
-        return null;
-    }
-
-    public String getMenuString() {
-        String menu = "";
-        for (Food food : foods) {
-            menu = menu + (food.getName()) +"," ;
-        }
-        return menu;
-    }
-
-    public String getFoodDetail(String foodName){
-        Food result = findFoodByName(foodName);
-        if (result == null) return null;
-        return result.getDetail();
-    }
 }
+
+

@@ -1,8 +1,10 @@
 package Exceptions;
 
-public class DuplicatedUserexception extends Exception {
+public class DuplicatedUserexception extends OrangeException {
+
     public DuplicatedUserexception()
     {
-        super("The User has already been created");
+
+        super("Phone number already exists",409);
     }
 }
