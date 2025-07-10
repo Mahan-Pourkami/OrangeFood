@@ -5,25 +5,25 @@ info:
   description: RESTful API for food ordering system (buyers, sellers, couriers, and
     admin).
 servers:
-  - url: https://api.food-ordering.com/v1
+- url: https://api.food-ordering.com/v1
 tags:
-  - name: auth
-    description: Authentication and user profile APIs
-  - name: restaurant
-    description: APIs related to restaurant management
-  - name: buyer
-    description: APIs for buyers to browse, order, and review
-  - name: courier
-    description: APIs for couriers to manage deliveries
-  - name: order
-    description: APIs for order tracking and payment processing
-  - name: admin
-    description: Administrative APIs for user, order, and finance management
+- name: auth
+  description: Authentication and user profile APIs
+- name: restaurant
+  description: APIs related to restaurant management
+- name: buyer
+  description: APIs for buyers to browse, order, and review
+- name: courier
+  description: APIs for couriers to manage deliveries
+- name: order
+  description: APIs for order tracking and payment processing
+- name: admin
+  description: Administrative APIs for user, order, and finance management
 paths:
   /auth/register:
     post:
       tags:
-        - auth
+      - auth
       summary: Register a new user
       requestBody:
         required: true
@@ -32,11 +32,11 @@ paths:
             schema:
               type: object
               required:
-                - full_name
-                - phone
-                - password
-                - role
-                - address
+              - full_name
+              - phone
+              - password
+              - role
+              - address
               properties:
                 full_name:
                   type: string
@@ -50,9 +50,9 @@ paths:
                 role:
                   type: string
                   enum:
-                    - buyer
-                    - seller
-                    - courier
+                  - buyer
+                  - seller
+                  - courier
                 address:
                   type: string
                 profileImageBase64:
@@ -60,8 +60,8 @@ paths:
                 bank_info:
                   type: object
                   required:
-                    - bankName
-                    - accountNumber
+                  - bankName
+                  - accountNumber
                   properties:
                     bank_name:
                       type: string
@@ -114,7 +114,7 @@ paths:
   /auth/login:
     post:
       tags:
-        - auth
+      - auth
       summary: Login a user
       requestBody:
         required: true
@@ -123,8 +123,8 @@ paths:
             schema:
               type: object
               required:
-                - phone
-                - password
+              - phone
+              - password
               properties:
                 phone:
                   type: string
@@ -163,10 +163,10 @@ paths:
   /auth/profile:
     get:
       tags:
-        - auth
+      - auth
       summary: Get current user profile
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Current user profile
@@ -192,10 +192,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     put:
       tags:
-        - auth
+      - auth
       summary: Update current user profile
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -216,8 +216,8 @@ paths:
                 bank_info:
                   type: object
                   required:
-                    - bank_name
-                    - account_number
+                  - bank_name
+                  - account_number
                   properties:
                     bank_name:
                       type: string
@@ -249,10 +249,10 @@ paths:
   /auth/logout:
     post:
       tags:
-        - auth
+      - auth
       summary: Logout user
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: User logged out successfully
@@ -279,10 +279,10 @@ paths:
   /restaurants:
     post:
       tags:
-        - restaurant
+      - restaurant
       summary: Create a new restaurant (seller only)
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -290,9 +290,9 @@ paths:
             schema:
               type: object
               required:
-                - name
-                - address
-                - phone
+              - name
+              - address
+              - phone
               properties:
                 name:
                   type: string
@@ -332,10 +332,10 @@ paths:
   /restaurants/mine:
     get:
       tags:
-        - restaurant
+      - restaurant
       summary: Get list of seller's restaurants
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of restaurants
@@ -362,16 +362,16 @@ paths:
   /restaurants/{id}:
     put:
       tags:
-        - restaurant
+      - restaurant
       summary: Update restaurant details
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
       requestBody:
         required: true
         content:
@@ -416,17 +416,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/{id}/item:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
     post:
       tags:
-        - restaurant
+      - restaurant
       summary: Add food item to restaurant with a specific id
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -434,12 +434,12 @@ paths:
             schema:
               type: object
               required:
-                - name
-                - description
-                - price
-                - supply
-                - keywords
-                - vendor_id
+              - name
+              - description
+              - price
+              - supply
+              - keywords
+              - vendor_id
               properties:
                 name:
                   type: string
@@ -481,22 +481,22 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/{id}/item/{item_id}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - name: item_id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: item_id
+      in: path
+      required: true
+      schema:
+        type: integer
     put:
       tags:
-        - restaurant
+      - restaurant
       summary: Edit food item of a restaurant with a specific id
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -544,10 +544,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     delete:
       tags:
-        - restaurant
+      - restaurant
       summary: Delete item
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Food item removed successfully
@@ -574,16 +574,16 @@ paths:
   /restaurants/{id}/menu:
     post:
       tags:
-        - restaurant
+      - restaurant
       summary: Add restaurant menu to system for specific restaurant id
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
       requestBody:
         required: true
         content:
@@ -621,22 +621,22 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/{id}/menu/{title}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - name: title
-        in: path
-        required: true
-        schema:
-          type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: title
+      in: path
+      required: true
+      schema:
+        type: string
     delete:
       tags:
-        - restaurant
+      - restaurant
       summary: Delete restaurant menu from system for specific restaurant id
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Food menu removed from restaurant successfully
@@ -662,10 +662,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     put:
       tags:
-        - restaurant
+      - restaurant
       summary: Add item to a menu of a restaurant with specific id
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -700,27 +700,27 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/{id}/menu/{title}/{item_id}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - name: title
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: item_id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: title
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: item_id
+      in: path
+      required: true
+      schema:
+        type: integer
     delete:
       tags:
-        - restaurant
+      - restaurant
       summary: Delete item from restaurant menu
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Item removed from restaurant menu successfully
@@ -746,34 +746,34 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/{id}/orders:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       parameters:
-        - name: status
-          in: query
-          schema:
-            type: string
-        - name: search
-          in: query
-          schema:
-            type: string
-        - name: user
-          in: query
-          schema:
-            type: string
-        - name: courier
-          in: query
-          schema:
-            type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: user
+        in: query
+        schema:
+          type: string
+      - name: courier
+        in: query
+        schema:
+          type: string
       tags:
-        - restaurant
+      - restaurant
       summary: Get list of orders for a specific restaurant
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of orders
@@ -801,14 +801,14 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /restaurants/orders/{order_id}:
     parameters:
-      - name: order_id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: order_id
+      in: path
+      required: true
+      schema:
+        type: integer
     patch:
       tags:
-        - restaurant
+      - restaurant
       summary: Change status of an order for a restaurant
       requestBody:
         required: true
@@ -820,11 +820,11 @@ paths:
                 status:
                   type: string
                   enum:
-                    - accepted
-                    - rejected
-                    - served
+                  - accepted
+                  - rejected
+                  - served
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Order status changed successfully
@@ -851,10 +851,10 @@ paths:
   /vendors:
     post:
       tags:
-        - buyer
+      - buyer
       summary: List vendors with optional filters
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -895,16 +895,16 @@ paths:
   /vendors/{id}:
     get:
       tags:
-        - buyer
+      - buyer
       summary: View menu items for a vendor
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Vendor menu items. There's an array of menu titles of this
@@ -944,10 +944,10 @@ paths:
   /items:
     post:
       tags:
-        - buyer
+      - buyer
       summary: List items with optional filters
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -989,17 +989,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /items/{id}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       tags:
-        - buyer
+      - buyer
       summary: Get details of a specific item
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Item details
@@ -1026,16 +1026,16 @@ paths:
   /coupons:
     get:
       tags:
-        - buyer
+      - buyer
       summary: Check if a coupon is valid
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: coupon_code
-          in: query
-          required: true
-          schema:
-            type: string
+      - name: coupon_code
+        in: query
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Coupon details
@@ -1062,10 +1062,10 @@ paths:
   /orders:
     post:
       tags:
-        - buyer
+      - buyer
       summary: Submit an order
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1073,9 +1073,9 @@ paths:
             schema:
               type: object
               required:
-                - delivery_address
-                - items
-                - vendor_id
+              - delivery_address
+              - items
+              - vendor_id
               properties:
                 delivery_address:
                   type: string
@@ -1088,8 +1088,8 @@ paths:
                   items:
                     type: object
                     required:
-                      - item_id
-                      - quantity
+                    - item_id
+                    - quantity
                     properties:
                       item_id:
                         type: integer
@@ -1120,17 +1120,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /orders/{id}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       tags:
-        - buyer
+      - buyer
       summary: Get details of a specific order
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Order details
@@ -1157,19 +1157,19 @@ paths:
   /orders/history:
     get:
       tags:
-        - buyer
+      - buyer
       parameters:
-        - name: search
-          in: query
-          schema:
-            type: string
-        - name: vendor
-          in: query
-          schema:
-            type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: vendor
+        in: query
+        schema:
+          type: string
       summary: Get order history
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of past orders
@@ -1198,10 +1198,10 @@ paths:
   /favorites:
     get:
       tags:
-        - buyer
+      - buyer
       summary: Get favorite restaurants
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of favorite restaurants
@@ -1227,17 +1227,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /favorites/{restaurantId}:
     parameters:
-      - name: restaurantId
-        in: path
-        required: true
-        schema:
-          type: string
+    - name: restaurantId
+      in: path
+      required: true
+      schema:
+        type: string
     put:
       tags:
-        - buyer
+      - buyer
       summary: Add a restaurant to favorites
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Added to favorites
@@ -1263,10 +1263,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     delete:
       tags:
-        - buyer
+      - buyer
       summary: Remove a restaurant from favorites
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Removed from favorites
@@ -1293,10 +1293,10 @@ paths:
   /ratings:
     post:
       tags:
-        - buyer
+      - buyer
       summary: Submit rating and review
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1304,9 +1304,9 @@ paths:
             schema:
               type: object
               required:
-                - orderId
-                - rating
-                - comment
+              - orderId
+              - rating
+              - comment
               properties:
                 order_id:
                   type: integer
@@ -1341,17 +1341,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /ratings/items/{item_id}:
     parameters:
-      - name: item_id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: item_id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       tags:
-        - buyer
+      - buyer
       summary: Get ratings and reviews for a specific item
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of ratings and reviews
@@ -1384,17 +1384,17 @@ paths:
           $ref: '#/components/responses/internal_server_error'
   /ratings/{id}:
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       tags:
-        - buyer
+      - buyer
       summary: Get a specific rating or review
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Rating details
@@ -1420,10 +1420,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     delete:
       tags:
-        - buyer
+      - buyer
       summary: Delete a rating or review
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Rating deleted
@@ -1449,10 +1449,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     put:
       tags:
-        - buyer
+      - buyer
       summary: Update a rating or review
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1478,12 +1478,12 @@ paths:
               schema:
                 type: object
                 required:
-                  - id
-                  - item_id
-                  - rating
-                  - comment
-                  - user_id
-                  - created_at
+                - id
+                - item_id
+                - rating
+                - comment
+                - user_id
+                - created_at
                 properties:
                   id:
                     type: integer
@@ -1516,10 +1516,10 @@ paths:
   /deliveries/available:
     get:
       tags:
-        - courier
+      - courier
       summary: Get available delivery requests
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of available deliveries
@@ -1548,16 +1548,16 @@ paths:
   /deliveries/{order_id}:
     patch:
       tags:
-        - courier
+      - courier
       summary: Change status of a delivery request
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: order_id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: order_id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -1568,9 +1568,9 @@ paths:
                 status:
                   type: string
                   enum:
-                    - accepted
-                    - received
-                    - delivered
+                  - accepted
+                  - received
+                  - delivered
       responses:
         '200':
           description: Changed status successfully
@@ -1602,23 +1602,23 @@ paths:
   /deliveries/history:
     get:
       tags:
-        - courier
+      - courier
       parameters:
-        - name: search
-          in: query
-          schema:
-            type: string
-        - name: vendor
-          in: query
-          schema:
-            type: string
-        - name: user
-          in: query
-          schema:
-            type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: vendor
+        in: query
+        schema:
+          type: string
+      - name: user
+        in: query
+        schema:
+          type: string
       summary: Get delivery history
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of completed and active deliveries
@@ -1647,10 +1647,10 @@ paths:
   /transactions:
     get:
       tags:
-        - order
+      - order
       summary: Get user's transaction history
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of transactions
@@ -1679,10 +1679,10 @@ paths:
   /wallet/top-up:
     post:
       tags:
-        - order
+      - order
       summary: Top up user's wallet
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1690,7 +1690,7 @@ paths:
             schema:
               type: object
               required:
-                - amount
+              - amount
               properties:
                 amount:
                   type: number
@@ -1716,10 +1716,10 @@ paths:
   /payment/online:
     post:
       tags:
-        - order
+      - order
       summary: Make an online payment for an order
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1727,16 +1727,16 @@ paths:
             schema:
               type: object
               required:
-                - order_id
-                - method
+              - order_id
+              - method
               properties:
                 order_id:
                   type: integer
                 method:
                   type: string
                   enum:
-                    - wallet
-                    - online
+                  - wallet
+                  - online
       responses:
         '200':
           description: Payment successful
@@ -1763,10 +1763,10 @@ paths:
   /admin/users:
     get:
       tags:
-        - admin
+      - admin
       summary: List all users
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of users
@@ -1795,16 +1795,16 @@ paths:
   /admin/users/{id}/status:
     patch:
       tags:
-        - admin
+      - admin
       summary: Update user approval status
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -1812,13 +1812,13 @@ paths:
             schema:
               type: object
               required:
-                - status
+              - status
               properties:
                 status:
                   type: string
                   enum:
-                    - approved
-                    - rejected
+                  - approved
+                  - rejected
       responses:
         '200':
           description: Status updated
@@ -1841,31 +1841,31 @@ paths:
   /admin/orders:
     get:
       parameters:
-        - name: search
-          in: query
-          schema:
-            type: string
-        - name: vendor
-          in: query
-          schema:
-            type: string
-        - name: courier
-          in: query
-          schema:
-            type: string
-        - name: customer
-          in: query
-          schema:
-            type: string
-        - name: status
-          in: query
-          schema:
-            type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: vendor
+        in: query
+        schema:
+          type: string
+      - name: courier
+        in: query
+        schema:
+          type: string
+      - name: customer
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
       tags:
-        - admin
+      - admin
       summary: View all orders
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of orders
@@ -1894,27 +1894,27 @@ paths:
   /admin/transactions:
     get:
       parameters:
-        - name: search
-          in: query
-          schema:
-            type: string
-        - name: user
-          in: query
-          schema:
-            type: string
-        - name: method
-          in: query
-          schema:
-            type: string
-        - name: status
-          in: query
-          schema:
-            type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: user
+        in: query
+        schema:
+          type: string
+      - name: method
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
       tags:
-        - admin
+      - admin
       summary: View financial transactions
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of financial transactions
@@ -1943,10 +1943,10 @@ paths:
   /admin/coupons:
     get:
       tags:
-        - admin
+      - admin
       summary: List all coupons
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: List of coupons
@@ -1974,10 +1974,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     post:
       tags:
-        - admin
+      - admin
       summary: Create a coupon
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1985,21 +1985,21 @@ paths:
             schema:
               type: object
               required:
-                - coupon_code
-                - type
-                - value
-                - min_price
-                - user_count
-                - startDate
-                - endDate
+              - coupon_code
+              - type
+              - value
+              - min_price
+              - user_count
+              - startDate
+              - endDate
               properties:
                 coupon_code:
                   type: string
                 type:
                   type: string
                   enum:
-                    - fixed
-                    - percent
+                  - fixed
+                  - percent
                 value:
                   type: number
                 min_price:
@@ -2038,16 +2038,16 @@ paths:
   /admin/coupons/{id}:
     delete:
       tags:
-        - admin
+      - admin
       summary: Delete a coupon
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Coupon deleted
@@ -2069,10 +2069,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     put:
       tags:
-        - admin
+      - admin
       summary: Update a coupon
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -2085,8 +2085,8 @@ paths:
                 type:
                   type: string
                   enum:
-                    - fixed
-                    - percent
+                  - fixed
+                  - percent
                 value:
                   type: number
                 min_price:
@@ -2123,10 +2123,10 @@ paths:
           $ref: '#/components/responses/internal_server_error'
     get:
       tags:
-        - admin
+      - admin
       summary: Get coupon details
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: coupon details
@@ -2160,26 +2160,26 @@ components:
     message:
       type: object
       required:
-        - message
+      - message
       properties:
         message:
           type: string
     error:
       type: object
       required:
-        - error
+      - error
       properties:
         error:
           type: string
     user:
       type: object
       required:
-        - id
-        - full_name
-        - phone
-        - email
-        - role
-        - address
+      - id
+      - full_name
+      - phone
+      - email
+      - role
+      - address
       properties:
         id:
           type: integer
@@ -2198,8 +2198,8 @@ components:
         bank_info:
           type: object
           required:
-            - bank_name
-            - account_number
+          - bank_name
+          - account_number
           properties:
             bank_name:
               type: string
@@ -2208,11 +2208,11 @@ components:
     restaurant:
       type: object
       required:
-        - name
-        - address
-        - phone
-        - tax_fee
-        - additional_fee
+      - name
+      - address
+      - phone
+      - tax_fee
+      - additional_fee
       properties:
         id:
           type: integer
@@ -2235,12 +2235,12 @@ components:
     food_item:
       type: object
       required:
-        - name
-        - description
-        - price
-        - supply
-        - keywords
-        - vendor_id
+      - name
+      - description
+      - price
+      - supply
+      - keywords
+      - vendor_id
       properties:
         id:
           type: integer
@@ -2264,11 +2264,11 @@ components:
     transaction:
       type: object
       required:
-        - id
-        - order_id
-        - user_id
-        - method
-        - status
+      - id
+      - order_id
+      - user_id
+      - method
+      - status
       properties:
         id:
           type: integer
@@ -2279,13 +2279,13 @@ components:
         method:
           type: string
           enum:
-            - wallet
-            - online
+          - wallet
+          - online
         status:
           type: string
           enum:
-            - success
-            - failed
+          - success
+          - failed
     order:
       type: object
       required: [id, delivery_address, customer_id, item_ids, vendor_id, raw_price, tax_fee, courier_fee, additional_fee, pay_price, status, created_at, updated_at]
@@ -2319,13 +2319,13 @@ components:
         status:
           type: string
           enum:
-            - submitted
-            - unpaid and cancelled
-            - waiting vendor
-            - cancelled
-            - finding courier
-            - on the way
-            - completed
+          - submitted
+          - unpaid and cancelled
+          - waiting vendor
+          - cancelled
+          - finding courier
+          - on the way
+          - completed
         created_at:
           type: string
         updated_at:
@@ -2333,12 +2333,12 @@ components:
     rating:
       type: object
       required:
-        - id
-        - item_id
-        - rating
-        - comment
-        - user_id
-        - created_at
+      - id
+      - item_id
+      - rating
+      - comment
+      - user_id
+      - created_at
       properties:
         id:
           type: integer
@@ -2359,14 +2359,14 @@ components:
     coupon:
       type: object
       required:
-        - id
-        - coupon_code
-        - type
-        - value
-        - min_price
-        - user_count
-        - startDate
-        - endDate
+      - id
+      - coupon_code
+      - type
+      - value
+      - min_price
+      - user_count
+      - startDate
+      - endDate
       properties:
         id:
           type: integer
@@ -2375,8 +2375,8 @@ components:
         type:
           type: string
           enum:
-            - fixed
-            - percent
+          - fixed
+          - percent
         value:
           type: number
         min_price:

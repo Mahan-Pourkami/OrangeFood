@@ -195,7 +195,6 @@ public class AuthHandler implements HttpHandler {
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(400, response.getBytes().length);
             }
-
             catch (UnsupportedMediaException e){
 
                 Headers headers = exchange.getResponseHeaders();
@@ -378,12 +377,12 @@ public class AuthHandler implements HttpHandler {
                 return field;
             }
 
-        if(jsonObject.getString("role").equals("buyer")
-        && jsonObject.getString("role").equals("seller")
-        && jsonObject.getString("role").equals("courier")) {
+            if(jsonObject.getString("role").equals("buyer")
+            && jsonObject.getString("role").equals("seller")
+            && jsonObject.getString("role").equals("courier")) {
 
-            return "role";
-        }
+                return "role";
+            }
         }
         if (!Validator.validateEmail(jsonObject.getString("email")) && !jsonObject.getString("email").isEmpty()) {
             return "email";

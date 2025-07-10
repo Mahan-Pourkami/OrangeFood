@@ -32,6 +32,8 @@ public class Server {
             server.createContext("/wallet" , new WalletHandler());
             server.createContext("/coupon" , new CouponHandler());
             server.createContext("/vendors" , new VendorHandler());
+            server.createContext("/items" , new ItemsHandler());
+
 
 
 
