@@ -64,3 +64,19 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
     innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
 }
+
+.circular-image {
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);
+}
+
+
+.centered-label {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-content-display: center;
+    -fx-label-padding: 0 0 0 0;
+}
