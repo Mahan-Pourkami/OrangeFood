@@ -35,8 +35,6 @@ public class Server {
             server.createContext("/items" , new ItemsHandler());
 
 
-
-
             server.start();
 
            System.out.println("MainServer.Server started at http://localhost:8080");

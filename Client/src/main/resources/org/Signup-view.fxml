@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
@@ -237,7 +239,7 @@
             <Font name="System Bold" size="28.0" />
          </font>
       </Label>
-      <ImageView fx:id="homebutton" fitHeight="201.0" fitWidth="202.0" layoutX="927.0" layoutY="54.0" onMousePressed="#handlehomebutton" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="homebutton" fitHeight="201.0" fitWidth="202.0" layoutX="756.0" layoutY="527.0" onMousePressed="#handlehomebutton" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/logo.png" />
          </image>
@@ -345,7 +347,7 @@
             <Font size="15.0" />
          </font>
       </TextField>
-      <Button fx:id="signupbutton" layoutX="912.0" layoutY="514.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="142.0" stylesheets="@../asset/style_sheets/input.css" text="Sign up">
+      <Button fx:id="signupbutton" layoutX="912.0" layoutY="399.0" mnemonicParsing="false" onMousePressed="#handleSignupButton" prefHeight="25.0" prefWidth="142.0" stylesheets="@../asset/style_sheets/input.css" text="Sign up">
          <styleClass>
             <String fx:value="glass-gradient-button" />
             <String fx:value="wobbly-image" />
@@ -412,17 +414,17 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="838.0" layoutY="558.0" prefHeight="36.0" prefWidth="201.0" text="Alraedy have an account ?" textFill="#fffcfc">
+      <Label layoutX="818.0" layoutY="438.0" prefHeight="36.0" prefWidth="201.0" text="Alraedy have an account ?" textFill="#fffcfc">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Hyperlink fx:id="loginlink" layoutX="1027.0" layoutY="559.0" onMousePressed="#handleloginlink" text="Login" textFill="#bfcaf8">
+      <Hyperlink fx:id="loginlink" layoutX="1007.0" layoutY="440.0" onMousePressed="#handleloginlink" text="Login" textFill="#bfcaf8">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Hyperlink>
-      <Label layoutX="919.0" layoutY="273.0" styleClass="wobbly-image" text="Orange Food !">
+      <Label layoutX="802.0" layoutY="746.0" styleClass="wobbly-image" text="Orange Food !">
          <font>
             <Font name="System Bold" size="40.0" />
          </font>
@@ -455,7 +457,7 @@
             </DropShadow>
          </effect>
       </Label>
-      <Label layoutX="1053.0" layoutY="334.0" styleClass="wobbly-image" text="Fresh, Fast &amp; Delicious!" textFill="WHITE">
+      <Label layoutX="989.0" layoutY="804.0" styleClass="wobbly-image" text="Fresh, Fast &amp; Delicious!" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -463,6 +465,31 @@
       <Label layoutX="494.0" layoutY="556.0" text="*" textFill="#fc0000">
          <font>
             <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+      <Button fx:id="profchooser" layoutX="912.0" layoutY="299.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="33.0" prefWidth="142.0" styleClass="buttonchooser" stylesheets="@../asset/style_sheets/input.css" text="choose profile" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ImageView fx:id="profview" fitHeight="171.0" fitWidth="201.0" layoutX="872.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+         <viewport>
+            <Rectangle2D height="640.0" width="640.0" />
+         </viewport>
+         <image>
+            <Image url="@../asset/images/contact.jpg" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+         <styleClass>
+            <String fx:value="circular-image" />
+            <String fx:value="circular-image" />
+         </styleClass>
+      </ImageView>
+      <Label fx:id="errorlable" alignment="CENTER" contentDisplay="CENTER" layoutX="965.0" layoutY="358.0" styleClass="centered-label" textAlignment="JUSTIFY" textFill="#ff0808" underline="true">
+         <font>
+            <Font name="System Bold" size="16.0" />
          </font>
       </Label>
    </children>

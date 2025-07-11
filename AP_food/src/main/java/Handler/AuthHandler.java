@@ -237,7 +237,7 @@ public class AuthHandler implements HttpHandler {
 
                         if (user == null) {
 
-                            response = generate_error("User not found");
+                            response = generate_error("Invalid pass");
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(404, response.getBytes().length);
@@ -377,9 +377,13 @@ public class AuthHandler implements HttpHandler {
                 return field;
             }
 
-            if(jsonObject.getString("role").equals("buyer")
-            && jsonObject.getString("role").equals("seller")
-            && jsonObject.getString("role").equals("courier")) {
+            if(jsonObject.getString("full_name").isEmpty()){
+                return "name";
+            }
+
+            if(!jsonObject.getString("role").equals("buyer")
+            && !jsonObject.getString("role").equals("seller")
+            && !jsonObject.getString("role").equals("courier")) {
 
                 return "role";
             }
