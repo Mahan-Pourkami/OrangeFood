@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -35,6 +36,10 @@ public class SceneManager {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
+        ImageView icon = new ImageView( new Image(Objects.requireNonNull(SceneManager.class.getResourceAsStream("/asset/images/logo.png"))));
+        icon.setFitHeight(48);
+        icon.setFitWidth(48);
+        alert.setGraphic(icon);
         alert.setContentText(message);
         alert.showAndWait();
     }

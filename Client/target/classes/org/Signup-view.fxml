@@ -472,7 +472,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="profview" fitHeight="171.0" fitWidth="201.0" layoutX="872.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="profview" fitHeight="171.0" fitWidth="201.0" layoutX="889.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true">
          <viewport>
             <Rectangle2D height="640.0" width="640.0" />
          </viewport>
