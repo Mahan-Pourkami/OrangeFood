@@ -535,7 +535,7 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
                 restaurant.menu_titles.remove(menu_title);
-                foodDAO.delete_from_menu(menu_title,res_id);
+                foodDAO.delet_from_menu(menu_title,res_id);
                 restaurantDAO.updateRestaurant(restaurant);
                 response = generate_msg("menu with title " + menu_title + " deleted successfully");
                 http_code = 200;

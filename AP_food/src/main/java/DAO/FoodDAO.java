@@ -125,8 +125,7 @@ public class FoodDAO {
             transaction.commit();
             return foods;
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
@@ -135,7 +134,6 @@ public class FoodDAO {
     }
 
     public List<Food> getFoodsByRestaurantId(Long restaurantId) {
-
         List<Food> result = new ArrayList<Food>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
@@ -147,7 +145,6 @@ public class FoodDAO {
     }
 
     public List<Food> getFoodsByMenu(Long restaurantId, String menu_title) {
-
         List <Food> result = new ArrayList<>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
@@ -170,10 +167,8 @@ public class FoodDAO {
         return null;
     }
 
-    public void delete_from_menu(String menu_title , long restaurantId) {
-
+    public void delet_from_menu(String menu_title , long restaurantId) {
         List<Food> foods = getAllFoods();
-
         for (Food food : foods) {
             if(food.getMenuTitle()!=null && food.getMenuTitle().equals(menu_title) && food.getRestaurantId().equals(restaurantId)) {
                 food.setMenuTitle(null);

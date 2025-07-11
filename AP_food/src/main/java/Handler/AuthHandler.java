@@ -170,10 +170,6 @@ public class AuthHandler implements HttpHandler {
                             bankobject.getString("bank_name"),
                             bankobject.getString("account_number"));
 
-                    if(jsonobject.getString("password").length()<8){
-                        throw new InvalidInputException("password");
-                    }
-
                     userDTOreg.register();
                     UserDTO.UserRegResponseDTO userRegResponseDTO = new UserDTO.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
                     Headers headers = exchange.getResponseHeaders();
@@ -195,6 +191,7 @@ public class AuthHandler implements HttpHandler {
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(400, response.getBytes().length);
             }
+
             catch (UnsupportedMediaException e){
 
                 Headers headers = exchange.getResponseHeaders();
@@ -207,13 +204,6 @@ public class AuthHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(409, response.getBytes().length);
-            }
-
-            catch (OrangeException e) {
-                Headers headers = exchange.getResponseHeaders();
-                headers.add("Content-Type", "application/json");
-                response = generate_error(e.getMessage());
-                exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
             }
         }
 
@@ -237,7 +227,7 @@ public class AuthHandler implements HttpHandler {
 
                         if (user == null) {
 
-                            response = generate_error("Invalid pass");
+                            response = generate_error("User not found");
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(404, response.getBytes().length);
@@ -377,16 +367,12 @@ public class AuthHandler implements HttpHandler {
                 return field;
             }
 
-            if(jsonObject.getString("full_name").isEmpty()){
-                return "name";
-            }
+        if(jsonObject.getString("role").equals("buyer")
+        && jsonObject.getString("role").equals("seller")
+        && jsonObject.getString("role").equals("courier")) {
 
-            if(!jsonObject.getString("role").equals("buyer")
-            && !jsonObject.getString("role").equals("seller")
-            && !jsonObject.getString("role").equals("courier")) {
-
-                return "role";
-            }
+            return "role";
+        }
         }
         if (!Validator.validateEmail(jsonObject.getString("email")) && !jsonObject.getString("email").isEmpty()) {
             return "email";
