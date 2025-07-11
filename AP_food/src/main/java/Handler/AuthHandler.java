@@ -297,6 +297,7 @@ public class AuthHandler implements HttpHandler {
                             JSONObject json = new JSONObject();
                             json.put("message", "Welcome dear admin!");
                             json.put("token", JwtUtil.generateToken("admin", "admin"));
+                            json.put("role", "admin");
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);

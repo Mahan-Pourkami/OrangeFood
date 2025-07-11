@@ -9,8 +9,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RestaurantDAO {
 
@@ -97,16 +98,17 @@ public class RestaurantDAO {
         }
     }
 
-    public List<Restaurant> findbyfilters(String name) {
+    public Set<Restaurant> findbyfilters(String name) {
 
         List<Restaurant> vendors = getAllRestaurants();
-        List<Restaurant> filteredVendors = new ArrayList<Restaurant>();
+        Set<Restaurant> filteredVendors = new HashSet<Restaurant>();
         for (Restaurant vendor : vendors) {
 
             if(vendor.getName().toLowerCase().contains(name.toLowerCase())){
                 filteredVendors.add(vendor);
             }
         }
+
         return filteredVendors;
     }
 

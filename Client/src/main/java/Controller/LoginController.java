@@ -5,18 +5,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public class LoginController {
@@ -46,6 +46,8 @@ public class LoginController {
     @FXML
     void handlelogin(MouseEvent event) throws IOException {
 
+
+        System.out.println(phonefield.getText());
         URL address = new URL("http://localhost:8080/auth/login");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
 
@@ -72,6 +74,11 @@ public class LoginController {
         JSONObject response = Methods.getJsonResponse(connection);
         int httpCode = connection.getResponseCode();
         if(httpCode == 200) {
+
+            File tokenFile = new File("src/main/resources/token.txt");
+            try (FileWriter writer = new FileWriter(tokenFile)) {
+                writer.write(response.getString("token"));
+            }
             error_lable.setVisible(false);
             FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
