@@ -15,6 +15,7 @@ public class SceneManager {
 
 
     public static void fadeScene(Stage stage, Scene scene) {
+
         FadeTransition ftOut = new FadeTransition(Duration.millis(50), stage.getScene().getRoot());
         ftOut.setFromValue(1.0);
         ftOut.setToValue(0.0);

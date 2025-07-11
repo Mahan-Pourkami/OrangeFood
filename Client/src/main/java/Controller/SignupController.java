@@ -8,8 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
+import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -67,7 +68,7 @@ public class SignupController {
     Label errorlable;
 
     String selectedImagePath = "";
-    Image default_prof = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/contact.jpg")),640,640,true,true);
+    Image default_prof = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/contact.png")),640,640,true,true);
 
 
     @FXML
@@ -119,8 +120,10 @@ public class SignupController {
         JSONObject response = Methods.getJsonResponse(connection);
 
         int httpCode = connection.getResponseCode();
+
         if (httpCode == 200) {
 
+            //TODO handle token
             FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = home.load();
@@ -191,6 +194,23 @@ public class SignupController {
         profview.setImage(default_prof);
           rolechooser.getItems().addAll("buyer", "seller", "courier");
         rolechooser.getSelectionModel().selectFirst();
+        profview.setOnDragOver(event -> {
+            if (event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+
+        profview.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                File file = db.getFiles().get(0);
+                selectedImagePath = file.getAbsolutePath();
+                profview.setImage(new Image(file.toURI().toString()));
+            }
+            event.setDropCompleted(true);
+            event.consume();
+        });
 
     }
 
