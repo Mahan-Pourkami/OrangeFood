@@ -27,7 +27,7 @@ public class AuthHandler implements HttpHandler {
         String request = exchange.getRequestMethod();
         String [] paths = exchange.getRequestURI().getPath().split("/");
         String response = "";
-  
+
         try {
 
             switch (request) {
@@ -195,6 +195,7 @@ public class AuthHandler implements HttpHandler {
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(400, response.getBytes().length);
             }
+
             catch (UnsupportedMediaException e){
 
                 Headers headers = exchange.getResponseHeaders();
@@ -378,8 +379,8 @@ public class AuthHandler implements HttpHandler {
             }
 
             if(jsonObject.getString("role").equals("buyer")
-            && jsonObject.getString("role").equals("seller")
-            && jsonObject.getString("role").equals("courier")) {
+                    && jsonObject.getString("role").equals("seller")
+                    && jsonObject.getString("role").equals("courier")) {
 
                 return "role";
             }

@@ -6,12 +6,16 @@ import Exceptions.*;
 import Model.Buyer;
 import Model.Food; // Import the Food model
 import Utils.JwtUtil;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemsHandler implements HttpHandler {
 
@@ -27,6 +31,10 @@ public class ItemsHandler implements HttpHandler {
             switch (methode) {
                 case "GET":
                     response = handleGetRequest(exchange,paths);
+                    break;
+
+                case "POST":
+                    response = handlePostRequest(exchange,paths);
                     break;
 
                 default:
@@ -78,10 +86,10 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("name", food.getName());
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
-            foodJson.put("vendor_id", food.getRestaurantId());
+            foodJson.put("vendor_id", food.getRestaurant().getId());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
-            foodJson.put("keywords", new JSONArray(food.getKeywords()));
+            foodJson.put("keywords", food.getKeywords());
 
             return foodJson.toString();
         }
@@ -90,6 +98,132 @@ public class ItemsHandler implements HttpHandler {
         }
     }
 
+    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+        FoodDAO foodDAO = new FoodDAO();
+        String token = JwtUtil.get_token_from_server(exchange);
+        String response ="";
+
+        if(paths.length == 2){
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("buyer")) {
+                throw new ForbiddenroleException();
+            }
+            JSONObject jsonobject = getJsonObject(exchange);
+
+            if(invalidInputItems(jsonobject).isEmpty()){
+                List<Food> foods = foodDAO.getAllFoods();
+                ArrayList<Food> foundFoods = new ArrayList<>();
+                JSONArray keywordsArray = jsonobject.getJSONArray("keywords");
+
+                //اگر قسمتی از نام و قیمتی کمتر از قیمت مضخص و تمام کی ورد های مشخص شده را به طور کامل (نه فقط قسمتی) بدون توجه به upper or lower case داشته باشد
+                //اگر چیزی پیدا نشود لیست خالی
+                for (Food food : foods) {
+                    if (food.getName().contains(jsonobject.getString("search")) &&
+                            (food.getPrice() <= jsonobject.getInt("price") || jsonobject.getInt("price") == 0)) {
+
+                        if (keywordsArray.isEmpty()) {
+                            foundFoods.add(food);
+                            continue;
+                        }
+
+                        List<String> foodKeywords = food.getKeywords().stream()
+                                .map(String::toLowerCase)
+                                .collect(Collectors.toList());
+
+                        boolean allKeywordsMatch = true;
+                        for (int i = 0; i < keywordsArray.length(); i++) {
+                            Object keywordObj = keywordsArray.get(i);
+                            if (keywordObj instanceof String) {
+                                String keyword = ((String) keywordObj).toLowerCase();
+                                if (!foodKeywords.contains(keyword)) {
+                                    allKeywordsMatch = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (allKeywordsMatch) {
+                            foundFoods.add(food);
+                        }
+                    }
+                }
+
+
+                JSONArray resultArray = new JSONArray();
+                for (Food food : foundFoods) {
+                    JSONObject foodJson = new JSONObject();
+                    foodJson.put("id", food.getId());
+                    foodJson.put("name", food.getName());
+                    foodJson.put("imageBase64", food.getPictureUrl());
+                    foodJson.put("description", food.getDescription());
+                    foodJson.put("vendor_id", food.getRestaurant().getId());
+                    foodJson.put("price", food.getPrice());
+                    foodJson.put("supply", food.getSupply());
+                    foodJson.put("keywords", food.getKeywords());
+                    resultArray.put(foodJson);
+                }
+                response = resultArray.toString();
+            }
+
+
+            else {
+                response = generate_error("Invalid "+invalidInputItems(jsonobject));
+                throw new OrangeException(response, 400);
+
+            }
+
+        }
+        else {
+            throw new OrangeException("endpoint not supported", 404);
+        }
+        return response;
+    }
+
+    private String invalidInputItems(JSONObject jsonObject) throws OrangeException {
+        String[] requiredFields = {"search", "price", "keywords"};
+
+        if (jsonObject.length() != 3) {
+            return "fields.";
+        }
+
+        for (String field : requiredFields) {
+            if (!jsonObject.has(field)) {
+                return field;
+            }
+        }
+
+        try {
+            // Check 'search' is a string (can be empty)
+            Object searchObj = jsonObject.get("search");
+            if (!(searchObj instanceof String)) {
+                return "Search";
+            }
+
+            Object priceObj = jsonObject.get("price");
+            if (!(priceObj instanceof Integer)) {
+                return "Price";
+            }
+
+            Object keywordsObj = jsonObject.get("keywords");
+            if (!(keywordsObj instanceof JSONArray)) {
+                return "Keywords";
+            }
+
+            JSONArray keywordsArray = (JSONArray) keywordsObj;
+            for (int i = 0; i < keywordsArray.length(); i++) {
+                if (!(keywordsArray.get(i) instanceof String)) {
+                    return "keywords";
+                }
+            }
+
+        } catch (Exception e) {
+            return "types";
+        }
+
+        return "";
+    }
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
