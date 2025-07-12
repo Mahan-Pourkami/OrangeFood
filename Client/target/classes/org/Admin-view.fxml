@@ -8,7 +8,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
@@ -18,7 +17,7 @@
 
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdminController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="86.0" layoutX="109.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1175.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="86.0" layoutX="-3.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1287.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -36,19 +35,6 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8f92a14d" height="337.0" layoutX="175.0" layoutY="134.0" stroke="WHITE" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="2.0" styleClass="wobbly-image" width="509.0">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Rectangle>
-      <VBox alignment="TOP_CENTER" layoutY="-9.0" prefHeight="877.0" prefWidth="110.0" styleClass="admin-vbox">
-         <children>
-            <VBox prefHeight="25.0" prefWidth="100.0" />
-            <Button fx:id="logout_button" mnemonicParsing="false" onMousePressed="#handle_logout" prefHeight="21.0" prefWidth="110.0" styleClass="buttonchooser" stylesheets="@../asset/style_sheets/input.css" text="Logout">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-         </children></VBox>
       <Label contentDisplay="CENTER" layoutX="534.0" layoutY="14.0" prefHeight="59.0" prefWidth="307.0" styleClass="wobbly-image" stylesheets="@../asset/style_sheets/style.css" text="Admin's Dashboard" textAlignment="JUSTIFY" textOverrun="CENTER_ELLIPSIS" wrapText="true">
          <font>
             <Font name="System Bold" size="33.0" />
@@ -80,58 +66,62 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <PieChart fx:id="userschart" layoutX="216.0" layoutY="186.0" prefHeight="252.0" prefWidth="263.0" stylesheets="@../asset/style_sheets/style.css">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8f92a14d" height="339.0" layoutX="129.0" layoutY="138.0" stroke="WHITE" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="2.0" styleClass="wobbly-image" width="522.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Rectangle>
+      <PieChart fx:id="userschart" layoutX="171.0" layoutY="191.0" prefHeight="252.0" prefWidth="263.0" stylesheets="@../asset/style_sheets/style.css">
          <styleClass>
             <String fx:value="chart-pie-label" />
             <String fx:value="data0" />
             <String fx:value="data2" />
             <String fx:value="data1" />
          </styleClass></PieChart>
-      <Line endX="100.0" fill="WHITE" layoutX="511.0" layoutY="310.0" rotate="270.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
-      <Label layoutX="529.0" layoutY="218.0" prefHeight="33.0" prefWidth="110.0" text="Buyers count :" textFill="WHITE">
+      <Line endX="100.0" fill="WHITE" layoutX="466.0" layoutY="315.0" rotate="270.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
+      <Label layoutX="484.0" layoutY="223.0" prefHeight="33.0" prefWidth="110.0" text="Buyers count :" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="529.0" layoutY="269.0" prefHeight="33.0" prefWidth="110.0" text="Sellers count :" textFill="WHITE">
+      <Label layoutX="484.0" layoutY="274.0" prefHeight="33.0" prefWidth="110.0" text="Sellers count :" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="529.0" layoutY="320.0" prefHeight="33.0" prefWidth="126.0" text="Couriers count :" textFill="WHITE">
+      <Label layoutX="484.0" layoutY="325.0" prefHeight="33.0" prefWidth="119.0" text="Couriers count :" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="529.0" layoutY="375.0" prefHeight="33.0" prefWidth="110.0" text="Total :" textFill="WHITE">
+      <Label layoutX="484.0" layoutY="380.0" prefHeight="33.0" prefWidth="110.0" text="Total :" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="buyer_count" layoutX="643.0" layoutY="224.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
+      <Label fx:id="buyer_count" layoutX="598.0" layoutY="229.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Label>
-      <Label fx:id="seller_count" layoutX="639.0" layoutY="275.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
+      <Label fx:id="seller_count" layoutX="594.0" layoutY="280.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Label>
-      <Label fx:id="courier_count" layoutX="652.0" layoutY="326.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
+      <Label fx:id="courier_count" layoutX="603.0" layoutY="331.0" prefHeight="21.0" prefWidth="32.0" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="total_count" layoutX="584.0" layoutY="381.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
+      <Label fx:id="total_count" layoutX="539.0" layoutY="386.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="404.0" layoutY="144.0" text="User s Data" textFill="WHITE">
+      <Label layoutX="359.0" layoutY="149.0" text="User s Data" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button layoutX="737.0" layoutY="174.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Get the all users details                                                                 " textFill="WHITE">
+      <Button layoutX="692.0" layoutY="179.0" mnemonicParsing="false" onMousePressed="#handleGetAllusers" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Get the all users details                                                                 " textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -139,7 +129,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="737.0" layoutY="261.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Manage the Coupons                                                                      " textFill="WHITE">
+      <Button layoutX="692.0" layoutY="266.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Manage the Coupons                                                                      " textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -147,7 +137,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="737.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Check the approval requests                                                            " textFill="WHITE">
+      <Button layoutX="692.0" layoutY="355.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Check the approval requests                                                            " textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -155,78 +145,78 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Line endX="1097.0" fill="WHITE" layoutX="183.0" layoutY="89.0" startX="-74.0" stroke="WHITE" strokeWidth="5.0" />
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="174.0" layoutY="502.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="338.0">
+      <Line endX="1097.0" fill="WHITE" layoutX="183.0" layoutY="89.0" startX="-186.0" startY="-3.0" stroke="WHITE" strokeWidth="5.0" />
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="129.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="338.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Rectangle>
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="532.0" layoutY="502.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="487.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Rectangle>
-      <Label layoutX="336.0" layoutY="596.0" text="System's Vendors" textFill="WHITE">
+      <Label layoutX="291.0" layoutY="601.0" text="System's Vendors" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="202.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="157.0" layoutY="561.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/vendoricon.png" />
          </image>
       </ImageView>
-      <Label layoutX="216.0" layoutY="722.0" prefHeight="30.0" prefWidth="199.0" text="Number of Restaurants:" textFill="#ffffffb9">
+      <Label layoutX="171.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Restaurants:" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="216.0" layoutY="764.0" text="Number of Items :" textFill="#ffffffb9">
+      <Label layoutX="171.0" layoutY="769.0" text="Number of Items :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="694.0" layoutY="596.0" text="System's Orders" textFill="WHITE">
+      <Label layoutX="649.0" layoutY="601.0" text="System's Orders" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="554.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="509.0" layoutY="561.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/carticon.png" />
          </image>
       </ImageView>
-      <Label layoutX="556.0" layoutY="722.0" prefHeight="30.0" prefWidth="199.0" text="Number of Orders :" textFill="#ffffffb9">
+      <Label layoutX="511.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Orders :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="556.0" layoutY="762.0" prefHeight="30.0" prefWidth="199.0" text="Today's Orders :" textFill="#ffffffb9">
+      <Label layoutX="511.0" layoutY="767.0" prefHeight="30.0" prefWidth="199.0" text="Today's Orders :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="880.0" layoutY="502.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="835.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Rectangle>
-      <Label layoutX="1025.0" layoutY="596.0" text="View Transactions" textFill="WHITE">
+      <Label layoutX="980.0" layoutY="601.0" text="View Transactions" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="128.0" fitWidth="137.0" layoutX="897.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="128.0" fitWidth="137.0" layoutX="852.0" layoutY="543.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/transactionicon.png" />
          </image>
       </ImageView>
-      <Label layoutX="897.0" layoutY="722.0" prefHeight="30.0" prefWidth="199.0" text="Number of Transactions :" textFill="#ffffffb9">
+      <Label layoutX="852.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Transactions :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="897.0" layoutY="762.0" prefHeight="30.0" prefWidth="199.0" text="Todays Transactions :" textFill="#ffffffb9">
+      <Label layoutX="852.0" layoutY="767.0" prefHeight="30.0" prefWidth="199.0" text="Todays Transactions :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -258,5 +248,10 @@
          </font>
       </Label>
       <Label layoutX="1138.0" layoutY="33.0" prefHeight="26.0" prefWidth="100.0" text="Label" />
+      <Button fx:id="logout_button" layoutX="1157.0" layoutY="20.0" mnemonicParsing="false" onMousePressed="#handle_logout" prefHeight="21.0" prefWidth="110.0" styleClass="buttonchooser" stylesheets="@../asset/style_sheets/input.css" text="Logout">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </Pane>
