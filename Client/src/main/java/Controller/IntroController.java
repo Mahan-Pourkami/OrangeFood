@@ -85,7 +85,7 @@ public class IntroController {
                 connection.disconnect();
             }
         } catch (IOException e) {
-            SceneManager.showErrorAlert("Connection Error", "Cannot connect to server: " + e.getMessage());
+            SceneManager.showErrorAlert("Connection Error",e.getMessage());
             redirectToLogin(mouseEvent);
         }
     }

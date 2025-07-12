@@ -85,9 +85,9 @@
 }
 
 .adminbutton {
-    -fx-background-color: #8e96a1;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-background-color: #203c57;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-border-color: white;
     -fx-text-fill: white;
 }
@@ -95,13 +95,13 @@
 .adminbutton:hover {
     -fx-background-color: #0d2a57;
     -fx-border-color: white;
-    -fx-border-radius: 5;
+    -fx-border-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 1);
 }
 
 .adminbutton:pressed {
     -fx-border-color: white;
-    -fx-border-radius: 5;
+    -fx-border-radius: 10;
     -fx-background-color: #083fa0;
     -fx-translate-y: 1px;
 }

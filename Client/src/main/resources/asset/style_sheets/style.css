@@ -91,6 +91,7 @@
 
     -fx-background-color: #0d2a57;
     -fx-border-color: #ffffff;
+    -fx-border-width: 5;
     -fx-border-radius: 10;
 }
 
