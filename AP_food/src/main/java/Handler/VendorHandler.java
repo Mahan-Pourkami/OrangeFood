@@ -115,7 +115,7 @@ public class VendorHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO);
+                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO ,foodDAO);
 
                 response = vendors.getResponse();
                 http_code = 200;

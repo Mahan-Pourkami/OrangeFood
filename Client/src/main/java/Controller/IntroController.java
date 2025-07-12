@@ -12,46 +12,102 @@ import javafx.stage.Stage;
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Objects;
 
 public class IntroController {
 
+    @FXML
+    private Button continueButton;
 
     @FXML
-    Button continueButton;
+    private Hyperlink aboutus;
 
     @FXML
-    Hyperlink aboutus;
+    private Hyperlink support;
 
     @FXML
-    Hyperlink support;
+    private Hyperlink community;
 
     @FXML
-    Hyperlink community;
-
-
-
-    public void handle_aboutus(MouseEvent mouseEvent) throws URISyntaxException, IOException {
-        Desktop.getDesktop().browse(new URI("https://github.com/Mahan-Fathollahpour"));
-    }
-    public void handle_support(MouseEvent mouseEvent) throws URISyntaxException, IOException {
-        Desktop.getDesktop().browse(new URI("https://github.com/parsa0s0a"));
-    }
-
-    public void handle_community(MouseEvent mouseEvent) throws URISyntaxException, IOException {
-        Desktop.getDesktop().browse(new URI("https://www.linkedin.com/in/mahan-fathollahpour-89941722a/"));
+    public void handle_aboutus(MouseEvent mouseEvent) {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/Mahan-Fathollahpour"));
+        } catch (IOException | URISyntaxException e) {
+            SceneManager.showErrorAlert("Browser Error", "Could not open GitHub profile");
+        }
     }
 
-    public void handle_continue_button(MouseEvent mouseEvent) throws IOException {
+    @FXML
+    public void handle_support(MouseEvent mouseEvent) {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/parsa0s0a"));
+        } catch (IOException | URISyntaxException e) {
+            SceneManager.showErrorAlert("Browser Error", "Could not open GitHub profile");
+        }
+    }
 
-        FXMLLoader newView = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/org/Login-view.fxml")));
-        Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-        Parent root = newView.load();
+    @FXML
+    public void handle_community(MouseEvent mouseEvent) {
+        try {
+            Desktop.getDesktop().browse(new URI("https://www.linkedin.com/in/mahan-fathollahpour-89941722a/"));
+        } catch (IOException | URISyntaxException e) {
+            SceneManager.showErrorAlert("Browser Error", "Could not open LinkedIn profile");
+        }
+    }
+
+    @FXML
+    public void handle_continue_button(MouseEvent mouseEvent) {
+        try {
+            String token = Methods.Get_saved_token();
+            if (token == null || token.isEmpty()) {
+                redirectToLogin(mouseEvent);
+                return;
+            }
+
+            URL profileUrl = new URL("http://localhost:8080/auth/profile");
+            HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
+
+            try {
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", "Bearer " + token);
+
+                int httpCode = connection.getResponseCode();
+                if (httpCode == HttpURLConnection.HTTP_OK) {
+                    redirectToHome(mouseEvent);
+                } else {
+                    redirectToLogin(mouseEvent);
+                }
+            } finally {
+                connection.disconnect();
+            }
+        } catch (IOException e) {
+            SceneManager.showErrorAlert("Connection Error",e.getMessage());
+            redirectToLogin(mouseEvent);
+        }
+    }
+
+    private void redirectToHome(MouseEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
     }
 
-
+    private void redirectToLogin(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            SceneManager.fadeScene(stage, scene);
+        } catch (IOException e) {
+            SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
+        }
+    }
 }

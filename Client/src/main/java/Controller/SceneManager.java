@@ -1,7 +1,11 @@
 package Controller;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -41,6 +45,19 @@ public class SceneManager {
 
     public static void showErrorAlert(String title, String message) {
         showAlert(title, message, Alert.AlertType.ERROR);
+    }
+
+    public  static  void animateChart(PieChart pieChart) {
+        for (PieChart.Data data : pieChart.getData()) {
+            Timeline timeline = new Timeline();
+            timeline.getKeyFrames().addAll(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(data.pieValueProperty(), 0)),
+                    new KeyFrame(Duration.seconds(1),
+                            new KeyValue(data.pieValueProperty(), data.getPieValue()))
+            );
+            timeline.play();
+        }
     }
 
 

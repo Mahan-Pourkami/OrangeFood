@@ -64,3 +64,51 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 15, 0, 0, 0),
     innershadow(gaussian, rgba(255, 255, 255, 0.4), 10, 0, 0, 0);
 }
+
+.circular-image {
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);
+}
+
+
+.centered-label {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-content-display: center;
+    -fx-label-padding: 0 0 0 0;
+}
+
+.admin-page {
+
+    -fx-background-color: #001537;
+    -fx-background-radius: 10;
+}
+
+.admin-vbox {
+
+    -fx-background-color: #0d2a57;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 5;
+    -fx-border-radius: 10;
+}
+
+.chart {
+    -fx-pie-label-visible: true;
+    -fx-label-line-length: 10;
+    -fx-start-angle: 90;
+}
+
+.data0.chart-pie { -fx-pie-color: #820748;-fx-pie-border-color :#FFFF;}
+.data1.chart-pie { -fx-pie-color: #0d2a57;  -fx-pie-border-color :#FFFF; }
+.data2.chart-pie { -fx-pie-color: #3357FF; -fx-pie-border-color :#FFFF;}
+
+
+.chart-pie-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-fill: #ffffff; /* Text color */
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 0,0,0,1);
+}

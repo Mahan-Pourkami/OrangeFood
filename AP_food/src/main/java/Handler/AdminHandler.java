@@ -207,6 +207,7 @@ public class AdminHandler implements HttpHandler {
 
         else if (paths.length == 3 && paths[2].equals("coupons")){
 
+
             try{
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
