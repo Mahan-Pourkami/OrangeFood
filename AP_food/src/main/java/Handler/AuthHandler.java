@@ -1,5 +1,6 @@
 package Handler;
 
+import DAO.BuyerDAO;
 import DAO.CourierDAO;
 import DAO.SellerDAO;
 import Model.*;
@@ -20,6 +21,7 @@ public class AuthHandler implements HttpHandler {
 
     CourierDAO courierDAO = new CourierDAO();
     SellerDAO  sellerDAO = new SellerDAO();
+    BuyerDAO buyerDAO = new BuyerDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -277,6 +279,7 @@ public class AuthHandler implements HttpHandler {
                             bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
                             userJson.put("bank_info", bankInfo);
                             json.put("user", userJson);
+                            json.put("role", user.role);
 
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
@@ -294,10 +297,17 @@ public class AuthHandler implements HttpHandler {
 
                         } else {
 
+                            int seller_counts = sellerDAO.getAllSellers().size();
+                            int courier_counts = courierDAO.getAllCouriers().size();
+                            int buyer_counts = buyerDAO.getAllBuyers().size() ;
+
                             JSONObject json = new JSONObject();
                             json.put("message", "Welcome dear admin!");
                             json.put("token", JwtUtil.generateToken("admin", "admin"));
                             json.put("role", "admin");
+                            json.put("seller_counts", seller_counts);
+                            json.put("courier_counts", courier_counts);
+                            json.put("buyer_counts", buyer_counts);
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);

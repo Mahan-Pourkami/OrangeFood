@@ -15,8 +15,6 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 
 public class LoginController {
@@ -80,11 +78,29 @@ public class LoginController {
                 writer.write(response.getString("token"));
             }
             error_lable.setVisible(false);
-            FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = home.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+
+            String role = response.getString("role");
+
+            if(role.equals("admin")) {
+
+                int seller_count = response.getInt("seller_counts");
+                int buyer_count = response.getInt("buyer_counts");
+                int courier_count = response.getInt("courier_counts");
+                AdminController.setvalues(buyer_count, seller_count, courier_count);
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+
+            }
+            else {
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
         }
         else {
             error_lable.setVisible(true);
