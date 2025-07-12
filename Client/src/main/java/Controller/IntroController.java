@@ -72,6 +72,7 @@ public class IntroController {
             HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
 
             try {
+
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + token);
 

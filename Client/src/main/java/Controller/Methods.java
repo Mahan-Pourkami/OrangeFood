@@ -1,5 +1,6 @@
 package Controller;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -30,6 +31,24 @@ public class Methods {
             }
 
             return new JSONObject(response.toString());
+        }
+    }
+    public static JSONArray getJsonArrayResponse(HttpURLConnection connection) throws IOException {
+        boolean isSuccess = (connection.getResponseCode() >= 200 && connection.getResponseCode() < 300);
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        isSuccess ? connection.getInputStream() : connection.getErrorStream(),
+                        "utf-8"
+                )
+        )) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line.trim());
+            }
+            return new JSONArray(response.toString());
         }
     }
 

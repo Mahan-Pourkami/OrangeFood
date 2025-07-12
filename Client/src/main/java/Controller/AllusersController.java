@@ -1,43 +1,98 @@
 package Controller;
 
 import Model.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class AllusersController {
 
+    @FXML
+    private TableView<User> userstable;
 
     @FXML
-    TableView<User>userstable;
+    private TableColumn<User, String> phone_col;
 
     @FXML
-    TableColumn<User,String> phone_col;
+    private TableColumn<User, String> id_col;
 
     @FXML
-    TableColumn<User,String> id_col;
+    private TableColumn<User, String> name_col;
 
     @FXML
-    TableColumn<User,String> name_col;
+    private TableColumn<User, String> email_col;
 
     @FXML
-    TableColumn<User,String> email_col;
+    private TableColumn<User, String> role_col;
 
+    private final ObservableList<User> users = FXCollections.observableArrayList();
 
     @FXML
     void initialize() throws IOException {
+        // 1. Set up the column bindings
+        phone_col.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        id_col.setCellValueFactory(new PropertyValueFactory<>("id"));
+        name_col.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        email_col.setCellValueFactory(new PropertyValueFactory<>("email"));
+        role_col.setCellValueFactory(new PropertyValueFactory<>("role"));
 
+        // 2. Connect the ObservableList to the TableView
+        userstable.setItems(users);
+
+        // 3. Load the data
+        loadUserData();
+    }
+
+    private void loadUserData() throws IOException {
+        String token = Methods.Get_saved_token();
         URL getusers = new URL("http://localhost:8080/admin/users");
         HttpURLConnection connection = (HttpURLConnection) getusers.openConnection();
         connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "Bearer " + token);
 
+        ArrayList<User> users_list = new ArrayList<>();
+
+        JSONArray jsonarray = Methods.getJsonArrayResponse(connection);
+        for (int i = 0; i < jsonarray.length(); i++) {
+            JSONObject jsonobject = jsonarray.getJSONObject(i);
+            User user = new User(
+                    jsonobject.getString("phone"),
+                    jsonobject.getString("id"),
+                    jsonobject.getString("full_name"),
+                    jsonobject.getString("email"),
+                    jsonobject.getString("role") // Is this duplicate email intentional?
+            );
+            users_list.add(user);
+        }
+
+        // 4. Add all users to the ObservableList
+        users.addAll(users_list);
     }
 
+    @FXML
+    void control_back(MouseEvent event) throws IOException {
 
-
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = users.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
 }

@@ -13,6 +13,7 @@ module org.example.client {
     requires com.fasterxml.jackson.core;
     requires org.json;
     requires java.desktop;
+    opens Model to javafx.base;
 
     opens org to javafx.fxml;
     exports org;
