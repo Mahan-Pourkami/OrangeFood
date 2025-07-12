@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AllusersController">
+   <children>
+      <TableView fx:id="userstable" layoutX="119.0" layoutY="113.0" prefHeight="465.0" prefWidth="1043.0">
+        <columns>
+          <TableColumn fx:id="phone_col" prefWidth="150.0" text="Phone" />
+          <TableColumn fx:id="id_col" prefWidth="197.0" text="ID" />
+            <TableColumn fx:id="name_col" prefWidth="255.0" text="Name" />
+            <TableColumn prefWidth="193.0" text="Role" />
+            <TableColumn fx:id="email_col" prefWidth="247.0" text="email" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>

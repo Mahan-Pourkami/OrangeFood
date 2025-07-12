@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -64,7 +65,7 @@ public class SignupController {
     ImageView profview;
 
     @FXML
-    Label errorlable;
+    Label errorlabel;
 
     String selectedImagePath = "";
     Image default_prof = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/contact.png")),640,640,true,true);
@@ -122,7 +123,11 @@ public class SignupController {
 
         if (httpCode == 200) {
 
-            //TODO handle token
+
+            File tokenFile = new File("src/main/resources/token.txt");
+            try (FileWriter writer = new FileWriter(tokenFile)) {
+                writer.write(response.getString("token"));
+            }
             FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = home.load();
@@ -131,7 +136,7 @@ public class SignupController {
         }
 
         else {
-            errorlable.setText(response.getString("error"));
+            errorlabel.setText(response.getString("error"));
         }
     }
 
