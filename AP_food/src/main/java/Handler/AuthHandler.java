@@ -27,7 +27,7 @@ public class AuthHandler implements HttpHandler {
         String request = exchange.getRequestMethod();
         String [] paths = exchange.getRequestURI().getPath().split("/");
         String response = "";
-  
+
         try {
 
             switch (request) {
@@ -170,6 +170,10 @@ public class AuthHandler implements HttpHandler {
                             bankobject.getString("bank_name"),
                             bankobject.getString("account_number"));
 
+                    if(jsonobject.getString("password").length()<8){
+                        throw new InvalidInputException("password");
+                    }
+
                     userDTOreg.register();
                     UserDTO.UserRegResponseDTO userRegResponseDTO = new UserDTO.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
                     Headers headers = exchange.getResponseHeaders();
@@ -204,6 +208,13 @@ public class AuthHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 response = generate_error(e.getMessage());
                 exchange.sendResponseHeaders(409, response.getBytes().length);
+            }
+
+            catch (OrangeException e) {
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                response = generate_error(e.getMessage());
+                exchange.sendResponseHeaders(e.http_code, response.getBytes().length);
             }
         }
 
@@ -367,12 +378,12 @@ public class AuthHandler implements HttpHandler {
                 return field;
             }
 
-        if(jsonObject.getString("role").equals("buyer")
-        && jsonObject.getString("role").equals("seller")
-        && jsonObject.getString("role").equals("courier")) {
+            if(jsonObject.getString("role").equals("buyer")
+                    && jsonObject.getString("role").equals("seller")
+                    && jsonObject.getString("role").equals("courier")) {
 
-            return "role";
-        }
+                return "role";
+            }
         }
         if (!Validator.validateEmail(jsonObject.getString("email")) && !jsonObject.getString("email").isEmpty()) {
             return "email";
