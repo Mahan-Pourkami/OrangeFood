@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -39,6 +40,12 @@ public class SceneManager {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
+        ImageView image = new ImageView(new Image(
+                SceneManager.class.getResourceAsStream("/asset/images/logo.png") // Correct path
+        ));
+        image.setFitWidth(48);  // Optional: Set size
+        image.setFitHeight(48);
+        alert.setGraphic(image);
         alert.setContentText(message);
         alert.showAndWait();
     }
