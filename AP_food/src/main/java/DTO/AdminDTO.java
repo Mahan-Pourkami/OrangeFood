@@ -1,11 +1,13 @@
 package DTO;
 
 import DAO.CouponDAO;
+import DAO.RestaurantDAO;
 import Exceptions.DuplicatedItemexception;
 import Exceptions.InvalidInputException;
 import Exceptions.NosuchItemException;
 import Model.Coupon;
 import Model.Coupontype;
+import Model.Restaurant;
 import Model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -225,5 +227,35 @@ public class AdminDTO {
             coupon.set_end_time(end_time);
             couponDAO.updateCoupon(coupon);
         }
+    }
+
+
+    public static class Get_Restaurants_response{
+
+        private String response;
+        private RestaurantDAO restaurantDAO;
+
+        public Get_Restaurants_response(RestaurantDAO restaurantDAO) {
+
+            JSONArray jsonArray = new JSONArray();
+            List<Restaurant> restaurants = restaurantDAO.getAllRestaurants();
+            for(Restaurant restaurant : restaurants){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id" , restaurant.getId());
+                jsonObject.put("name" , restaurant.getName());
+                jsonObject.put("address" , restaurant.getAddress());
+                jsonObject.put("phone" , restaurant.getPhone());
+                jsonObject.put("owner_phone",restaurant.getSeller().getPhone());
+                jsonObject.put("owner_name" , restaurant.getSeller().getfullname());
+                jsonArray.put(jsonObject);
+            }
+
+            this.response = jsonArray.toString();
+        }
+        public String getResponse() {
+            return response;
+        }
+
+
     }
 }

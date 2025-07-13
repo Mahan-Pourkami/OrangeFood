@@ -1,6 +1,7 @@
 package Controller;
 
-import Model.User;
+
+import Model.Vendor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,68 +22,75 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class AllusersController {
+public class AllvendorsController {
 
     @FXML
-    private TableView<User> userstable;
+    TableView<Vendor> vendor_table;
 
     @FXML
-    private TableColumn<User, String> phone_col;
+    TableColumn<Vendor, String> name_col;
 
     @FXML
-    private TableColumn<User, String> id_col;
+    TableColumn<Vendor, String> phone_col;
 
     @FXML
-    private TableColumn<User, String> name_col;
+    TableColumn<Vendor, String> add_col;
 
     @FXML
-    private TableColumn<User, String> email_col;
+    TableColumn<Vendor, Long> id_col;
 
     @FXML
-    private TableColumn<User, String> role_col;
-
-    private final ObservableList<User> users = FXCollections.observableArrayList();
+    TableColumn<Vendor, String> oname_col;
 
     @FXML
-    void initialize() throws IOException {
+    TableColumn<Vendor, String> ophone_col;
 
+    private final ObservableList<Vendor> vendors = FXCollections.observableArrayList();
+
+
+    @FXML
+    void initialize() throws IOException{
+
+        name_col.setCellValueFactory(new PropertyValueFactory<>("name"));
         phone_col.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        add_col.setCellValueFactory(new PropertyValueFactory<>("address"));
         id_col.setCellValueFactory(new PropertyValueFactory<>("id"));
-        name_col.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        email_col.setCellValueFactory(new PropertyValueFactory<>("email"));
-        role_col.setCellValueFactory(new PropertyValueFactory<>("role"));
+        oname_col.setCellValueFactory(new PropertyValueFactory<>("owner_name"));
+        ophone_col.setCellValueFactory(new PropertyValueFactory<>("owner_phone"));
+        vendor_table.setItems(vendors);
+        loadVendorsData();
 
-        userstable.setItems(users);
-        loadUserData();
+
     }
 
-    private void loadUserData() throws IOException {
+    private void loadVendorsData() throws IOException {
 
         String token = Methods.Get_saved_token();
-        URL getusers = new URL("http://localhost:8080/admin/users");
+        URL getusers = new URL("http://localhost:8080/admin/vendors");
         HttpURLConnection connection = (HttpURLConnection) getusers.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + token);
 
-        ArrayList<User> users_list = new ArrayList<>();
+        ArrayList<Vendor> vendors_list = new ArrayList<>();
         if (connection.getResponseCode() == 200) {
             JSONArray jsonarray = Methods.getJsonArrayResponse(connection);
             for (int i = 0; i < jsonarray.length(); i++) {
                 JSONObject jsonobject = jsonarray.getJSONObject(i);
-                User user = new User(
+
+                Vendor vendor = new Vendor(jsonobject.getString("name"),
+                        jsonobject.getString("address"),
                         jsonobject.getString("phone"),
-                        jsonobject.getString("id"),
-                        jsonobject.getString("full_name"),
-                        jsonobject.getString("email"),
-                        jsonobject.getString("role")
-                );
-                users_list.add(user);
+                        jsonobject.getLong("id"),
+                        jsonobject.getString("owner_phone"),
+                        jsonobject.getString("owner_name"));
+
+               vendors_list.add(vendor);
             }
 
-            users.addAll(users_list);
+         vendors.addAll(vendors_list);
         }
         else {
-                SceneManager.showErrorAlert("Task failed" , "Cannot fetch users data");
+            SceneManager.showErrorAlert("Task failed" , "Cannot fetch users data");
         }
     }
 

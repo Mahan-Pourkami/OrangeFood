@@ -1,10 +1,7 @@
 package Handler;
 
 
-import DAO.CouponDAO;
-import DAO.CourierDAO;
-import DAO.SellerDAO;
-import DAO.UserDAO;
+import DAO.*;
 import DTO.AdminDTO;
 import Exceptions.*;
 import Model.*;
@@ -23,6 +20,7 @@ public class AdminHandler implements HttpHandler {
     SellerDAO sellerDAO = new SellerDAO();
     CourierDAO courierDAO = new CourierDAO();
     CouponDAO couponDAO = new CouponDAO();
+    RestaurantDAO restaurantDAO = new RestaurantDAO();
 
 
     @Override
@@ -265,6 +263,26 @@ public class AdminHandler implements HttpHandler {
             }
         }
 
+        else if (paths.length == 3 && paths[2].equals("vendors")){
+
+           try {
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                AdminDTO.Get_Restaurants_response res = new AdminDTO.Get_Restaurants_response(restaurantDAO);
+                response = res.getResponse();
+                http_code = 200;
+            }
+           catch (OrangeException e){
+               response = generate_error(e.getMessage());
+               http_code = e.http_code;
+           }
+        }
+
         Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.getBytes().length);
@@ -320,8 +338,6 @@ public class AdminHandler implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()){
             os.write(response.getBytes());
         }
-
-
         return response;
     }
 

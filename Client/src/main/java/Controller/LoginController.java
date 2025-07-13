@@ -86,7 +86,8 @@ public class LoginController {
                 int seller_count = response.getInt("seller_counts");
                 int buyer_count = response.getInt("buyer_counts");
                 int courier_count = response.getInt("courier_counts");
-                AdminController.setvalues(buyer_count, seller_count, courier_count);
+                int vendors_count = response.getInt("vendors_counts");
+                AdminController.setvalues(buyer_count, seller_count, courier_count, vendors_count);
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();

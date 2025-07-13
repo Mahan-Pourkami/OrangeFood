@@ -36,12 +36,17 @@ public class AdminController {
     @FXML
     PieChart userschart;
 
+    @FXML
+    Label vendor_count ;
+
 
     private static int buyer_number ;
 
     private static int seller_number  ;
 
     private static int courier_number  ;
+
+    private static int vendors_number;
 
     private static int total_number;
 
@@ -58,6 +63,7 @@ public class AdminController {
         buyer_count.setText(""+ buyer_number);
         seller_count.setText(""+ seller_number);
         courier_count.setText(""+ courier_number);
+        vendor_count.setText(""+ vendors_number);
         total_number = buyer_number + seller_number + courier_number;
         total_count.setText(""+ total_number);
 
@@ -88,11 +94,13 @@ public class AdminController {
        }
     }
 
-    public static void setvalues(int buyer_count, int seller_count, int courier_count) {
+    public static void setvalues(int buyer_count, int seller_count, int courier_count,int vendors_number) {
 
         AdminController.buyer_number = buyer_count;
         AdminController.seller_number = seller_count;
         AdminController.courier_number = courier_count;
+        AdminController.vendors_number = vendors_number;
+
 
     }
 
@@ -124,6 +132,15 @@ public class AdminController {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Alluser-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
+
+    @FXML
+    void handleGetAllvendors(MouseEvent event) throws IOException {
+        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Allvendors-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = vendors.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
     }

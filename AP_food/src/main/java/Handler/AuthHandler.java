@@ -2,6 +2,7 @@ package Handler;
 
 import DAO.BuyerDAO;
 import DAO.CourierDAO;
+import DAO.RestaurantDAO;
 import DAO.SellerDAO;
 import Model.*;
 import Utils.JwtUtil;
@@ -22,6 +23,7 @@ public class AuthHandler implements HttpHandler {
     CourierDAO courierDAO = new CourierDAO();
     SellerDAO  sellerDAO = new SellerDAO();
     BuyerDAO buyerDAO = new BuyerDAO();
+    RestaurantDAO restaurantDAO = new RestaurantDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -309,6 +311,7 @@ public class AuthHandler implements HttpHandler {
                             json.put("seller_counts", seller_counts);
                             json.put("courier_counts", courier_counts);
                             json.put("buyer_counts", buyer_counts);
+                            json.put("vendors_counts", restaurantDAO.getAllRestaurants().size());
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);

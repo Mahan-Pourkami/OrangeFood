@@ -146,7 +146,7 @@
          </cursor>
       </Button>
       <Line endX="1097.0" fill="WHITE" layoutX="183.0" layoutY="89.0" startX="-186.0" startY="-3.0" stroke="WHITE" strokeWidth="5.0" />
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="129.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="338.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#163b5e" height="322.0" layoutX="129.0" layoutY="507.0" onMousePressed="#handleGetAllvendors" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="338.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -156,7 +156,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Rectangle>
-      <Label layoutX="291.0" layoutY="601.0" text="System's Vendors" textFill="WHITE">
+      <Label layoutX="287.0" layoutY="601.0" text="System's Vendors" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -167,11 +167,6 @@
          </image>
       </ImageView>
       <Label layoutX="171.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Restaurants:" textFill="#ffffffb9">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label layoutX="171.0" layoutY="769.0" text="Number of Items :" textFill="#ffffffb9">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -253,5 +248,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Label fx:id="vendor_count" layoutX="358.0" layoutY="732.0" prefHeight="17.0" prefWidth="25.0" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
