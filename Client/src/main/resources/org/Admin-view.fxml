@@ -129,7 +129,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="692.0" layoutY="266.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Manage the Coupons                                                                      " textFill="WHITE">
+      <Button layoutX="692.0" layoutY="266.0" mnemonicParsing="false" onMousePressed="#handleGetAllcoupons" prefHeight="50.0" prefWidth="511.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Manage the Coupons                                                                      " textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

@@ -145,6 +145,16 @@ public class AdminController {
         SceneManager.fadeScene(stage, scene);
     }
 
+    @FXML
+    void handleGetAllcoupons(MouseEvent event) throws IOException {
+        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Coupon-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = vendors.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+
+    }
+
 
 
 }
