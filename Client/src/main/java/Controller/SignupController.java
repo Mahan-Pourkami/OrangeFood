@@ -123,7 +123,6 @@ public class SignupController {
 
         if (httpCode == 200) {
 
-
             File tokenFile = new File("src/main/resources/token.txt");
             try (FileWriter writer = new FileWriter(tokenFile)) {
                 writer.write(response.getString("token"));

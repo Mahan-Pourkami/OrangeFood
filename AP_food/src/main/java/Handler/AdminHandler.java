@@ -100,6 +100,12 @@ public class AdminHandler implements HttpHandler {
                 http_code = 201;
             }
 
+            catch (IllegalArgumentException e){
+
+                response = generate_error("Invalid date");
+                http_code = 400;
+            }
+
             catch (OrangeException e){
 
                 response = generate_error(e.getMessage());
@@ -156,6 +162,66 @@ public class AdminHandler implements HttpHandler {
             }
 
         }
+        else if(paths.length==5 && paths[2].equals("users") && paths[4].equals("status")){
+
+            try{
+                if (!jsonObject.has("status")) {
+                    throw new InvalidInputException("status");
+                }
+
+                String status = jsonObject.getString("status");
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = "09" + paths[3];
+                User user = userDAO.getUserByPhone(phone);
+
+                if (user == null ) {
+                    throw new NosuchItemException("User not found");
+                }
+
+                if (user.role.equals(Role.seller)) {
+                    Seller seller = sellerDAO.getSeller(phone);
+                    seller.setStatue(status);
+
+                    if(status.equals("approved")) {
+                        sellerDAO.updateSeller(seller);
+                    }
+                    else {
+                        sellerDAO.deleteSeller(phone);
+                    }
+                }
+                else if (user.role.equals(Role.courier)) {
+
+                    Courier courier = courierDAO.getCourier(phone);
+                    courier.setStatue(status);
+                    if(status.equals("approved")) {
+                        courierDAO.updateCourier(courier);
+                    }
+                    else {
+                       courierDAO.deleteCourier(phone);
+                    }
+                }
+
+                else throw new ForbiddenroleException();
+
+                response = generate_msg("Status of User :" + paths[3] + " is " + status);
+                http_code = 200;
+
+            }
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+        }
+
+
+
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.length());
         try (OutputStream os = exchange.getResponseBody()) {
@@ -281,6 +347,26 @@ public class AdminHandler implements HttpHandler {
                response = generate_error(e.getMessage());
                http_code = e.http_code;
            }
+        }
+
+        else if (paths.length == 3 && paths[2].equals("approvals")){
+
+            try{
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                AdminDTO.Get_approval_request request = new AdminDTO.Get_approval_request(sellerDAO, courierDAO);
+                response = request.getResponse();
+                http_code = 200;
+            }
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
         }
 
         Headers headers = exchange.getResponseHeaders();

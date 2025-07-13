@@ -134,11 +134,19 @@ public class AuthHandler implements HttpHandler {
 
             if(JwtUtil.validateToken(token)) {
 
-                UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token));
-                response = userdto.response();
-                Headers headers = exchange.getResponseHeaders();
-                headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, response.getBytes().length);
+               try {
+                    UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token));
+                    response = userdto.response();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
+                }
+               catch (NullPointerException e) {
+                   response= generate_error("admin last come");
+                   Headers headers = exchange.getResponseHeaders();
+                   headers.add("Content-Type", "application/json");
+                   exchange.sendResponseHeaders(402, response.getBytes().length);
+               }
             }
             else {
                 response= generate_error("Unauthorized request");

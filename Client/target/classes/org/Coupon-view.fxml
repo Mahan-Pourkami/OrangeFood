@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,7 +17,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CouponController">
    <children>
@@ -37,7 +38,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#123251" height="680.0" layoutX="36.0" layoutY="113.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="426.0" />
+      <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#123251" height="680.0" layoutX="36.0" layoutY="113.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="356.0" />
       <Line endX="1105.0" endY="-1.0" fill="WHITE" layoutX="179.0" layoutY="87.0" startX="-186.0" startY="-3.0" stroke="WHITE" strokeWidth="5.0" />
       <Label layoutX="571.0" layoutY="19.0" text="Coupons">
          <font>
@@ -78,12 +79,12 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <TextField layoutX="144.0" layoutY="215.0" prefHeight="25.0" prefWidth="228.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
+      <TextField fx:id="code_field" layoutX="144.0" layoutY="215.0" prefHeight="25.0" prefWidth="228.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <ComboBox layoutX="144.0" layoutY="283.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
+      <ComboBox fx:id="typechooser" layoutX="144.0" layoutY="283.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
       <Label layoutX="88.0" layoutY="219.0" text="Code" textFill="WHITE">
          <font>
             <Font size="15.0" />
@@ -94,7 +95,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="144.0" layoutY="351.0" prefHeight="25.0" prefWidth="150.0" promptText="Int or float" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
+      <TextField fx:id="value_field" layoutX="144.0" layoutY="351.0" prefHeight="25.0" prefWidth="150.0" promptText="Int or float" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
          <font>
             <Font size="15.0" />
          </font>
@@ -104,7 +105,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="144.0" layoutY="418.0" prefHeight="25.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
+      <TextField fx:id="min_field" layoutX="144.0" layoutY="418.0" prefHeight="25.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" text="0">
          <font>
             <Font size="15.0" />
          </font>
@@ -114,7 +115,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="144.0" layoutY="483.0" prefHeight="25.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css">
+      <TextField fx:id="count_field" layoutX="144.0" layoutY="483.0" prefHeight="25.0" prefWidth="150.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" text="0">
          <font>
             <Font size="15.0" />
          </font>
@@ -124,8 +125,8 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <DatePicker layoutX="144.0" layoutY="547.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
-      <DatePicker layoutX="144.0" layoutY="617.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
+      <DatePicker fx:id="start_chooser" layoutX="144.0" layoutY="547.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
+      <DatePicker fx:id="end_chooser" layoutX="144.0" layoutY="617.0" styleClass="adminfield" stylesheets="@../asset/style_sheets/input.css" />
       <Label layoutX="89.0" layoutY="549.0" text="Start" textFill="WHITE">
          <font>
             <Font size="15.0" />
@@ -136,6 +137,24 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button layoutX="278.0" layoutY="706.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="136.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Submit" />
+      <Button layoutX="164.0" layoutY="698.0" mnemonicParsing="false" onMousePressed="#handle_submit" prefHeight="32.0" prefWidth="136.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Submit" />
+      <TableView fx:id="coupon_table" layoutX="428.0" layoutY="109.0" prefHeight="689.0" prefWidth="845.0">
+        <columns>
+          <TableColumn fx:id="id_col" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="code_col" prefWidth="91.0" text="Code" />
+            <TableColumn fx:id="type_col" minWidth="2.0" prefWidth="78.0" text="Type" />
+            <TableColumn fx:id="val_col" prefWidth="72.0" text="Value" />
+            <TableColumn fx:id="start_col" prefWidth="75.0" text="Start" />
+            <TableColumn fx:id="end_col" prefWidth="75.0" text="End" />
+            <TableColumn fx:id="count_col" prefWidth="75.0" text="User count" />
+            <TableColumn fx:id="min_col" prefWidth="75.0" text="Min price" />
+            <TableColumn fx:id="action_col" prefWidth="228.0" />
+        </columns>
+      </TableView>
+      <Label fx:id="error_label" layoutX="45.0" layoutY="815.0" textFill="#ff5300">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

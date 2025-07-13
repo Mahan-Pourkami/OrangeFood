@@ -41,6 +41,8 @@ public class AllusersController {
     @FXML
     private TableColumn<User, String> role_col;
 
+
+
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
     @FXML
@@ -51,6 +53,7 @@ public class AllusersController {
         name_col.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         email_col.setCellValueFactory(new PropertyValueFactory<>("email"));
         role_col.setCellValueFactory(new PropertyValueFactory<>("role"));
+
 
         userstable.setItems(users);
         loadUserData();

@@ -137,6 +137,16 @@ public class AdminController {
     }
 
     @FXML
+    private void handle_approve(MouseEvent event) throws IOException {
+        FXMLLoader approve = new FXMLLoader(getClass().getResource("/org/Approval-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = approve.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
+
+
+    @FXML
     void handleGetAllvendors(MouseEvent event) throws IOException {
         FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Allvendors-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
