@@ -17,7 +17,7 @@ public class Server {
 
         try {
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
@@ -33,6 +33,8 @@ public class Server {
             server.createContext("/coupon" , new CouponHandler());
             server.createContext("/vendors" , new VendorHandler());
             server.createContext("/items" , new ItemsHandler());
+            server.createContext("/orders" , new OrderHandler());
+
 
             server.start();
 
