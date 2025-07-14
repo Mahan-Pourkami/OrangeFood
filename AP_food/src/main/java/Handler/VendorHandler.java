@@ -18,8 +18,13 @@ import java.io.*;
 
 public class VendorHandler implements HttpHandler {
 
-    RestaurantDAO restaurantDAO = new RestaurantDAO();
-    FoodDAO foodDAO = new FoodDAO();
+    RestaurantDAO restaurantDAO ;
+    FoodDAO foodDAO ;
+
+    public VendorHandler(RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
+        this.restaurantDAO = restaurantDAO;
+        this.foodDAO = foodDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {

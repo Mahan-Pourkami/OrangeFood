@@ -12,7 +12,11 @@ import java.io.*;
 
 public class CouponHandler implements HttpHandler {
 
-    CouponDAO couponDAO = new CouponDAO();
+    CouponDAO couponDAO;
+
+    public CouponHandler(CouponDAO couponDAO) {
+        this.couponDAO = couponDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {

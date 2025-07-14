@@ -16,11 +16,20 @@ import java.util.List;
 
 public class AdminHandler implements HttpHandler {
 
-    UserDAO userDAO = new UserDAO();
-    SellerDAO sellerDAO = new SellerDAO();
-    CourierDAO courierDAO = new CourierDAO();
-    CouponDAO couponDAO = new CouponDAO();
-    RestaurantDAO restaurantDAO = new RestaurantDAO();
+    UserDAO userDAO ;
+    SellerDAO sellerDAO ;
+    CourierDAO courierDAO ;
+    CouponDAO couponDAO ;
+    RestaurantDAO restaurantDAO ;
+
+    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO) {
+        this.userDAO = userDAO;
+        this.sellerDAO = sellerDAO;
+        this.courierDAO = courierDAO;
+        this.couponDAO = couponDAO;
+        this.restaurantDAO = restaurantDAO;
+
+    }
 
 
     @Override

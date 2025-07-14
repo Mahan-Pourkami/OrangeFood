@@ -123,15 +123,25 @@ public class SignupController {
 
         if (httpCode == 200) {
 
-            File tokenFile = new File("src/main/resources/token.txt");
-            try (FileWriter writer = new FileWriter(tokenFile)) {
-                writer.write(response.getString("token"));
+            if(role.equals("buyer")){
+                File tokenFile = new File("src/main/resources/token.txt");
+                try (FileWriter writer = new FileWriter(tokenFile)) {
+                    writer.write(response.getString("token"));
+                }
+
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
             }
-            FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = home.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+            else {
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
         }
 
         else {

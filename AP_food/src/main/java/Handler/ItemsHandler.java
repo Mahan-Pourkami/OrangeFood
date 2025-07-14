@@ -19,6 +19,13 @@ import java.util.stream.Collectors;
 
 public class ItemsHandler implements HttpHandler {
 
+    FoodDAO foodDAO;
+
+    public ItemsHandler(FoodDAO foodDAO) {
+        this.foodDAO = foodDAO;
+    }
+
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -58,7 +65,7 @@ public class ItemsHandler implements HttpHandler {
     }
 
     private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        FoodDAO foodDAO = new FoodDAO();
+
         String token = JwtUtil.get_token_from_server(exchange);
 
         if(paths.length == 3){
@@ -99,7 +106,7 @@ public class ItemsHandler implements HttpHandler {
     }
 
     private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        FoodDAO foodDAO = new FoodDAO();
+
         String token = JwtUtil.get_token_from_server(exchange);
         String response ="";
 
