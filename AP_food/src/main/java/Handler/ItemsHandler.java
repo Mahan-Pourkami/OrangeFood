@@ -4,7 +4,7 @@ import DAO.BuyerDAO;
 import DAO.FoodDAO;
 import Exceptions.*;
 import Model.Buyer;
-import Model.Food; // Import the Food model
+import Model.Food;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;

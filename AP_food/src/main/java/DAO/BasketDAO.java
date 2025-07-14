@@ -4,6 +4,7 @@ import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -127,6 +128,8 @@ public class BasketDAO implements AutoCloseable {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Basket basket = session.get(Basket.class, id);
+            // Force initialization of lazy collection
+            basket.getItems().size(); // or use Hibernate.initialize(basket.getItems());
             transaction.commit();
             return basket;
         } catch (Exception e) {
@@ -136,6 +139,7 @@ public class BasketDAO implements AutoCloseable {
             throw new DataAccessException("Failed to retrieve basket with ID " + id + ": " + e.getMessage(), e);
         }
     }
+
 
     public List<Basket> getAllBasket() {
         Transaction transaction = null;
@@ -159,11 +163,49 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
+    public List<Object[]> getBasketIdAndPhone() {
+        Transaction transaction = null;
+        Session session = null;
+
+        try {
+            session = sessionFactory.openSession(); // manually open session
+            transaction = session.beginTransaction(); // manually begin transaction
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+            Root<Basket> root = cq.from(Basket.class);
+
+            // Use entity field names, not column names
+            cq.multiselect(root.get("id"), root.get("buyerPhone"));
+
+            List<Object[]> results = session.createQuery(cq).getResultList();
+
+            transaction.commit(); // commit transaction
+            return results;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                try {
+                    transaction.rollback(); // rollback safely
+                } catch (IllegalStateException ise) {
+                    System.err.println("Rollback failed: " + ise.getMessage());
+                }
+            }
+            throw new DataAccessException("Failed to retrieve basket data: " + e.getMessage(), e);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close(); // always close session
+            }
+        }
+    }
+
+
+
+
     @Override
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
-            System.out.println("SessionFactory closed.");
         }
     }
 }
