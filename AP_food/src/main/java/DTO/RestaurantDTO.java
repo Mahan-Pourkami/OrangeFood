@@ -18,8 +18,8 @@ public class RestaurantDTO {
 
     public static class AddRestaurantDTO {
 
-        SellerDAO sellerDAO = new SellerDAO() ;
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
+        SellerDAO sellerDAO  ;
+        RestaurantDAO restaurantDAO ;
 
         public String name;
         public String address;
@@ -29,7 +29,10 @@ public class RestaurantDTO {
         public Integer additional_fee;
         public String seller_phone ;
 
-        public AddRestaurantDTO(JSONObject json,String seller_phone) throws DuplicatedUserexception, UnsupportedMediaException {
+        public AddRestaurantDTO(JSONObject json,String seller_phone,SellerDAO sellerDAO , RestaurantDAO restaurantDAO) throws DuplicatedUserexception, UnsupportedMediaException {
+
+            this.sellerDAO = sellerDAO;
+            this.restaurantDAO = restaurantDAO;
 
             String logo_img = json.getString("logoBase64");
             if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
@@ -70,9 +73,8 @@ public class RestaurantDTO {
 
     public static class Addrestaurant_response {
 
-        UserDAO userDAO = new UserDAO();
-        SellerDAO sellerDAO = new SellerDAO() ;
-        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
+        SellerDAO sellerDAO  ;
+        RestaurantDAO restaurantDAO  ;
 
         public Long id ;
         public String name ;
@@ -82,7 +84,11 @@ public class RestaurantDTO {
         public Integer tax_fee ;
         public Integer additional_fee;
 
-        public Addrestaurant_response(String phone) throws NosuchRestaurantException {
+        public Addrestaurant_response(String phone , RestaurantDAO restaurantDAO , SellerDAO sellerDAO) throws NosuchRestaurantException {
+
+
+            this.sellerDAO = sellerDAO;
+            this.restaurantDAO = restaurantDAO;
 
             Seller seller = sellerDAO.getSeller(phone);
             Restaurant res = seller.getRestaurant();
@@ -130,8 +136,8 @@ public class RestaurantDTO {
 
     public static class UpdateRestaurant_request {
 
-        SellerDAO sellerDAO = new SellerDAO() ;
-        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
+        SellerDAO sellerDAO ;
+        RestaurantDAO restaurantDAO ;
 
 
         public String name ;
@@ -141,7 +147,11 @@ public class RestaurantDTO {
         public Integer tax_fee;
         public Integer additional_fee;
 
-        public  UpdateRestaurant_request(JSONObject json,String phone) throws NosuchRestaurantException, UnsupportedMediaException {
+        public  UpdateRestaurant_request(JSONObject json,String phone , SellerDAO sellerDAO , RestaurantDAO restaurantDAO) throws NosuchRestaurantException, UnsupportedMediaException {
+
+
+            this.sellerDAO = sellerDAO;
+            this.restaurantDAO = restaurantDAO;
 
             String logo_img = json.getString("logoBase64");
             Seller seller = sellerDAO.getSeller(phone);
@@ -193,9 +203,8 @@ public class RestaurantDTO {
 
     public static class Add_Item_request {
 
-        SellerDAO sellerDAO = new SellerDAO() ;
-        RestaurantDAO restaurantDAO = new RestaurantDAO() ;
-        FoodDAO foodDAO = new FoodDAO() ;
+
+        FoodDAO foodDAO ;
 
         public String name ;
         public String logoBase64 ;
@@ -204,9 +213,10 @@ public class RestaurantDTO {
         public int supply;
         public List<String> keywords ;
 
-        public Add_Item_request(JSONObject json,long id) throws IOException {
+        public Add_Item_request(JSONObject json,long id , FoodDAO foodDAO) throws IOException {
 
 
+            this.foodDAO = foodDAO;
 
             this.name = json.getString("name");
             this.logoBase64 = json.getString("imageBase64");
@@ -233,7 +243,7 @@ public class RestaurantDTO {
 
     public static class Get_item_response {
 
-        FoodDAO foodDAO = new FoodDAO() ;
+        FoodDAO foodDAO  ;
 
         public Long id ;
         public String name ;
@@ -244,8 +254,9 @@ public class RestaurantDTO {
         public List<String> keywords ;
         private long res_id;
 
-        public Get_item_response(String name , long res_id){
+        public Get_item_response(String name , long res_id , FoodDAO foodDAO) {
 
+            this.foodDAO = foodDAO;
             Food food = foodDAO.findFoodByName(name,res_id);
             this.res_id = res_id;
             this.id = food.getId();
@@ -295,7 +306,7 @@ public class RestaurantDTO {
 
     public static class Update_Item_request {
 
-        FoodDAO foodDAO = new FoodDAO() ;
+        FoodDAO foodDAO  ;
         public String name ;
         public String logoBase64 ;
         public String description ;
@@ -303,9 +314,10 @@ public class RestaurantDTO {
         public int supply;
         public List<String> keywords ;
 
-        public Update_Item_request(JSONObject json,long id) throws IOException {
+        public Update_Item_request(JSONObject json,long id,FoodDAO foodDAO) throws IOException {
 
 
+            this.foodDAO = foodDAO;
             Food food = foodDAO.getFood(id);
             this.name = json.getString("name");
             this.logoBase64 = json.getString("imageBase64");
@@ -326,6 +338,34 @@ public class RestaurantDTO {
             if(logoBase64!=null && !logoBase64.isEmpty() && !logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg"))  food.setPictureUrl(this.logoBase64);
             food.setkeywords(this.keywords);
             foodDAO.updateFood(food);
+        }
+    }
+
+    public static class Get_Foods {
+
+        FoodDAO foodDAO  ;
+        private String response ;
+
+        public Get_Foods(FoodDAO foodDAO,long id) {
+
+            this.foodDAO = foodDAO;
+            List<Food> foods = foodDAO.getFoodsByRestaurantId(id);
+            JSONArray jsonArray = new JSONArray();
+            for(Food food : foods){
+                JSONObject js = new JSONObject();
+                js.put("id", food.getId());
+                js.put("name", food.getName());
+                js.put("imageBase64", food.getPictureUrl());
+                js.put("description", food.getDescription());
+                js.put("price", food.getPrice());
+                js.put("supply", food.getSupply());
+                jsonArray.put(js);
+            }
+            this.response = jsonArray.toString();
+        }
+
+        public String getResponse() {
+            return response;
         }
     }
 

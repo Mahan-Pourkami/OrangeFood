@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Admin.AdminController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -95,8 +96,17 @@ public class LoginController {
                 SceneManager.fadeScene(stage, scene);
 
             }
-            else {
+            else if(role.equals("buyer")) {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
+
+            else if(role.equals("seller")) {
+
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);

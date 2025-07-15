@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.FoodManageController">
+   <children>
+      <ImageView fitHeight="233.0" fitWidth="256.0" layoutX="1072.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#dfe6ed6d" height="702.0" layoutX="42.0" layoutY="128.0" stroke="#ee9c286e" strokeType="INSIDE" strokeWidth="5.0" width="334.0" />
+      <TextField layoutX="150.0" layoutY="222.0" styleClass="white-button" />
+      <Label layoutX="80.0" layoutY="228.0" text="Name">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <TextField layoutX="150.0" layoutY="300.0" prefHeight="17.0" prefWidth="169.0" styleClass="white-button" />
+      <TextField layoutX="150.0" layoutY="369.0" styleClass="white-button" />
+      <TextField layoutX="150.0" layoutY="431.0" styleClass="white-button" />
+      <TextArea layoutX="145.0" layoutY="492.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="white-button" />
+      <Label layoutX="80.0" layoutY="306.0" text="price">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="375.0" text="supply">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="55.0" layoutY="437.0" text="Description">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="60.0" layoutY="525.0" text="Keywords">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="172.0" layoutY="149.0" prefHeight="35.0" prefWidth="60.0" text="Add Item">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="244.0" layoutY="685.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="84.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="add Image" />
+      <ImageView fitHeight="150.0" fitWidth="169.0" layoutX="61.0" layoutY="628.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="244.0" layoutY="760.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="84.0" styleClass="white-button" text="Submit">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TableView layoutX="409.0" layoutY="163.0" prefHeight="659.0" prefWidth="735.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Name" />
+          <TableColumn prefWidth="75.0" text="price" />
+            <TableColumn prefWidth="75.0" text="supply" />
+            <TableColumn prefWidth="261.0" text="Description" />
+            <TableColumn prefWidth="149.0" />
+        </columns>
+      </TableView>
+      <Label layoutX="542.0" layoutY="36.0" text="Manage Items" textFill="#ff9012">
+         <font>
+            <Font name="System Bold" size="39.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="51.0" layoutY="51.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</Pane>

@@ -50,7 +50,7 @@ public class CouponHandler implements HttpHandler {
         JSONObject jsonObject = getJsonObject(exchange);
         int httpCode = 200;
 
-        if(paths.length==2 ){
+        if(paths.length==3 ){
 
            try {
                 if (!JwtUtil.validateToken(token)) {
@@ -59,10 +59,10 @@ public class CouponHandler implements HttpHandler {
                 if (!JwtUtil.extractRole(token).equals("buyer")) {
                     throw new ForbiddenroleException();
                 }
-                if (!jsonObject.has("coupon_code")) {
-                    throw new InvalidInputException("coupon_code");
-                }
-                String couponCode = jsonObject.getString("coupon_code");
+
+                //"coupon_code="
+
+                String couponCode = paths[2].substring("coupon_code=".length());
                 Coupon coupon = couponDAO.findCouponByCode(couponCode);
 
                 if (coupon == null) {

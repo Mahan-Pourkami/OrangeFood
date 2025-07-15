@@ -19,4 +19,11 @@ module org.example.client {
     exports org;
     exports Controller;
     opens Controller to javafx.fxml;
+    exports Controller.Admin;
+    opens Controller.Admin to javafx.fxml;
+    exports Controller.Buyer;
+    opens Controller.Buyer to javafx.fxml;
+    exports Controller.Vendor;
+    opens Controller.Vendor to javafx.fxml;
+
 }

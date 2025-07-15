@@ -1,0 +1,37 @@
+.bg {
+
+   -fx-background: linear-gradient(to right, #ffffff , #f6d9c1 );
+    -fx-background-radius: 10;
+
+}
+
+.white-button {
+    -fx-background-color: #ffffff;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.white-button:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-cursor: hand;
+}
+
+.white-button:pressed {
+    -fx-background-color: #ebebeb;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+.white-button:focused {
+    -fx-border-color: #999999;
+    -fx-border-width: 1.5px;
+}
+
+.vendor {
+
+    -fx-background: linear-gradient(to right, #ffffff , #f4a565);
+    -fx-background-radius: 10;
+}

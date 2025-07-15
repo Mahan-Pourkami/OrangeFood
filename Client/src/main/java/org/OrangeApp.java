@@ -21,10 +21,8 @@ public class OrangeApp extends Application {
         Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/logo.png")));
         stage.getIcons().add(icon);
         stage.setScene(scene);
-
         stage.show();
     }
-
     public static void main(String[] args) {
         launch();
     }

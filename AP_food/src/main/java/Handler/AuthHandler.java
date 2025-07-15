@@ -89,7 +89,7 @@ public class AuthHandler implements HttpHandler {
 
                     if (invalid_input_update(profilejson).isEmpty()) {
 
-                        UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(JwtUtil.extractSubject(token), profilejson);
+                        UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(JwtUtil.extractSubject(token), profilejson,userDAO);
                         Headers headers = exchange.getResponseHeaders();
                         headers.add("Content-Type", "application/json");
                         JSONObject json = new JSONObject();

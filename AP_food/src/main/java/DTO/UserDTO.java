@@ -153,6 +153,7 @@ public class UserDTO {
            jsonObject.put("phone", phone);
            jsonObject.put("role", role);
            jsonObject.put("address", address);
+           jsonObject.put("email", email);
            jsonObject.put("profileImageBase64", this.profileImageBase64);
            bankjson.put("bank_name", bankinfo.bankName);
            bankjson.put("account_number", bankinfo.accountNumber);
@@ -194,11 +195,12 @@ public class UserDTO {
 
     public static class Userupdateprof{
 
-        UserDAO userDAO = new UserDAO();
+        UserDAO userDAO ;
 
 
-       public Userupdateprof(String phone , JSONObject jsonObject ) throws EmailException, UnsupportedMediaException, InvalidInputException {
+       public Userupdateprof(String phone , JSONObject jsonObject, UserDAO userDAO ) throws EmailException, UnsupportedMediaException, InvalidInputException {
 
+           this.userDAO = userDAO;
             User user = userDAO.getUserByPhone(phone);
             if(!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email"))!=null && !jsonObject.getString("email").isEmpty()) {
                 throw new EmailException();

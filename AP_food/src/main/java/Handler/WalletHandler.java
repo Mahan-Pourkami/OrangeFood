@@ -30,6 +30,12 @@ public class WalletHandler implements HttpHandler {
 
         try{
             switch (methode) {
+
+                case "GET" :
+                    response=handleGetRequest(exchange,paths);
+                    break;
+
+
                 case "POST":
                     handlePostRequest(exchange,paths);
                     break;
@@ -49,6 +55,51 @@ public class WalletHandler implements HttpHandler {
         }
     }
 
+
+    private String handleGetRequest(HttpExchange exchange,String [] paths) throws IOException {
+
+        int http_code = 200;
+        String response = "";
+        String token = JwtUtil.get_token_from_server(exchange);
+        JSONObject obj = new JSONObject();
+
+        if(paths.length == 3 && paths[2].equals("quantity")){
+
+            try{
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = JwtUtil.extractSubject(token);
+                Buyer buyer = buyerDAO.getBuyer(phone);
+                int quantity = buyer.getchargevalue();
+                String account_number = buyer.getBankinfo().getAccountNumber();
+
+                obj.put("account_number", account_number);
+                obj.put("quantity", quantity);
+                response = obj.toString();
+                http_code = 200;
+            }
+            catch(OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(http_code, response.length());
+
+            try(OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+
+
+        return response;
+    }
+
     private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException {
 
         String response = "";
@@ -65,7 +116,7 @@ public class WalletHandler implements HttpHandler {
                 if (!JwtUtil.extractRole(token).equals("buyer")) {
                     throw new ForbiddenroleException();
                 }
-                if (!jsonObject.has("amount")) {
+                if (!jsonObject.has("amount") || !(jsonObject.get("amount") instanceof Integer)) {
                     throw new InvalidInputException("amount");
                 }
 

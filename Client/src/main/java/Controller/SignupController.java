@@ -204,6 +204,7 @@ public class SignupController {
 
     @FXML
     void initialize() {
+
         profview.setImage(default_prof);
           rolechooser.getItems().addAll("buyer", "seller", "courier");
         rolechooser.getSelectionModel().selectFirst();

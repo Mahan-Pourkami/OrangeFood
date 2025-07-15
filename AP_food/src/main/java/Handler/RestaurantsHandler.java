@@ -95,10 +95,10 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new ForbiddenroleException();
 
                 String phone = JwtUtil.extractSubject(token);
-                RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject, phone);
+                RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject, phone , sellerDAO ,restaurantDAO);
                 restaurantDTO.register();
                 System.out.println("Restaurant added");
-                RestaurantDTO.Addrestaurant_response restaurant_response = new RestaurantDTO.Addrestaurant_response(phone);
+                RestaurantDTO.Addrestaurant_response restaurant_response = new RestaurantDTO.Addrestaurant_response(phone,restaurantDAO,sellerDAO);
                 response = restaurant_response.response();
                 http_code = 200;
 
@@ -135,9 +135,9 @@ public class RestaurantsHandler implements HttpHandler {
                 throw new InvalidTokenexception();
             }
 
-            RestaurantDTO.Add_Item_request req = new RestaurantDTO.Add_Item_request(jsonobject,res_id);
+            RestaurantDTO.Add_Item_request req = new RestaurantDTO.Add_Item_request(jsonobject,res_id,foodDAO);
             System.out.println("Item added");
-            RestaurantDTO.Get_item_response res = new RestaurantDTO.Get_item_response(jsonobject.getString("name"),res_id);
+            RestaurantDTO.Get_item_response res = new RestaurantDTO.Get_item_response(jsonobject.getString("name"),res_id,foodDAO);
             System.out.println("Response received");
             response = res.response();
             http_code = 200;
@@ -240,19 +240,48 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 System.out.println(phone);
-                RestaurantDTO.Addrestaurant_response restaurantDTO = new RestaurantDTO.Addrestaurant_response(phone);
+                RestaurantDTO.Addrestaurant_response restaurantDTO = new RestaurantDTO.Addrestaurant_response(phone,restaurantDAO,sellerDAO);
 
                 response = restaurantDTO.response();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
             }
+
+            else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("items")) {
+
+                String token = JwtUtil.get_token_from_server(exchange);
+                if(!JwtUtil.validateToken(token)){
+                    throw new InvalidTokenexception();
+                }
+                if(!JwtUtil.extractRole(token).equals("seller")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = JwtUtil.extractSubject(token);
+                Seller seller = sellerDAO.getSeller(phone);
+                Restaurant restaurant = seller.getRestaurant();
+
+                if(restaurant == null){
+                    throw new NosuchRestaurantException();
+                }
+
+                long res_id = restaurant.getId();
+                RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO,res_id);
+                response = get_req.getResponse();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+            }
+
             else {
                 response = generate_error("Endpoint not found");
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(404, response.getBytes().length);
             }
+
+
         }
         catch (OrangeException e) {
             response = generate_error(e.getMessage());
@@ -293,8 +322,8 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
-                RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject, phone);
-                RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone);
+                RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject, phone,sellerDAO,restaurantDAO);
+                RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone,restaurantDAO,sellerDAO);
                 response = update_response.response();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
@@ -361,8 +390,8 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
 
-                RestaurantDTO.Update_Item_request updateItemRequest = new RestaurantDTO.Update_Item_request(jsonObject, food_id);
-                RestaurantDTO.Get_item_response updateItemrepsonse = new RestaurantDTO.Get_item_response(jsonObject.getString("name"), res_id);
+                RestaurantDTO.Update_Item_request updateItemRequest = new RestaurantDTO.Update_Item_request(jsonObject, food_id,foodDAO);
+                RestaurantDTO.Get_item_response updateItemrepsonse = new RestaurantDTO.Get_item_response(jsonObject.getString("name"), res_id,foodDAO);
                 response = updateItemrepsonse.response();
                 http_code = 200 ;
 
@@ -586,11 +615,11 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
                 Food food = foodDAO.getFood(food_id);
-                if (food == null || !food.getRestaurantId().equals(res_id) || !food.getMenuTitle().equals(menu_title)) {
+                if (food == null || !food.getRestaurantId().equals(res_id) || !food.getMenuTitle().contains(menu_title)) {
                     throw new NosuchItemException();
                 }
 
-                food.setMenuTitle(null);
+                food.removeMenuTitle(menu_title);
                 foodDAO.updateFood(food);
                 response = generate_msg("Item with Id " + food_id + " deleted from menu with title :" + menu_title + " successfully");
                 http_code = 200;

@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AllusersController">
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Admin.AllusersController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="99.0" layoutY="-2.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1280.0">
          <fill>

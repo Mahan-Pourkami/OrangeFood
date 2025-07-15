@@ -13,6 +13,8 @@ import java.nio.file.Paths;
 public class Methods {
 
 
+    public final static String url = "http://localhost:8080/";
+
     public static JSONObject getJsonResponse(HttpURLConnection connection) throws IOException {
 
         boolean isSuccess = (connection.getResponseCode() >= 200 && connection.getResponseCode() < 300);
