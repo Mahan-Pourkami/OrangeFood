@@ -18,6 +18,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OrderHandler implements HttpHandler {
+
+    UserDAO userDAO;
+    CouponDAO couponDAO;
+    BasketDAO basketDAO;
+    RestaurantDAO restaurantDAO;
+    FoodDAO foodDAO;
+
+    public OrderHandler(UserDAO userDAO,CouponDAO couponDAO,BasketDAO basketDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
+        this.userDAO = userDAO;
+        this.couponDAO = couponDAO;
+        this.basketDAO = basketDAO;
+        this.restaurantDAO = restaurantDAO;
+        this.foodDAO = foodDAO;
+    }
+
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -57,9 +73,6 @@ public class OrderHandler implements HttpHandler {
     }
 
     private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        UserDAO userDAO = new UserDAO();
-        CouponDAO couponDAO = new CouponDAO();
-        BasketDAO basketDAO = new BasketDAO();
         String token = JwtUtil.get_token_from_server(exchange);
         String response = "";
         if(paths.length == 2){
@@ -74,6 +87,7 @@ public class OrderHandler implements HttpHandler {
             JSONObject jsonrequest = getJsonObject(exchange);
             if(invalidInputItemsSubmit(jsonrequest).isEmpty()) {
                 User buyer = userDAO.getUserByPhone(JwtUtil.extractSubject(token));
+
                 Basket basket = new Basket(
                         buyer,
                         (String) jsonrequest.get("delivery_address"),
@@ -87,13 +101,13 @@ public class OrderHandler implements HttpHandler {
                     int quantity = item.getInt("quantity");
                     basket.addItem(itemId, quantity);
                 }
-                basketDAO.saveBasket(basket);
                 if(basket.getCoupon_id()!=null&&couponDAO.getCoupon(basket.getCoupon_id())!=null){
-                    if(!couponDAO.getCoupon(basket.getCoupon_id()).is_valid(basket.getPayPrice())) {
+                    if(!couponDAO.getCoupon(basket.getCoupon_id()).is_valid(basket.getPayPrice(restaurantDAO,foodDAO))) {
                         response = generate_error("Coupon not valid");
                         throw new OrangeException(response, 400);
                     }
                 }
+                basketDAO.saveBasket(basket);
                 response = getBasketJsonObject(basket).toString();
             }
             else {
@@ -105,15 +119,10 @@ public class OrderHandler implements HttpHandler {
         else {
             throw new OrangeException("endpoint not supported", 404);
         }
-        userDAO.close();
-        couponDAO.close();
-        basketDAO.close();
         return response;
     }
 
-
     private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        BasketDAO basketDAO = new BasketDAO();
         String token = JwtUtil.get_token_from_server(exchange);
         String response = "";
         if(paths.length == 3 && paths[2].equals("history")){
@@ -162,7 +171,6 @@ public class OrderHandler implements HttpHandler {
         else {
             throw new OrangeException("endpoint not supported", 404);
         }
-        basketDAO.close();
         return response;
     }
 
@@ -184,7 +192,6 @@ public class OrderHandler implements HttpHandler {
             if (!(deliveryObj instanceof String)) {
                 return "delivery_address";
             }
-            RestaurantDAO restaurantDAO = new RestaurantDAO();
             Object vendorIdObj = jsonObject.get("vendor_id");
             if (!(vendorIdObj instanceof Integer)) {
                 return "vendor_id";
@@ -207,7 +214,6 @@ public class OrderHandler implements HttpHandler {
             }
 
             JSONArray itemsArray = (JSONArray) itemsObj;
-            FoodDAO foodDAO = new FoodDAO();
             for (int i = 0; i < itemsArray.length(); i++) {
                 Object itemObj = itemsArray.get(i);
                 if (!(itemObj instanceof JSONObject)) {
@@ -290,11 +296,11 @@ public class OrderHandler implements HttpHandler {
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         JSONArray itemIdsArray = new JSONArray(basket.getItems().keySet());
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice());
-        basketJson.put("tax_fee",basket.getTaxFee());
-        basketJson.put("additional_fee",basket.getAdditionalFee());
+        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice());
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
         basketJson.put("courier_id",basket.getCourier_id());
         basketJson.put("status",basket.getStateofCart());
         basketJson.put("created_at",basket.getCreated_at());
@@ -309,11 +315,11 @@ public class OrderHandler implements HttpHandler {
         basketJson.put("vendor_id",basket.getRes_id());
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice());
-        basketJson.put("tax_fee",basket.getTaxFee());
-        basketJson.put("additional_fee",basket.getAdditionalFee());
+        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice());
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
         basketJson.put("courier_id",basket.getCourier_id());
         basketJson.put("status",basket.getStateofCart());
         basketJson.put("created_at",basket.getCreated_at());
