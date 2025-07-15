@@ -12,7 +12,11 @@ import java.io.*;
 
 public class CouponHandler implements HttpHandler {
 
-    CouponDAO couponDAO = new CouponDAO();
+    CouponDAO couponDAO;
+
+    public CouponHandler(CouponDAO couponDAO) {
+        this.couponDAO = couponDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {
@@ -60,6 +64,7 @@ public class CouponHandler implements HttpHandler {
                 }
                 String couponCode = jsonObject.getString("coupon_code");
                 Coupon coupon = couponDAO.findCouponByCode(couponCode);
+
                 if (coupon == null) {
                     throw new NosuchItemException("coupon");
                 }

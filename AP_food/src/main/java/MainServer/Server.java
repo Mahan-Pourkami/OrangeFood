@@ -1,5 +1,6 @@
 package MainServer;
 
+import DAO.*;
 import Handler.*;
 import com.sun.net.httpserver.HttpServer;
 
@@ -17,22 +18,34 @@ public class Server {
 
         try {
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
+            UserDAO userDAO = new UserDAO();
+            SellerDAO sellerDAO = new SellerDAO();
+            CourierDAO courierDAO = new CourierDAO();
+            CouponDAO couponDAO = new CouponDAO();
+            BuyerDAO buyerDAO = new BuyerDAO();
+            RestaurantDAO restaurantDAO = new RestaurantDAO();
+            FoodDAO foodDAO = new FoodDAO();
+            RatingDAO ratingDAO = new RatingDAO();
+
+
+
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
             server.setExecutor(executor);
 
             
-            server.createContext("/auth" , new AuthHandler());
-            server.createContext("/restaurants",new RestaurantsHandler());
-            server.createContext("/favorites" , new FavoriteHandler());
-            server.createContext("/admin",new AdminHandler());
-            server.createContext("/rating" , new RatingHandler());
-            server.createContext("/wallet" , new WalletHandler());
-            server.createContext("/coupon" , new CouponHandler());
-            server.createContext("/vendors" , new VendorHandler());
-            server.createContext("/items" , new ItemsHandler());
+            server.createContext("/auth" , new AuthHandler(courierDAO,sellerDAO,buyerDAO,userDAO,restaurantDAO));
+            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO));
+            server.createContext("/favorites" , new FavoriteHandler(buyerDAO,restaurantDAO));
+            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO));
+            server.createContext("/rating" , new RatingHandler(ratingDAO,foodDAO,userDAO));
+            server.createContext("/wallet" , new WalletHandler(buyerDAO));
+            server.createContext("/coupon" , new CouponHandler(couponDAO));
+            server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO));
+            server.createContext("/items" , new ItemsHandler(foodDAO));
             server.createContext("/orders" , new OrderHandler());
 
 

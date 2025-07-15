@@ -18,9 +18,15 @@ import java.io.*;
 
 public class RestaurantsHandler implements HttpHandler {
 
-    private SellerDAO sellerDAO = new SellerDAO();
-    private RestaurantDAO restaurantDAO = new RestaurantDAO();
-    private FoodDAO foodDAO = new FoodDAO();
+    private SellerDAO sellerDAO ;
+    private RestaurantDAO restaurantDAO ;
+    private FoodDAO foodDAO ;
+
+    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO) {
+        this.sellerDAO = sellerDAO;
+        this.restaurantDAO = restaurantDAO;
+        this.foodDAO = foodDAO;
+    }
 
 
     @Override

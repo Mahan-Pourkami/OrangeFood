@@ -18,8 +18,13 @@ import java.io.*;
 
 public class VendorHandler implements HttpHandler {
 
-    RestaurantDAO restaurantDAO = new RestaurantDAO();
-    FoodDAO foodDAO = new FoodDAO();
+    RestaurantDAO restaurantDAO ;
+    FoodDAO foodDAO ;
+
+    public VendorHandler(RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
+        this.restaurantDAO = restaurantDAO;
+        this.foodDAO = foodDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {
@@ -115,7 +120,7 @@ public class VendorHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO);
+                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO ,foodDAO);
 
                 response = vendors.getResponse();
                 http_code = 200;

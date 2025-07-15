@@ -18,9 +18,13 @@ import java.util.List;
 
 public class FavoriteHandler implements HttpHandler {
 
-    UserDAO userDAO = new UserDAO();
-    BuyerDAO buyerDAO = new BuyerDAO();
-    RestaurantDAO restaurantDAO = new RestaurantDAO();
+    BuyerDAO buyerDAO ;
+    RestaurantDAO restaurantDAO ;
+
+    public FavoriteHandler(BuyerDAO buyerDAO, RestaurantDAO restaurantDAO) {
+        this.buyerDAO = buyerDAO;
+        this.restaurantDAO = restaurantDAO;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

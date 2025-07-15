@@ -14,6 +14,7 @@ public class OrangeApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 860);
         stage.setTitle("Orange Food");
@@ -27,4 +28,5 @@ public class OrangeApp extends Application {
     public static void main(String[] args) {
         launch();
     }
+
 }

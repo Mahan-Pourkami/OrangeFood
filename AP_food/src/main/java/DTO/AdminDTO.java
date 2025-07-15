@@ -1,12 +1,13 @@
 package DTO;
 
 import DAO.CouponDAO;
+import DAO.CourierDAO;
+import DAO.RestaurantDAO;
+import DAO.SellerDAO;
 import Exceptions.DuplicatedItemexception;
 import Exceptions.InvalidInputException;
 import Exceptions.NosuchItemException;
-import Model.Coupon;
-import Model.Coupontype;
-import Model.User;
+import Model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,7 +79,7 @@ public class AdminDTO {
 
             for(String input : requierd){
 
-                if(!this.jsonObject.has(input)){
+                if(!this.jsonObject.has(input) || this.jsonObject.get(input) == null || this.jsonObject.get(input) == ""){
                     throw  new InvalidInputException(input);
                 }
             }
@@ -92,8 +93,8 @@ public class AdminDTO {
 
             if(jsonObject.has("start_date") && jsonObject.has("end_date")){
 
-                this.start_time = jsonObject.getString("start_time");
-                this.end_time = jsonObject.getString("end_time");
+                this.start_time = jsonObject.getString("start_date");
+                this.end_time = jsonObject.getString("end_date");
             }
 
             else {
@@ -185,6 +186,15 @@ public class AdminDTO {
 
             Coupon coupon = couponDAO.getCoupon(id);
 
+            String [] requierd = {"coupon_code" , "type" , "value" , "min_price" , "user_count"};
+
+            for(String input : requierd){
+
+                if(!jsonObject.has(input) || jsonObject.get(input) == null || jsonObject.get(input) == ""){
+                    throw  new InvalidInputException(input);
+                }
+            }
+
             if(jsonObject.has("coupon_code"))this.coupon_code = jsonObject.getString("coupon_code");
             else this.coupon_code = coupon.getCode();
 
@@ -225,5 +235,90 @@ public class AdminDTO {
             coupon.set_end_time(end_time);
             couponDAO.updateCoupon(coupon);
         }
+    }
+
+    public static class Get_approval_request{
+
+        private String response;
+        SellerDAO sellerDAO;
+        CourierDAO courierDAO;
+
+        public Get_approval_request(SellerDAO sellerDAO , CourierDAO courierDAO) throws IOException {
+
+            this.sellerDAO = sellerDAO;
+            this.courierDAO = courierDAO;
+            JSONArray jsonArray = new JSONArray();
+
+            List<Seller> sellers_list= this.sellerDAO.getAllSellers();
+            List<Courier> couriers_list= this.courierDAO.getAllCouriers();
+
+            for(Courier courier : couriers_list){
+                JSONObject jsonObject = new JSONObject();
+                if(courier.getStatue().equals(Userstatue.requested)){
+
+                    jsonObject.put("phone" , courier.getPhone());
+                    jsonObject.put("full_name" , courier.getfullname());
+                    jsonObject.put("address" , courier.getAddress());
+                    jsonObject.put("role" , courier.role.toString());
+                    jsonObject.put("id" , courier.getId());
+
+                    jsonArray.put(jsonObject);
+                }
+
+
+            }
+            for (Seller seller : sellers_list){
+                JSONObject jsonObject = new JSONObject();
+
+                if(seller.getStatue().equals(Userstatue.requested)){
+
+                    jsonObject.put("phone" , seller.getPhone());
+                    jsonObject.put("full_name" , seller.getfullname());
+                    jsonObject.put("address" , seller.getAddress());
+                    jsonObject.put("role" , seller.role.toString());
+                    jsonObject.put("id" , seller.getId());
+
+                    jsonArray.put(jsonObject);
+                }
+
+            }
+
+            this.response = jsonArray.toString();
+        }
+
+        public String getResponse() {
+            return response;
+        }
+
+    }
+
+
+    public static class Get_Restaurants_response{
+
+        private String response;
+        private RestaurantDAO restaurantDAO;
+
+        public Get_Restaurants_response(RestaurantDAO restaurantDAO) {
+
+            JSONArray jsonArray = new JSONArray();
+            List<Restaurant> restaurants = restaurantDAO.getAllRestaurants();
+            for(Restaurant restaurant : restaurants){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id" , restaurant.getId());
+                jsonObject.put("name" , restaurant.getName());
+                jsonObject.put("address" , restaurant.getAddress());
+                jsonObject.put("phone" , restaurant.getPhone());
+                jsonObject.put("owner_phone",restaurant.getSeller().getPhone());
+                jsonObject.put("owner_name" , restaurant.getSeller().getfullname());
+                jsonArray.put(jsonObject);
+            }
+
+            this.response = jsonArray.toString();
+        }
+        public String getResponse() {
+            return response;
+        }
+
+
     }
 }
