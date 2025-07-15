@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,15 +86,17 @@ public class FoodManageController {
 
 
     Image default_img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
-
-    String image_path = default_img.getUrl();
+    URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
+    String image_path = "";
     private static long res_id ;
 
 
     @FXML
-    void initialize() throws IOException {
+    void initialize() throws IOException, URISyntaxException {
 
         prof_view.setImage(default_img);
+        String image_path = new File(resourceUrl.toURI()).getAbsolutePath();
+        System.out.println(image_path);
         URL get_restaurantinfo = new URL(Methods.url+"restaurants/mine");
         HttpURLConnection connection = (HttpURLConnection) get_restaurantinfo.openConnection();
         connection.setRequestMethod("GET");
@@ -286,6 +289,7 @@ public class FoodManageController {
         obj.put("name",name_field.getText());
         obj.put("price",Integer.parseInt(price_field.getText()));
         obj.put("supply",Integer.parseInt(sup_field.getText()));
+        obj.put("imageBase64",image_path);
         obj.put("description",des_field.getText());
         List<String> keywords = List.of(key_box.getText().split(" "));
         JSONArray array = new JSONArray();
@@ -293,7 +297,7 @@ public class FoodManageController {
             array.put(keyword);
         }
         obj.put("keywords",array);
-        obj.put("imageBase64",image_path);
+
 
 
         try (OutputStream os = connection.getOutputStream()) {

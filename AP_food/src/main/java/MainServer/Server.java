@@ -2,7 +2,6 @@ package MainServer;
 
 import DAO.*;
 import Handler.*;
-import Model.TransactionT;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -33,7 +32,7 @@ public class Server {
 
 
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 

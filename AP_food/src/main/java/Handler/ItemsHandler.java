@@ -22,6 +22,7 @@ public class ItemsHandler implements HttpHandler {
     FoodDAO foodDAO;
 
     public ItemsHandler(FoodDAO foodDAO) {
+
         this.foodDAO = foodDAO;
     }
 
@@ -93,7 +94,7 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("name", food.getName());
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
-            foodJson.put("vendor_id", food.getId());
+            foodJson.put("vendor_id", food.getRestaurant());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
             foodJson.put("keywords", food.getKeywords());
@@ -165,7 +166,7 @@ public class ItemsHandler implements HttpHandler {
                     foodJson.put("name", food.getName());
                     foodJson.put("imageBase64", food.getPictureUrl());
                     foodJson.put("description", food.getDescription());
-                    foodJson.put("vendor_id", food.getId());
+                    foodJson.put("vendor_id", food.getRestaurant());
                     foodJson.put("price", food.getPrice());
                     foodJson.put("supply", food.getSupply());
                     foodJson.put("keywords", food.getKeywords());
