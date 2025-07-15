@@ -10,8 +10,8 @@ module org.example.client {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.net.http;
-    requires com.fasterxml.jackson.core;
     requires org.json;
+    requires com.fasterxml.jackson.databind;
     requires java.desktop;
     opens Model to javafx.base;
 

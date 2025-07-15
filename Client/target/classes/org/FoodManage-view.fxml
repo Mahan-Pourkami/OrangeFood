@@ -13,7 +13,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.FoodManageController">
    <children>
       <ImageView fitHeight="233.0" fitWidth="256.0" layoutX="1072.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
@@ -64,13 +63,15 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <TableView layoutX="409.0" layoutY="163.0" prefHeight="659.0" prefWidth="735.0">
+      <TableView fx:id="food_table" layoutX="388.0" layoutY="163.0" prefHeight="659.0" prefWidth="851.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="75.0" text="price" />
-            <TableColumn prefWidth="75.0" text="supply" />
-            <TableColumn prefWidth="261.0" text="Description" />
-            <TableColumn prefWidth="149.0" />
+          <TableColumn fx:id="name_col" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="price_col" prefWidth="75.0" text="price" />
+            <TableColumn fx:id="sup_col" prefWidth="75.0" text="supply" />
+            <TableColumn fx:id="des_col" prefWidth="261.0" text="Description" />
+            <TableColumn fx:id="id_col" prefWidth="91.0" text="ID" />
+            <TableColumn fx:id="res_col" prefWidth="132.0" text="Res ID" />
+            <TableColumn fx:id="action_col" prefWidth="141.0" />
         </columns>
       </TableView>
       <Label layoutX="542.0" layoutY="36.0" text="Manage Items" textFill="#ff9012">

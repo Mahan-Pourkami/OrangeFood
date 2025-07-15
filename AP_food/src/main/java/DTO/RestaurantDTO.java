@@ -357,6 +357,7 @@ public class RestaurantDTO {
                 js.put("name", food.getName());
                 js.put("imageBase64", food.getPictureUrl());
                 js.put("description", food.getDescription());
+                js.put("res_id", food.getRestaurantId());
                 js.put("price", food.getPrice());
                 js.put("supply", food.getSupply());
                 jsonArray.put(js);
