@@ -2,7 +2,6 @@ package Controller.Vendor;
 
 import Controller.Methods;
 import Controller.SceneManager;
-import Model.Coupon;
 import Model.Food;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -87,7 +86,7 @@ public class FoodManageController {
 
     Image default_img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
     URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
-    String image_path = "";
+    String image_path;
     private static long res_id ;
 
 
@@ -95,7 +94,7 @@ public class FoodManageController {
     void initialize() throws IOException, URISyntaxException {
 
         prof_view.setImage(default_img);
-        String image_path = new File(resourceUrl.toURI()).getAbsolutePath();
+        image_path = new File(resourceUrl.toURI()).getAbsolutePath();
         System.out.println(image_path);
         URL get_restaurantinfo = new URL(Methods.url+"restaurants/mine");
         HttpURLConnection connection = (HttpURLConnection) get_restaurantinfo.openConnection();
@@ -220,6 +219,12 @@ public class FoodManageController {
 
     void handleEditFood(Food food, ActionEvent event) throws IOException {
 
+        EditfoodController.set_id(food.getRes_id(),food.getId());
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Editfood-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = users.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
 
     }
 
@@ -297,8 +302,6 @@ public class FoodManageController {
             array.put(keyword);
         }
         obj.put("keywords",array);
-
-
 
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = obj.toString().getBytes("utf-8");

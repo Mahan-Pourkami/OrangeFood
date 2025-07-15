@@ -368,4 +368,36 @@ public class RestaurantDTO {
         }
     }
 
+    public static class Get_item_spcefic {
+
+        private FoodDAO foodDAO  ;
+        private String response ;
+
+        public Get_item_spcefic(FoodDAO foodDAO,long id) {
+
+            this.foodDAO = foodDAO;
+            Food food = foodDAO.getFood(id);
+
+            JSONObject js = new JSONObject();
+            js.put("id", food.getId());
+            js.put("name", food.getName());
+            js.put("imageBase64", food.getPictureUrl());
+            js.put("description", food.getDescription());
+            js.put("price", food.getPrice());
+            js.put("supply", food.getSupply());
+
+            JSONArray jsarray = new JSONArray();
+            List<String> keywords = food.getKeywords();
+            for(String keyword : keywords){
+                jsarray.put(keyword);
+            }
+            js.put("keywords", jsarray);
+            this.response = js.toString();
+        }
+        public String getResponse() {
+            return response;
+        }
+
+    }
+
 }

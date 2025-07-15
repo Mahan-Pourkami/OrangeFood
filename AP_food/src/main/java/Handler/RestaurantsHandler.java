@@ -260,18 +260,46 @@ public class RestaurantsHandler implements HttpHandler {
 
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
-//                Restaurant restaurant = seller.getRestaurant();
-//
-//                if(restaurant == null){
-//                    throw new NosuchRestaurantException();
-//                }
 
-                long res_id = 1652;
+                Restaurant restaurant = seller.getRestaurant();
+
+                if(restaurant == null){
+                    throw new NosuchRestaurantException();
+                }
+
+                long res_id = restaurant.getId();
                 RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO,res_id);
                 response = get_req.getResponse();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
+            }
+
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
+
+                long res_id = Long.parseLong(paths[2]);
+                long food_id = Long.parseLong(paths[4]);
+
+                String token = JwtUtil.get_token_from_server(exchange);
+                if(!JwtUtil.validateToken(token)){
+                    throw new InvalidTokenexception();
+                }
+                if(!JwtUtil.extractRole(token).equals("seller")) {
+                    throw new ForbiddenroleException();
+                }
+                String phone = JwtUtil.extractSubject(token);
+                Seller seller = sellerDAO.getSeller(phone);
+
+                if(res_id!=seller.getRestaurant().getId()){
+                    throw new InvalidTokenexception();
+                }
+
+                RestaurantDTO.Get_item_spcefic get_res = new RestaurantDTO.Get_item_spcefic(foodDAO,food_id);
+                response = get_res.getResponse();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+
             }
 
             else {
@@ -283,6 +311,14 @@ public class RestaurantsHandler implements HttpHandler {
 
 
         }
+        catch (NumberFormatException e){
+
+            response = generate_error("Invalid ID");
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(400, response.getBytes().length);
+        }
+
         catch (OrangeException e) {
             response = generate_error(e.getMessage());
             Headers headers = exchange.getResponseHeaders();
