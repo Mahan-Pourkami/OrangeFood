@@ -6,6 +6,8 @@ public enum StateofCart {
      rejected ,
      served,
      received ,
-     delivered
+     delivered,
+     waiting,//در انتظار پرداخت
+     payed //پرداخت شده در انتظار رستوران
 
 }

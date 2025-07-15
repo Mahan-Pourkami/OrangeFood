@@ -2,6 +2,7 @@ package MainServer;
 
 import DAO.*;
 import Handler.*;
+import Model.TransactionT;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -26,9 +27,13 @@ public class Server {
             RestaurantDAO restaurantDAO = new RestaurantDAO();
             FoodDAO foodDAO = new FoodDAO();
             RatingDAO ratingDAO = new RatingDAO();
+            BasketDAO basketDAO = new BasketDAO();
+            TransactionTDAO transactionTDAO = new TransactionTDAO();
+            BuyerDAO buyerDao = new BuyerDAO();
 
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
@@ -44,7 +49,8 @@ public class Server {
             server.createContext("/coupon" , new CouponHandler(couponDAO));
             server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO));
             server.createContext("/items" , new ItemsHandler(foodDAO));
-            server.createContext("/orders" , new OrderHandler());
+            server.createContext("/orders" , new OrderHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
+            server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDao));
 
 
             server.start();

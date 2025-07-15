@@ -39,9 +39,9 @@ public class Buyer extends User{
     }
 
     public void discharge(Integer discharge) {
-        Token -= discharge;
         if(Token < -100)
             throw new ArithmeticException("Not enough money");
+        Token -= discharge;
     }
 
     public void add_tofavorite_restaurants(long id) {

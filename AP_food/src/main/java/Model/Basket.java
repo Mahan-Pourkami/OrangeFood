@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static Model.StateofCart.received;
+import static Model.StateofCart.waiting;
 
 @Entity
 @Table(name = "baskets")
@@ -72,7 +72,7 @@ public class Basket {
         this.res_id = vendor_id;
         this.items = new HashMap<>();
         this.coupon_id = (coupon_id != null) ? coupon_id.longValue() : null;
-        this.stateofCart = received;
+        this.stateofCart = waiting;
         this.created_at = LocalDateTime.now().toString();
         this.upadated_at = LocalDateTime.now().toString();
         this.courier_id = null;
@@ -183,48 +183,45 @@ public class Basket {
         return items;
     }
 
-    public int getRawPrice(){
+    public int getRawPrice(FoodDAO foodDAO){
         int rawPrice=0;
-        FoodDAO foodDAO = new FoodDAO();
         for(Map.Entry<Long,Integer> item : items.entrySet()){
             rawPrice += foodDAO.getFood(item.getKey()).getPrice()*item.getValue();
         }
         return rawPrice;
     }
 
-    public int getTaxFee(){
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
+    public int getTaxFee(RestaurantDAO restaurantDAO){
         int taxFee = restaurantDAO.get_restaurant(res_id).getTax_fee();
         return taxFee;
     }
 
-    public int getAdditionalFee(){
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
+    public int getAdditionalFee(RestaurantDAO restaurantDAO){
         int additionalFee = restaurantDAO.get_restaurant(res_id).getAdditional_fee();
         return additionalFee;
 
     }
 
-    public int getPayPrice(){
+    public int getPayPrice(RestaurantDAO restaurantDAO,FoodDAO foodDAO){
         int payPrice = 0 ;
-        int additionalFee = getAdditionalFee();
-        int taxFee = getTaxFee();
+        int additionalFee = getAdditionalFee(restaurantDAO);
+        int taxFee = getTaxFee(restaurantDAO);
         CouponDAO couponDAO = new CouponDAO();
-        payPrice = getRawPrice()+additionalFee+taxFee+COURIER_FEE;
+        payPrice = getRawPrice(foodDAO)+additionalFee+taxFee+COURIER_FEE;
         if(coupon_id!=null&&couponDAO.getCoupon(coupon_id)!=null) {
             Coupon cp = couponDAO.getCoupon(coupon_id);
             if (payPrice > cp.getMin_price()) {
                 Coupontype couponType = cp.getType();
                 if (couponType == Coupontype.fixed) {
-                    payPrice = getRawPrice() + additionalFee + taxFee + COURIER_FEE - (int) cp.getValue();
+                    payPrice = getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE - (int) cp.getValue();
                 }
                 if (couponType == Coupontype.percent) {
-                    payPrice = (getRawPrice() + additionalFee + taxFee + COURIER_FEE) * ((100 - (int) cp.getValue()) / 100);
+                    payPrice = (getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE) * ((100 - (int) cp.getValue()) / 100);
                 }
             }
         }
         else{
-            payPrice = getRawPrice() + additionalFee + taxFee + COURIER_FEE;
+            payPrice = getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE;
         }
         return payPrice;
     }
