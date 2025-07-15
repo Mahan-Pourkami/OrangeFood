@@ -51,6 +51,7 @@ public class Server {
             server.createContext("/items" , new ItemsHandler(foodDAO));
             server.createContext("/orders" , new OrderHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
             server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDao));
+            server.createContext("/transactions" , new TransactionsHandler(transactionTDAO));
 
 
             server.start();

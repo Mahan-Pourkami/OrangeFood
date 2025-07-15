@@ -97,6 +97,28 @@ public class TransactionTDAO {
         }
     }
 
+    public List<TransactionT> getTransactionsByUserId(String userId) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<TransactionT> cq = cb.createQuery(TransactionT.class);
+            Root<TransactionT> root = cq.from(TransactionT.class);
+            cq.select(root).where(cb.equal(root.get("userId"), userId));
+
+            List<TransactionT> transactions = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return transactions;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Failed to retrieve transactions for userId: " + userId, e);
+        }
+    }
+
+
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
