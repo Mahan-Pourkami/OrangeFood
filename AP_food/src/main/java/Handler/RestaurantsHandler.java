@@ -260,13 +260,13 @@ public class RestaurantsHandler implements HttpHandler {
 
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
-                Restaurant restaurant = seller.getRestaurant();
+//                Restaurant restaurant = seller.getRestaurant();
+//
+//                if(restaurant == null){
+//                    throw new NosuchRestaurantException();
+//                }
 
-                if(restaurant == null){
-                    throw new NosuchRestaurantException();
-                }
-
-                long res_id = restaurant.getId();
+                long res_id = 1652;
                 RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO,res_id);
                 response = get_req.getResponse();
                 Headers headers = exchange.getResponseHeaders();

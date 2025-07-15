@@ -99,12 +99,9 @@ public class Food {
     }
 
     @JsonIgnore
-    public Restaurant getRestaurant() {
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
+    public Long getRestaurant() {
 
-
-        Restaurant restaurant = restaurantDAO.get_restaurant(restaurantId);
-        return restaurant;
+        return restaurantId;
     }
 
     public List<String> getMenuTitle() {

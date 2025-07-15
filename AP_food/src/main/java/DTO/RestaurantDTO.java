@@ -1,10 +1,7 @@
 package DTO;
 
 import DAO.*;
-import Exceptions.DuplicatedItemexception;
-import Exceptions.DuplicatedUserexception;
-import Exceptions.NosuchRestaurantException;
-import Exceptions.UnsupportedMediaException;
+import Exceptions.*;
 import Model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONArray;
@@ -223,15 +220,16 @@ public class RestaurantDTO {
             this.description = json.getString("description");
             this.price = json.getInt("price");
             this.supply = json.getInt("supply");
-            System.out.println("Done 3");
             this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
-            System.out.println("Done");
+
+            if(name.isEmpty()) throw new InvalidInputException("Name");
+            if(description.isEmpty()) throw new InvalidInputException("Description");
 
             if(foodDAO.findFoodByName(name,id)!=null){
               throw new DuplicatedItemexception();
             }
 
-            if(!this.logoBase64.endsWith("png") && !this.logoBase64.endsWith("jpeg") && !this.logoBase64.endsWith("jpg")) {
+            if(!this.logoBase64.endsWith("png") && !this.logoBase64.endsWith("jpeg") && !this.logoBase64.endsWith("jpg") && !this.logoBase64.isEmpty()) {
                 throw new UnsupportedMediaException();
             }
 
@@ -335,7 +333,7 @@ public class RestaurantDTO {
             if(!description.isEmpty()) food.setDescription(this.description);
             food.setPrice(this.price);
             food.setSupply(this.supply);
-            if(logoBase64!=null && !logoBase64.isEmpty() && !logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg"))  food.setPictureUrl(this.logoBase64);
+            if(logoBase64!=null && !logoBase64.isEmpty() && !logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg") )  food.setPictureUrl(this.logoBase64);
             food.setkeywords(this.keywords);
             foodDAO.updateFood(food);
         }

@@ -134,10 +134,11 @@ public class FoodDAO {
     }
 
     public List<Food> getFoodsByRestaurantId(Long restaurantId) {
+
         List<Food> result = new ArrayList<Food>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
-            if(food.getRestaurant().getId().equals(restaurantId)) {
+            if(food.getRestaurant().equals(restaurantId)) {
                 result.add(food);
             }
         }
@@ -148,7 +149,7 @@ public class FoodDAO {
         List <Food> result = new ArrayList<>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
-            if(food.getRestaurant().getId().equals(restaurantId) && food.getMenuTitle().contains(menu_title)) {
+            if(food.getRestaurant().equals(restaurantId) && food.getMenuTitle().contains(menu_title)) {
                 result.add(food);
             }
         }

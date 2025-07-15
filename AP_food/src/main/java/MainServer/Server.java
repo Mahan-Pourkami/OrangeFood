@@ -28,8 +28,6 @@ public class Server {
             RatingDAO ratingDAO = new RatingDAO();
 
 
-
-
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);

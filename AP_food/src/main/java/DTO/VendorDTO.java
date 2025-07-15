@@ -42,7 +42,7 @@ public class VendorDTO {
                 if(food.getMenuTitle()!=null && !food.getMenuTitle().isEmpty()) {
                     for (String keyword : food.getKeywords()) {
                         if ( keyword.contains(key)) {
-                            vendors.add(food.getRestaurant());
+                            vendors.add(restaurantDAO.get_restaurant(food.getRestaurant()));
                         }
                     }
                 }

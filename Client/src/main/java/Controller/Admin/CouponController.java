@@ -300,9 +300,9 @@ public class CouponController {
     }
 
 
-
     @FXML
     private void control_back(MouseEvent event) throws IOException {
+
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
@@ -312,6 +312,7 @@ public class CouponController {
 
     @FXML
     private void login_back(MouseEvent event) throws IOException {
+
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();

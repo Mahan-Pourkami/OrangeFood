@@ -45,6 +45,8 @@ public class VendorController {
 
     }
 
+
+
     @FXML
     void handleprofilebutton (MouseEvent event) throws IOException {
 
@@ -74,7 +76,6 @@ public class VendorController {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
-
 
     }
 
