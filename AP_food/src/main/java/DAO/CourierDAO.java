@@ -2,6 +2,7 @@ package DAO;
 
 import Model.Bankinfo;
 import Model.Courier;
+import Model.Seller;
 import Model.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -95,6 +96,27 @@ public class CourierDAO {
         catch (Exception e) {
             if(transaction!=null)transaction.rollback();
             throw new RuntimeException("failed to update courier",e);
+        }
+    }
+
+    public void deleteCourier(String phone) {
+
+        Transaction transaction = null ;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Courier courier = session.get(Courier.class, phone);
+            if(courier!=null) {
+                session.remove(courier);
+                transaction.commit();
+            }
+            else {
+                throw new RuntimeException("Courier not found");
+            }
+        }
+
+        catch (Exception e) {
+            if(transaction!=null)transaction.rollback();
+            throw new RuntimeException("failed to delete seller",e);
         }
     }
 

@@ -11,9 +11,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VendorDTO {
 
@@ -25,7 +23,7 @@ public class VendorDTO {
         private JSONObject jsonObject;
         private String response ;
 
-        public Get_Vendors(JSONObject json , RestaurantDAO restaurantDAO) throws InvalidInputException {
+        public Get_Vendors(JSONObject json , RestaurantDAO restaurantDAO , FoodDAO foodDAO) throws InvalidInputException {
 
             this.restaurantDAO = restaurantDAO;
             this.jsonObject = json;
@@ -34,7 +32,22 @@ public class VendorDTO {
                 throw new InvalidInputException("Search");
             }
 
-            List<Restaurant> vendors = restaurantDAO.findbyfilters(jsonObject.getString("search"));
+            List<String> keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
+            List<Food> foods = foodDAO.getAllFoods();
+
+            Set<Restaurant> vendors = restaurantDAO.findbyfilters(jsonObject.getString("search"));
+
+            for(String key : keywords){
+            for(Food food : foods) {
+                if(food.getMenuTitle()!=null && !food.getMenuTitle().isEmpty()) {
+                    for (String keyword : food.getKeywords()) {
+                        if ( keyword.contains(key)) {
+                            vendors.add(food.getRestaurant());
+                        }
+                    }
+                }
+            }
+            }
 
             JSONArray jsonArray = new JSONArray();
 
@@ -48,6 +61,7 @@ public class VendorDTO {
                 jsonObject1.put("tax_fee",r.getTax_fee());
                 jsonObject1.put("additional_fee",r.getAdditional_fee());
                 jsonArray.put(jsonObject1);
+
             }
 
             this.response = jsonArray.toString();

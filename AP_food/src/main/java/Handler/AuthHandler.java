@@ -1,7 +1,6 @@
 package Handler;
 
-import DAO.CourierDAO;
-import DAO.SellerDAO;
+import DAO.*;
 import Model.*;
 import Utils.JwtUtil;
 import DTO.UserDTO;
@@ -18,8 +17,21 @@ import java.io.*;
 
 public class AuthHandler implements HttpHandler {
 
-    CourierDAO courierDAO = new CourierDAO();
-    SellerDAO  sellerDAO = new SellerDAO();
+    CourierDAO courierDAO ;
+    SellerDAO  sellerDAO ;
+    BuyerDAO buyerDAO ;
+    UserDAO userDAO;
+    RestaurantDAO restaurantDAO ;
+
+    public AuthHandler(CourierDAO courierDAO ,SellerDAO sellerDAO , BuyerDAO buyerDAO, UserDAO userDAO, RestaurantDAO restaurantDAO) {
+        this.courierDAO = courierDAO;
+        this.sellerDAO = sellerDAO;
+        this.buyerDAO = buyerDAO;
+        this.userDAO = userDAO;
+        this.restaurantDAO = restaurantDAO;
+
+
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -27,6 +39,7 @@ public class AuthHandler implements HttpHandler {
         String request = exchange.getRequestMethod();
         String [] paths = exchange.getRequestURI().getPath().split("/");
         String response = "";
+
 
         try {
 
@@ -130,11 +143,19 @@ public class AuthHandler implements HttpHandler {
 
             if(JwtUtil.validateToken(token)) {
 
-                UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token));
-                response = userdto.response();
-                Headers headers = exchange.getResponseHeaders();
-                headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, response.getBytes().length);
+               try {
+                    UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token),userDAO);
+                    response = userdto.response();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
+                }
+               catch (NullPointerException e) {
+                   response= generate_error("admin last come");
+                   Headers headers = exchange.getResponseHeaders();
+                   headers.add("Content-Type", "application/json");
+                   exchange.sendResponseHeaders(402, response.getBytes().length);
+               }
             }
             else {
                 response= generate_error("Unauthorized request");
@@ -168,7 +189,8 @@ public class AuthHandler implements HttpHandler {
                             jsonobject.getString("email"),
                             jsonobject.getString("profileImageBase64"),
                             bankobject.getString("bank_name"),
-                            bankobject.getString("account_number"));
+                            bankobject.getString("account_number"),
+                            userDAO,sellerDAO,buyerDAO,courierDAO);
 
                     if(jsonobject.getString("password").length()<8){
                         throw new InvalidInputException("password");
@@ -230,7 +252,8 @@ public class AuthHandler implements HttpHandler {
 
                         UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
                                 jsonobject.getString("phone"),
-                                jsonobject.getString("password"));
+                                jsonobject.getString("password")
+                        ,userDAO);
 
                         System.out.println("UserDTO made");
                         User user = userDTOlogin.getUserByPhoneAndPass();
@@ -278,6 +301,7 @@ public class AuthHandler implements HttpHandler {
                             bankInfo.put("account_number", user.getBankinfo().getAccountNumber());
                             userJson.put("bank_info", bankInfo);
                             json.put("user", userJson);
+                            json.put("role", user.role);
 
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
@@ -295,9 +319,18 @@ public class AuthHandler implements HttpHandler {
 
                         } else {
 
+                            int seller_counts = sellerDAO.getAllSellers().size();
+                            int courier_counts = courierDAO.getAllCouriers().size();
+                            int buyer_counts = buyerDAO.getAllBuyers().size() ;
+
                             JSONObject json = new JSONObject();
                             json.put("message", "Welcome dear admin!");
                             json.put("token", JwtUtil.generateToken("admin", "admin"));
+                            json.put("role", "admin");
+                            json.put("seller_counts", seller_counts);
+                            json.put("courier_counts", courier_counts);
+                            json.put("buyer_counts", buyer_counts);
+                            json.put("vendors_counts", restaurantDAO.getAllRestaurants().size());
                             Headers headers = exchange.getResponseHeaders();
                             headers.add("Content-Type", "application/json");
                             exchange.sendResponseHeaders(200, json.toString().getBytes().length);

@@ -11,12 +11,10 @@ public class UserDTO {
 
     public static class UserRegisterDTO {
 
-        UserDAO userDAO = new UserDAO();
-        SellerDAO sellerDAO = new SellerDAO();
-        BuyerDAO buyerDAO = new BuyerDAO();
-        CourierDAO courierDAO = new CourierDAO();
-
-
+        UserDAO userDAO ;
+        SellerDAO sellerDAO ;
+        BuyerDAO buyerDAO ;
+        CourierDAO courierDAO ;
         public String fullName;
         public String phone;
         public String password;
@@ -26,8 +24,12 @@ public class UserDTO {
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
 
-        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account) throws UnsupportedMediaException, DuplicatedUserexception, EmailException {
+        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account, UserDAO userDAO ,SellerDAO sellerDAO , BuyerDAO buyerDAO , CourierDAO courierDAO) throws UnsupportedMediaException, DuplicatedUserexception, EmailException {
 
+            this.userDAO = userDAO ;
+            this.sellerDAO = sellerDAO;
+            this.buyerDAO = buyerDAO;
+            this.courierDAO = courierDAO;
             this.fullName = fullName;
             this.phone = phone;
             this.password = password;
@@ -97,11 +99,11 @@ public class UserDTO {
         public String password;
         UserDAO userDAO;
 
-        public UserLoginRequestDTO(String phone, String password) {
+        public UserLoginRequestDTO(String phone, String password,UserDAO userDAO) {
 
             this.phone = phone;
             this.password = password;
-            this.userDAO = new UserDAO();
+            this.userDAO = userDAO;
 
         }
         public User getUserByPhoneAndPass() {
@@ -115,7 +117,6 @@ public class UserDTO {
 
     public static class UserResponprofileDTO {
 
-        UserDAO userDAO = new UserDAO();
         JSONObject jsonObject = new JSONObject();
         JSONObject bankjson = new JSONObject();
 
@@ -128,7 +129,7 @@ public class UserDTO {
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
 
-       public UserResponprofileDTO (String phone) {
+       public UserResponprofileDTO (String phone,UserDAO userDAO) {
 
            User user = userDAO.getUserByPhone(phone);
 

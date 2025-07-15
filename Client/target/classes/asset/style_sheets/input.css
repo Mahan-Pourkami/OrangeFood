@@ -66,3 +66,60 @@
     -fx-border-width: 1;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
 }
+
+.buttonchooser {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.buttonchooser:hover {
+    -fx-background-color: #c0392b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 1);
+}
+
+.buttonchooser:pressed {
+    -fx-background-color: #a93226;
+    -fx-translate-y: 1px;
+}
+
+.adminbutton {
+    -fx-background-color: #203c57;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+
+.adminbutton:hover {
+    -fx-background-color: #0d2a57;
+    -fx-border-color: white;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 1);
+}
+
+.adminbutton:pressed {
+    -fx-border-color: white;
+    -fx-border-radius: 10;
+    -fx-background-color: #083fa0;
+    -fx-translate-y: 1px;
+}
+
+
+.adminfield {
+    -fx-border-color: #6ae6ff;
+    -fx-background-color: black;
+    -fx-text-fill: #66bae8;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.adminfield:focused {
+    -fx-background-color: #000000; /* Dark peach */
+    -fx-text-fill: #65b9e6; /* Yellow text */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}

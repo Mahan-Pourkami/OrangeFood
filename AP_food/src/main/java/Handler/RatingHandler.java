@@ -15,9 +15,15 @@ import java.io.*;
 
 public class RatingHandler implements HttpHandler {
 
-    RatingDAO ratingDAO = new RatingDAO();
-    FoodDAO foodDAO = new FoodDAO();
-    UserDAO userDAO = new UserDAO();
+    RatingDAO ratingDAO ;
+    FoodDAO foodDAO ;
+    UserDAO userDAO ;
+
+    public RatingHandler(RatingDAO ratingDAO, FoodDAO foodDAO, UserDAO userDAO) {
+        this.ratingDAO = ratingDAO;
+        this.foodDAO = foodDAO;
+        this.userDAO = userDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {

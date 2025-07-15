@@ -15,7 +15,11 @@ import java.io.*;
 
 public class WalletHandler implements HttpHandler {
 
-    BuyerDAO buyerDAO = new BuyerDAO();
+    BuyerDAO buyerDAO ;
+
+    public WalletHandler(BuyerDAO buyerDAO) {
+        this.buyerDAO = buyerDAO;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
