@@ -454,7 +454,7 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
 
-                if(food.getMenuTitle()!=null && !food.getMenuTitle().isEmpty()){
+                if(food.getMenuTitle().contains(menu_title)){
                     throw new DuplicatedItemexception();
                 }
 
