@@ -35,3 +35,93 @@
     -fx-background: linear-gradient(to right, #ffffff , #f4a565);
     -fx-background-radius: 10;
 }
+
+/* Table View */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Table Header */
+.table-view .column-header-background {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 5px 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 1px 0 0;
+    -fx-padding: 5px 10px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #424242;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Table Rows */
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-cell-size: 35px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #000000;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Table Cells */
+.table-cell {
+    -fx-text-fill: #212121;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+    -fx-padding: 5px 10px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Scrollbar */
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.table-view .scroll-bar:horizontal .thumb,
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #bdbdbd;
+    -fx-background-radius: 5px;
+}
+
+.table-view .scroll-bar:horizontal .thumb:hover,
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9e9e9e;
+}
+
+/* Corner */
+.table-view .corner {
+    -fx-background-color: #f5f5f5;
+}
+
