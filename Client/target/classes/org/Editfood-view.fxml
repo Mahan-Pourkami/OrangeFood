@@ -11,7 +11,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.EditfoodController">
    <children>
       <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#dfe6ed6d" height="547.0" layoutX="410.0" layoutY="165.0" stroke="#ee9c286e" strokeType="INSIDE" strokeWidth="5.0" width="559.0" />
@@ -46,8 +45,8 @@
          </font>
       </Label>
       <Button fx:id="profchooser" layoutX="832.0" layoutY="396.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="35.0" prefWidth="84.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="add Image" />
-      <ImageView fx:id="prof_view" fitHeight="150.0" fitWidth="169.0" layoutX="774.0" layoutY="231.0" onMousePressed="#handleSelectImage" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="832.0" layoutY="465.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="84.0" styleClass="white-button" text="Submit">
+      <ImageView fx:id="prof_view" fitHeight="150.0" fitWidth="169.0" layoutX="774.0" layoutY="217.0" onMousePressed="#handleSelectImage" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="832.0" layoutY="465.0" mnemonicParsing="false" onMousePressed="#handleupdate" prefHeight="35.0" prefWidth="84.0" styleClass="white-button" text="Submit">
          <font>
             <Font size="14.0" />
          </font>
@@ -73,6 +72,11 @@
       <Label layoutX="548.0" layoutY="49.0" prefHeight="56.0" prefWidth="213.0" text="Edit Item" textFill="#ff9012">
          <font>
             <Font name="System Bold" size="39.0" />
+         </font>
+      </Label>
+      <Label fx:id="error_label" layoutX="583.0" layoutY="671.0" prefHeight="25.0" prefWidth="183.0" textFill="RED" underline="true">
+         <font>
+            <Font name="System Bold" size="15.0" />
          </font>
       </Label>
    </children>
