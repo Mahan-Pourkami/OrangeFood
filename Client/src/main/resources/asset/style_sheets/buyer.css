@@ -125,3 +125,84 @@
     -fx-background-color: #f5f5f5;
 }
 
+.title-label {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 24px;
+    -fx-text-fill: #050202;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+    -fx-alignment: center-right;
+}
+
+.view-button {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.view-button:hover {
+
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #186b1b;
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+}
+
+.view-button:pressed {
+
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+
+}
+
+.delete-button {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #b40f0f; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.delete-button:hover {
+
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #880505;
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+}
+
+.delete-button:pressed {
+
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+
+}
+
+.card-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0; /* Bottom border only */
+}
+
+/* Title style */
+.card-title {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 16px;
+    -fx-text-fill: #000000;
+    -fx-padding: 5 0 5 0;
+}
+
+
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+}
+.list-cell {
+    -fx-background-radius: 10px;
+}

@@ -14,7 +14,7 @@
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.VendorController">
    <children>
       <Button layoutX="222.0" layoutY="270.0" mnemonicParsing="false" onMousePressed="#handle_item_button" prefHeight="343.0" prefWidth="211.0" styleClass="white-button" />
-      <Button layoutX="446.0" layoutY="275.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="280.0" styleClass="white-button" text="                Manage Menu">
+      <Button layoutX="446.0" layoutY="275.0" mnemonicParsing="false" onMousePressed="#handle_menu_button" prefHeight="150.0" prefWidth="280.0" styleClass="white-button" text="                Manage Menu">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -126,20 +126,15 @@
             <Image url="@../asset/images/pizza_2d.png" />
          </image>
       </ImageView>
-      <Button layoutX="977.0" layoutY="280.0" mnemonicParsing="false" prefHeight="335.0" prefWidth="211.0" styleClass="white-button" />
-      <Label layoutX="1002.0" layoutY="566.0" prefHeight="33.0" prefWidth="161.0" text="Add Restaurant">
+      <Button fx:id="add_button" layoutX="977.0" layoutY="280.0" mnemonicParsing="false" onMousePressed="#handle_add_restaurant_button" prefHeight="335.0" prefWidth="211.0" styleClass="white-button" />
+      <Label fx:id="add_text" layoutX="1002.0" layoutY="566.0" prefHeight="33.0" prefWidth="161.0" text="Add Restaurant">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="92.0" fitWidth="92.0" layoutX="1032.0" layoutY="321.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="plus_image" fitHeight="92.0" fitWidth="92.0" layoutX="1037.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/plus.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="92.0" fitWidth="102.0" layoutX="1032.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../asset/images/restaurant3d.png" />
          </image>
       </ImageView>
    </children>

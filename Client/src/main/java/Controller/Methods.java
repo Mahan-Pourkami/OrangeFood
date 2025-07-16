@@ -7,8 +7,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.MissingResourceException;
 
 public class Methods {
 
@@ -61,4 +63,22 @@ public class Methods {
         return new String(Files.readAllBytes(Paths.get(path)));
 
   }
+
+  public static Long get_restaurant_id () throws IOException {
+
+        URL url = new URL(Methods.url+"restaurants/mine");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        String token = Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+token);
+
+        JSONObject response = getJsonResponse(connection);
+
+
+        if(connection.getResponseCode()==200)  return response.getLong("id");
+
+        else return null;
+
+  }
+
 }

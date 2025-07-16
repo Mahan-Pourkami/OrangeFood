@@ -21,14 +21,16 @@ public class PaymentHandler implements HttpHandler {
     RestaurantDAO restaurantDAO;
     TransactionTDAO transactionTDAO;
     BuyerDAO buyerDAO;
+    CouponDAO couponDAO;
 
-    public PaymentHandler(BasketDAO basketDAO,UserDAO userDAO,FoodDAO foodDAO,RestaurantDAO restaurantDAO,TransactionTDAO transactionTDAO,BuyerDAO buyerDAO) {
+    public PaymentHandler(BasketDAO basketDAO,UserDAO userDAO,FoodDAO foodDAO,RestaurantDAO restaurantDAO,TransactionTDAO transactionTDAO,BuyerDAO buyerDAO ,CouponDAO couponDAO) {
         this.basketDAO = basketDAO;
         this.userDAO = userDAO;
         this.foodDAO = foodDAO;
         this.restaurantDAO = restaurantDAO;
         this.transactionTDAO = transactionTDAO;
         this.buyerDAO = buyerDAO;
+        this.couponDAO = couponDAO;
     }
 
     @Override
@@ -98,7 +100,7 @@ public class PaymentHandler implements HttpHandler {
                 if(jsonobject.get("method").equals("wallet")){
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
-                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO));
+                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO,couponDAO));
                         buyerDAO.updateBuyer(buyer);
                     }
                     catch(ArithmeticException e){

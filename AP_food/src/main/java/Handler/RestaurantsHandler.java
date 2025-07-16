@@ -8,12 +8,16 @@ import Exceptions.*;
 import Model.Food;
 import Model.Restaurant;
 import Model.Seller;
+import Model.Userstatue;
 import Utils.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
+import java.util.List;
 
 
 public class RestaurantsHandler implements HttpHandler {
@@ -94,7 +98,14 @@ public class RestaurantsHandler implements HttpHandler {
                 if (!JwtUtil.extractRole(token).equals("seller"))
                     throw new ForbiddenroleException();
 
+
                 String phone = JwtUtil.extractSubject(token);
+
+                Seller seller = sellerDAO.getSeller(phone);
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
                 RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject, phone , sellerDAO ,restaurantDAO);
                 restaurantDTO.register();
                 System.out.println("Restaurant added");
@@ -107,6 +118,11 @@ public class RestaurantsHandler implements HttpHandler {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
+            catch (IllegalArgumentException e) {
+                response = generate_error("Invalid Input for numbers");
+                http_code = 400;
+            }
+
             finally {
 
                 Headers headers = exchange.getResponseHeaders();
@@ -130,6 +146,11 @@ public class RestaurantsHandler implements HttpHandler {
 
             String phone = JwtUtil.extractSubject(token);
             Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
             Long res_id = Long.parseLong(paths[2]);
             if(!seller.getRestaurant().getId().equals(res_id)) {
                 throw new InvalidTokenexception();
@@ -145,14 +166,14 @@ public class RestaurantsHandler implements HttpHandler {
 
             }
 
-            catch (IllegalArgumentException e) {
-                response = generate_error("Invalid price");
-                http_code = 400;
-            }
-
             catch (OrangeException e){
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
+            }
+
+            catch (IllegalArgumentException e) {
+                response = generate_error("Invalid Input for numbers");
+                http_code = 400;
             }
 
             finally {
@@ -181,6 +202,11 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
                 Long res_id = Long.parseLong(paths[2]);
 
                 Restaurant restaurant = restaurantDAO.get_restaurant(res_id);
@@ -261,6 +287,10 @@ public class RestaurantsHandler implements HttpHandler {
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
 
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
                 Restaurant restaurant = seller.getRestaurant();
 
                 if(restaurant == null){
@@ -290,6 +320,10 @@ public class RestaurantsHandler implements HttpHandler {
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
 
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
                 if(res_id!=seller.getRestaurant().getId()){
                     throw new InvalidTokenexception();
                 }
@@ -299,6 +333,36 @@ public class RestaurantsHandler implements HttpHandler {
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
+
+            }
+
+            else if (paths.length ==3 && paths[1].equals("restaurants") && paths[2].equals("menu")) {
+
+
+                String token = JwtUtil.get_token_from_server(exchange);
+                if(!JwtUtil.validateToken(token)){
+                    throw new InvalidTokenexception();
+                }
+                if(!JwtUtil.extractRole(token).equals("seller")) {
+                    throw new ForbiddenroleException();
+                }
+
+                String phone = JwtUtil.extractSubject(token);
+                Seller seller = sellerDAO.getSeller(phone);
+                Restaurant restaurant = restaurantDAO.get_restaurant(seller.getRestaurant().getId());
+                JSONArray jsonArray = new JSONArray();
+                for(String menu_title : restaurant.get_menu_titles()){
+                    jsonArray.put(menu_title);
+                }
+                response = jsonArray.toString();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+
+
+            }
+
+            else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("item")) {
 
             }
 
@@ -353,6 +417,10 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
 
                 if (seller.getRestaurant() != null && !seller.getRestaurant().getId().equals(Id)) {
                     throw new InvalidTokenexception();
@@ -409,6 +477,10 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
 
                 if (!seller.getRestaurant().getId().equals(res_id)) {
                     throw new InvalidTokenexception();
@@ -467,6 +539,10 @@ public class RestaurantsHandler implements HttpHandler {
 
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
 
                 if (!seller.getRestaurant().getId().equals(res_id)) {
                     throw new InvalidTokenexception();
@@ -556,6 +632,11 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
+
                 if (!seller.getRestaurant().getId().equals(res_id)) {
                     throw new InvalidTokenexception();
                 }
@@ -596,6 +677,10 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
 
                 if (!seller.getRestaurant().getId().equals(res_id)) {
                     throw new InvalidTokenexception();
@@ -639,6 +724,10 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 Seller seller = sellerDAO.getSeller(phone);
+
+                if(!seller.getStatue().equals(Userstatue.approved)){
+                    throw new ForbiddenroleException();
+                }
 
                 if (!seller.getRestaurant().getId().equals(res_id)) {
                     throw new InvalidTokenexception();

@@ -136,20 +136,24 @@ public class ProfileController{
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        if(role.equals("buyer")) {
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = users.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-        }
-        else if (role.equals("seller")) {
+        try{
+            if (role.equals("buyer")) {
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = users.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            } else if (role.equals("seller")) {
 
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = users.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = users.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
+        }
+        catch(Exception e){
+            redirectToLogin(event);
         }
     }
 
@@ -197,7 +201,6 @@ public class ProfileController{
     }
 
 
-
     @FXML
     private void refresh(MouseEvent event) throws IOException {
 
@@ -206,6 +209,19 @@ public class ProfileController{
         Parent root = users.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
+    }
+
+
+    private void redirectToLogin(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            SceneManager.fadeScene(stage, scene);
+        } catch (IOException e) {
+            SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
+        }
     }
 
 }

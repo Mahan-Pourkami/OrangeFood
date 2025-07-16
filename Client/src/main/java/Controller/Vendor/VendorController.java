@@ -7,6 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -15,6 +18,30 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class VendorController {
+
+
+    @FXML
+    Label add_text;
+
+    @FXML
+    Button add_button;
+
+    @FXML
+    ImageView plus_image;
+
+
+    @FXML
+    void initialize() throws IOException {
+
+        Long res_id = Methods.get_restaurant_id();
+
+        if (res_id != null) {
+            add_text.setVisible(false);
+            add_button.setVisible(false);
+            plus_image.setVisible(false);
+        }
+
+    }
 
 
 
@@ -61,6 +88,12 @@ public class VendorController {
     @FXML
     void handle_item_button (MouseEvent event) throws IOException {
 
+
+        if(Methods.get_restaurant_id() == null){
+            SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
+            return;
+        }
+
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/FoodManage-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = users.load();
@@ -83,16 +116,27 @@ public class VendorController {
     @FXML
     void handle_add_restaurant_button (MouseEvent event) throws IOException {
 
-        URL check_have_restaurant_url = new URL(Methods.url+"restaurants/mine");
-        HttpURLConnection connection = (HttpURLConnection) check_have_restaurant_url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Authorization", "Bearer " + Methods.Get_saved_token());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/AddRestaurant-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
 
-        int http_code = connection.getResponseCode();
+    @FXML
+    void handle_menu_button (MouseEvent event) throws IOException {
 
-        if(http_code == 200){
-            SceneManager.showErrorAlert("Conflict Request" , "Restaurant Added before");
+        if(Methods.get_restaurant_id() == null){
+            SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
+            return;
         }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/MenuManage-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+
     }
 
 }

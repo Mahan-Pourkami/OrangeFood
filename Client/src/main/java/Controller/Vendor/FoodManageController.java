@@ -142,7 +142,7 @@ public class FoodManageController {
 
                     {
 
-                        editBtn.getStyleClass().add("edit-button");
+                        editBtn.getStyleClass().add("view-button");
                         deleteBtn.getStyleClass().add("delete-button");
                         pane.setAlignment(Pos.CENTER);
 
@@ -354,6 +354,7 @@ public class FoodManageController {
             try {
 
                 image_path = selectedFile.getAbsolutePath();
+                System.out.println(image_path);
 
                 Image image = new Image(selectedFile.toURI().toString(),640,640,true,true);
                  prof_view.setImage(image);

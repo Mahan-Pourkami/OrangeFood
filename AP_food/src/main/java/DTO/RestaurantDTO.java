@@ -200,7 +200,6 @@ public class RestaurantDTO {
 
     public static class Add_Item_request {
 
-
         FoodDAO foodDAO ;
 
         public String name ;
@@ -333,7 +332,7 @@ public class RestaurantDTO {
             if(!description.isEmpty()) food.setDescription(this.description);
             food.setPrice(this.price);
             food.setSupply(this.supply);
-            if(logoBase64!=null && !logoBase64.isEmpty() && !logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg") )  food.setPictureUrl(this.logoBase64);
+            if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || !logoBase64.endsWith(".jpg") || !logoBase64.endsWith(".jpeg")))  food.setPictureUrl(this.logoBase64);
             food.setkeywords(this.keywords);
             foodDAO.updateFood(food);
         }

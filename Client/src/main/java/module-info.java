@@ -13,6 +13,7 @@ module org.example.client {
     requires org.json;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires java.sql;
     opens Model to javafx.base;
 
     opens org to javafx.fxml;

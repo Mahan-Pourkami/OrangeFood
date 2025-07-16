@@ -4,18 +4,14 @@ import DAO.*;
 import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class OrderHandler implements HttpHandler {
 
@@ -102,7 +98,7 @@ public class OrderHandler implements HttpHandler {
                     basket.addItem(itemId, quantity);
                 }
                 if(basket.getCoupon_id()!=null&&couponDAO.getCoupon(basket.getCoupon_id())!=null){
-                    if(!couponDAO.getCoupon(basket.getCoupon_id()).is_valid(basket.getPayPrice(restaurantDAO,foodDAO))) {
+                    if(!couponDAO.getCoupon(basket.getCoupon_id()).is_valid(basket.getPayPrice(restaurantDAO,foodDAO,couponDAO))) {
                         response = generate_error("Coupon not valid");
                         throw new OrangeException(response, 400);
                     }
@@ -300,7 +296,7 @@ public class OrderHandler implements HttpHandler {
         basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
         basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
         basketJson.put("courier_id",basket.getCourier_id());
         basketJson.put("status",basket.getStateofCart());
         basketJson.put("created_at",basket.getCreated_at());
@@ -319,7 +315,7 @@ public class OrderHandler implements HttpHandler {
         basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
         basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
         basketJson.put("courier_id",basket.getCourier_id());
         basketJson.put("status",basket.getStateofCart());
         basketJson.put("created_at",basket.getCreated_at());

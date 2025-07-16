@@ -28,7 +28,7 @@ public class Server {
             RatingDAO ratingDAO = new RatingDAO();
             BasketDAO basketDAO = new BasketDAO();
             TransactionTDAO transactionTDAO = new TransactionTDAO();
-            BuyerDAO buyerDao = new BuyerDAO();
+
 
 
 
@@ -49,7 +49,7 @@ public class Server {
             server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO));
             server.createContext("/items" , new ItemsHandler(foodDAO));
             server.createContext("/orders" , new OrderHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
-            server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDao));
+            server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDAO,couponDAO));
 
 
             server.start();

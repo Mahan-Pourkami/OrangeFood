@@ -268,21 +268,21 @@ public class AuthHandler implements HttpHandler {
 
                         } else {
 
-                            if (user.role.equals(Role.courier)) {
-
-                                Courier courier = courierDAO.getCourier(user.getPhone());
-                                if (courier.getStatue()==null || !courier.getStatue().equals(Userstatue.approved)) {
-
-                                    throw new ForbiddenroleException();
-                                }
-                            }
-
-                            if (user.role.equals(Role.seller)) {
-                                Seller seller = sellerDAO.getSeller(user.getPhone());
-                                if (seller.getStatue()==null || !seller.getStatue().equals(Userstatue.approved)) {
-                                    throw new ForbiddenroleException();
-                                }
-                            }
+//                            if (user.role.equals(Role.courier)) {
+//
+//                                Courier courier = courierDAO.getCourier(user.getPhone());
+//                                if (courier.getStatue()==null || !courier.getStatue().equals(Userstatue.approved)) {
+//
+//                                    throw new ForbiddenroleException();
+//                                }
+//                            }
+//
+//                            if (user.role.equals(Role.seller)) {
+//                                Seller seller = sellerDAO.getSeller(user.getPhone());
+//                                if (seller.getStatue()==null || !seller.getStatue().equals(Userstatue.approved)) {
+//                                    throw new ForbiddenroleException();
+//                                }
+//                            }
 
                             String token = JwtUtil.generateToken(user.getPhone(), String.valueOf(user.role));
                             JSONObject json = new JSONObject();
