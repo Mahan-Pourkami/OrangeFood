@@ -156,6 +156,17 @@ public class FoodDAO {
         return result;
     }
 
+    public List<Food> foodsnotinmenu(Long restaurantId, String menu_title) {
+        List <Food> result = new ArrayList<>();
+        List<Food> foods = getAllFoods();
+        for (Food food : foods) {
+            if(food.getRestaurant().equals(restaurantId) && !food.getMenuTitle().contains(menu_title)) {
+                result.add(food);
+            }
+        }
+        return result;
+    }
+
 
     public Food findFoodByName(String name,long restaurantId) {
         List<Food> foods = getAllFoods();

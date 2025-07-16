@@ -152,7 +152,7 @@ public class ItemsHandler implements HttpHandler {
                             }
                         }
 
-                        if (allKeywordsMatch) {
+                        if (allKeywordsMatch && !food.getMenuTitle().isEmpty()) {
                             foundFoods.add(food);
                         }
                     }

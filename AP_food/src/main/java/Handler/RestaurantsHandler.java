@@ -10,7 +10,6 @@ import Model.Restaurant;
 import Model.Seller;
 import Model.Userstatue;
 import Utils.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -230,7 +229,7 @@ public class RestaurantsHandler implements HttpHandler {
             }
 
             catch (OrangeException e){
-
+                e.printStackTrace();
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -276,65 +275,168 @@ public class RestaurantsHandler implements HttpHandler {
 
             else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("items")) {
 
-                String token = JwtUtil.get_token_from_server(exchange);
-                if(!JwtUtil.validateToken(token)){
-                    throw new InvalidTokenexception();
+                try {
+                    String token = JwtUtil.get_token_from_server(exchange);
+                    if (!JwtUtil.validateToken(token)) {
+                        throw new InvalidTokenexception();
+                    }
+                    if (!JwtUtil.extractRole(token).equals("seller")) {
+                        throw new ForbiddenroleException();
+                    }
+
+                    String phone = JwtUtil.extractSubject(token);
+                    Seller seller = sellerDAO.getSeller(phone);
+
+                    if (!seller.getStatue().equals(Userstatue.approved)) {
+                        throw new ForbiddenroleException();
+                    }
+
+                    Restaurant restaurant = seller.getRestaurant();
+
+                    if (restaurant == null) {
+                        throw new NosuchRestaurantException();
+                    }
+
+                    long res_id = restaurant.getId();
+                    RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO, res_id);
+                    response = get_req.getResponse();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
                 }
-                if(!JwtUtil.extractRole(token).equals("seller")) {
-                    throw new ForbiddenroleException();
+                catch (OrangeException e){
+                    response = generate_error(e.getMessage());
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(e.http_code, response.length());
                 }
-
-                String phone = JwtUtil.extractSubject(token);
-                Seller seller = sellerDAO.getSeller(phone);
-
-                if(!seller.getStatue().equals(Userstatue.approved)){
-                    throw new ForbiddenroleException();
-                }
-
-                Restaurant restaurant = seller.getRestaurant();
-
-                if(restaurant == null){
-                    throw new NosuchRestaurantException();
-                }
-
-                long res_id = restaurant.getId();
-                RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO,res_id);
-                response = get_req.getResponse();
-                Headers headers = exchange.getResponseHeaders();
-                headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, response.getBytes().length);
             }
 
             else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
 
-                long res_id = Long.parseLong(paths[2]);
-                long food_id = Long.parseLong(paths[4]);
+                try{
+                    long res_id = Long.parseLong(paths[2]);
+                    long food_id = Long.parseLong(paths[4]);
 
-                String token = JwtUtil.get_token_from_server(exchange);
-                if(!JwtUtil.validateToken(token)){
-                    throw new InvalidTokenexception();
-                }
-                if(!JwtUtil.extractRole(token).equals("seller")) {
-                    throw new ForbiddenroleException();
-                }
-                String phone = JwtUtil.extractSubject(token);
-                Seller seller = sellerDAO.getSeller(phone);
+                    String token = JwtUtil.get_token_from_server(exchange);
+                    if (!JwtUtil.validateToken(token)) {
+                        throw new InvalidTokenexception();
+                    }
+                    if (!JwtUtil.extractRole(token).equals("seller")) {
+                        throw new ForbiddenroleException();
+                    }
+                    String phone = JwtUtil.extractSubject(token);
+                    Seller seller = sellerDAO.getSeller(phone);
 
-                if(!seller.getStatue().equals(Userstatue.approved)){
-                    throw new ForbiddenroleException();
-                }
+                    if (!seller.getStatue().equals(Userstatue.approved)) {
+                        throw new ForbiddenroleException();
+                    }
 
-                if(res_id!=seller.getRestaurant().getId()){
-                    throw new InvalidTokenexception();
-                }
+                    if (res_id != seller.getRestaurant().getId()) {
+                        throw new InvalidTokenexception();
+                    }
 
-                RestaurantDTO.Get_item_spcefic get_res = new RestaurantDTO.Get_item_spcefic(foodDAO,food_id);
-                response = get_res.getResponse();
-                Headers headers = exchange.getResponseHeaders();
-                headers.add("Content-Type", "application/json");
-                exchange.sendResponseHeaders(200, response.getBytes().length);
+                    RestaurantDTO.Get_item_spcefic get_res = new RestaurantDTO.Get_item_spcefic(foodDAO, food_id);
+                    response = get_res.getResponse();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(200, response.getBytes().length);
+                }
+                catch (OrangeException e){
+                    response = generate_error(e.getMessage());
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(e.http_code, response.length());
+                }
 
             }
+
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
+
+               try {
+                    int http_code = 200;
+                    String menu_title = paths[4];
+                    Long res_id = Long.parseLong(paths[2]);
+
+                    String token = JwtUtil.get_token_from_server(exchange);
+                    if (!JwtUtil.validateToken(token)) {
+                        throw new InvalidTokenexception();
+                    }
+                    if (!JwtUtil.extractRole(token).equals("seller")) {
+                        throw new ForbiddenroleException();
+                    }
+                    String phone = JwtUtil.extractSubject(token);
+                    Seller seller = sellerDAO.getSeller(phone);
+                    if (!seller.getStatue().equals(Userstatue.approved)) {
+                        throw new ForbiddenroleException();
+                    }
+                    List<Food> result = foodDAO.getFoodsByMenu(res_id, menu_title);
+                    JSONArray jsonArray = new JSONArray();
+                    for (Food food : result) {
+                        JSONObject json = new JSONObject();
+                        json.put("id", food.getId());
+                        json.put("name", food.getName());
+                        json.put("price", food.getPrice());
+                        json.put("description", food.getDescription());
+                        jsonArray.put(json);
+                    }
+                    http_code = 200;
+                    response = jsonArray.toString();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(http_code, response.length());
+                }
+               catch (OrangeException e){
+                   response = generate_error(e.getMessage());
+                   Headers headers = exchange.getResponseHeaders();
+                   headers.add("Content-Type", "application/json");
+                   exchange.sendResponseHeaders(e.http_code, response.length());
+               }
+            }
+
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("notmenu")){
+
+                try{
+                    int http_code = 200;
+                    String menu_title = paths[4];
+                    Long res_id = Long.parseLong(paths[2]);
+
+                    String token = JwtUtil.get_token_from_server(exchange);
+                    if (!JwtUtil.validateToken(token)) {
+                        throw new InvalidTokenexception();
+                    }
+                    if (!JwtUtil.extractRole(token).equals("seller")) {
+                        throw new ForbiddenroleException();
+                    }
+                    String phone = JwtUtil.extractSubject(token);
+                    Seller seller = sellerDAO.getSeller(phone);
+                    if (!seller.getStatue().equals(Userstatue.approved)) {
+                        throw new ForbiddenroleException();
+                    }
+                    List<Food> result = foodDAO.foodsnotinmenu(res_id, menu_title);
+                    JSONArray jsonArray = new JSONArray();
+                    for (Food food : result) {
+                        JSONObject json = new JSONObject();
+                        json.put("id", food.getId());
+                        json.put("name", food.getName());
+                        json.put("price", food.getPrice());
+                        json.put("description", food.getDescription());
+                        jsonArray.put(json);
+                    }
+                    http_code = 200;
+                    response = jsonArray.toString();
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(http_code, response.length());
+                }
+                catch (OrangeException e){
+                    response = generate_error(e.getMessage());
+                    Headers headers = exchange.getResponseHeaders();
+                    headers.add("Content-Type", "application/json");
+                    exchange.sendResponseHeaders(e.http_code, response.length());
+                }
+            }
+
 
             else if (paths.length ==3 && paths[1].equals("restaurants") && paths[2].equals("menu")) {
 

@@ -20,12 +20,12 @@
       </ImageView>
       <ListView fx:id="list_menu" layoutX="436.0" layoutY="235.0" prefHeight="543.0" prefWidth="723.0" styleClass="list-cell" />
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#dde4eb45" height="173.0" layoutX="67.0" layoutY="235.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" width="297.0" />
-      <TextField layoutX="114.0" layoutY="292.0" promptText="Enter the Menu Title" styleClass="white-button">
+      <TextField fx:id="title_field" layoutX="114.0" layoutY="292.0" promptText="Enter the Menu Title" styleClass="white-button">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </TextField>
-      <Button layoutX="188.0" layoutY="358.0" mnemonicParsing="false" styleClass="view-button" text="Button" />
+      <Button fx:id="submit_button" layoutX="188.0" layoutY="358.0" mnemonicParsing="false" onMousePressed="#handle_add_menu" styleClass="view-button" text="Add" />
       <Label layoutX="167.0" layoutY="247.0" text="Add  Menu">
          <font>
             <Font name="System Bold" size="18.0" />
