@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -56,11 +57,12 @@ public class UpdateRestaurantController {
 
     Image default_img = new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png"));
 
-    String prof = default_img.getUrl() ;
+    URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
+    String prof ="";
 
 
     @FXML
-    void initialize() throws IOException {
+    void initialize() throws IOException, URISyntaxException {
 
 
         URL get_info = new URL(Methods.url+"restaurants/mine");
@@ -85,7 +87,7 @@ public class UpdateRestaurantController {
                 prof = image.getUrl();
             }
             catch (Exception e) {
-                prof_view.setImage(default_img);
+                prof = new File(resourceUrl.toURI()).getAbsolutePath();
             }
         }
 

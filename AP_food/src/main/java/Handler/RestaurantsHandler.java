@@ -121,6 +121,9 @@ public class RestaurantsHandler implements HttpHandler {
                 response = generate_error("Invalid Input for numbers");
                 http_code = 400;
             }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
             finally {
 
