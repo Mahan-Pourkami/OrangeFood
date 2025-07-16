@@ -24,7 +24,7 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <Button layoutX="736.0" layoutY="278.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="224.0" styleClass="white-button">
+      <Button layoutX="736.0" layoutY="278.0" mnemonicParsing="false" onMousePressed="#handle_edit_button" prefHeight="145.0" prefWidth="224.0" styleClass="white-button">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

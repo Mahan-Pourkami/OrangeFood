@@ -139,4 +139,19 @@ public class VendorController {
 
     }
 
+    @FXML
+    void handle_edit_button (MouseEvent event) throws IOException {
+
+        if(Methods.get_restaurant_id() == null){
+            SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/UpdateRestaurant-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+
+    }
+
 }

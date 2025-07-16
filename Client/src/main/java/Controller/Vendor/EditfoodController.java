@@ -93,6 +93,7 @@ public class EditfoodController {
             }
            catch (Exception e) {
                prof_view.setImage(default_img);
+               image_path = default_img.getUrl();
            }
             JSONArray array = obj.getJSONArray("keywords");
             StringBuilder text = new StringBuilder();

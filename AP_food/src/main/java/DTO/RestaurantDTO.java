@@ -144,7 +144,7 @@ public class RestaurantDTO {
         public Integer tax_fee;
         public Integer additional_fee;
 
-        public  UpdateRestaurant_request(JSONObject json,String phone , SellerDAO sellerDAO , RestaurantDAO restaurantDAO) throws NosuchRestaurantException, UnsupportedMediaException {
+        public  UpdateRestaurant_request(JSONObject json,String phone , SellerDAO sellerDAO , RestaurantDAO restaurantDAO) throws NosuchRestaurantException, UnsupportedMediaException, InvalidInputException {
 
 
             this.sellerDAO = sellerDAO;
@@ -179,8 +179,14 @@ public class RestaurantDTO {
             res = restaurantDAO.get_restaurant(res.getId());
 
             if(!this.name.isEmpty())res.setName(this.name);
+            else throw new InvalidInputException("name");
+
             if(!this.address.isEmpty())res.setAddress(this.address);
+            else throw new InvalidInputException("address");
+
             if(!this.phone.isEmpty())res.setPhone(this.phone);
+            else throw new InvalidInputException("phone");
+
             if(!this.logoBase64.isEmpty())res.setLogoUrl(this.logoBase64);
 
             res.setTax_fee(this.tax_fee);
@@ -332,7 +338,9 @@ public class RestaurantDTO {
             if(!description.isEmpty()) food.setDescription(this.description);
             food.setPrice(this.price);
             food.setSupply(this.supply);
-            if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || !logoBase64.endsWith(".jpg") || !logoBase64.endsWith(".jpeg")))  food.setPictureUrl(this.logoBase64);
+            if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || logoBase64.endsWith(".jpg") || logoBase64.endsWith(".jpeg")))  food.setPictureUrl(this.logoBase64);
+            else throw new UnsupportedMediaException();
+
             food.setkeywords(this.keywords);
             foodDAO.updateFood(food);
         }

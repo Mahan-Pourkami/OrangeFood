@@ -451,6 +451,7 @@ public class RestaurantsHandler implements HttpHandler {
         }
 
         catch(Exception e){
+            e.printStackTrace();
             response = generate_error("Internal Server Error");
             Headers headers = exchange.getResponseHeaders();
             headers.add("Content-Type", "application/json");
