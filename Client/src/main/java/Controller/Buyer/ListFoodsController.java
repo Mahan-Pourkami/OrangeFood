@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -88,23 +89,29 @@ public class ListFoodsController {
 
        VBox textVBox = new VBox(10);
        Label name = new Label(food.getName());
-       name.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+       name.setStyle("-fx-font-weight: bold; -fx-font-size: 30px;");
        Label description = new Label(food.getDescription());
-       description.setStyle("-fx-text-fill: #8d8383; -fx-font-size: 14px;");
+       description.setStyle("-fx-text-fill: #8d8383; -fx-font-size: 15px;");
        name.setPadding(new Insets(20));
        description.setPadding(new Insets(5, 20, 5, 20));
        textVBox.getChildren().addAll(name, description);
 
 
        Label price = new Label(food.getPrice() + "$");
-       price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+       Button add = new Button("Add to Cart");
+       add.getStyleClass().add("cart-button");
+       add.setPadding(new Insets(40, 20, 20, 40));
+       price.setStyle("-fx-font-weight: bold; -fx-font-size: 40px; -fx-text-fill: #d15314");
        price.setPadding(new Insets(20));
+       VBox vbox3 = new VBox(10);
+       vbox3.setPadding(new Insets(20));
+       vbox3.getChildren().addAll(price,add);
 
 
        Region spacer = new Region();
        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-       card.getChildren().addAll(image, textVBox, spacer, price);
+       card.getChildren().addAll(image, textVBox, spacer,vbox3);
        card.setSpacing(10);
 
        return card;

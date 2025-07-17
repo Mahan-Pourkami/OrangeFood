@@ -7,9 +7,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.SearchRestaurantController">
@@ -19,13 +16,13 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </TextField>
-      <ListView fx:id="res_list" layoutX="384.0" layoutY="133.0" prefHeight="713.0" prefWidth="882.0" />
-      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="67.0" layoutY="410.0" pickOnBounds="true" preserveRatio="true">
+      <ListView fx:id="res_list" layoutX="384.0" layoutY="-1.0" prefHeight="860.0" prefWidth="896.0" />
+      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="51.0" layoutY="356.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/logo.png" />
          </image>
       </ImageView>
-      <Label layoutX="118.0" layoutY="550.0" text="Orange Food !" textFill="#d18f00">
+      <Label layoutX="27.0" layoutY="499.0" text="Orange Restaurants !" textFill="#d18f00">
          <font>
             <Font name="System Bold" size="32.0" />
          </font>
@@ -43,37 +40,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="514.0" layoutY="14.0" prefHeight="96.0" prefWidth="397.0" text="Orange Restaurants !">
-         <font>
-            <Font name="System Bold" size="38.0" />
-         </font>
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="1.0" green="0.5666666626930237" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.006711409395973154">
-                     <color>
-                        <Color red="1.0" green="0.5666666626930237" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.412751677852349">
-                     <color>
-                        <Color />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="0.6476190686225891" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </textFill>
-      </Label>
       <TextField fx:id="key_area" layoutX="39.0" layoutY="227.0" prefHeight="34.0" prefWidth="286.0" promptText="Keywords with -" styleClass="white-button">
          <font>
             <Font name="System Bold" size="13.0" />
