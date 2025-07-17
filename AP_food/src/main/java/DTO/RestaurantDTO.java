@@ -134,12 +134,6 @@ public class RestaurantDTO {
         RestaurantDAO restaurantDAO ;
 
 
-        public String name ;
-        public String address ;
-        public String phone ;
-        public String logoBase64 ;
-        public Integer tax_fee;
-        public Integer additional_fee;
 
         public  UpdateRestaurant_request(JSONObject json,String phone , SellerDAO sellerDAO , RestaurantDAO restaurantDAO) throws NosuchRestaurantException, UnsupportedMediaException, InvalidInputException {
 
@@ -147,57 +141,57 @@ public class RestaurantDTO {
             this.sellerDAO = sellerDAO;
             this.restaurantDAO = restaurantDAO;
 
-            String logo_img = json.getString("logoBase64");
+
             Seller seller = sellerDAO.getSeller(phone);
             System.out.println(seller.getfullname());
             if(seller.getRestaurant() == null){
                 throw new NosuchRestaurantException();
             }
 
-            if(logo_img!=null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
-                throw new UnsupportedMediaException();
-            }
-
-            this.name = json.getString("name");
-            this.address = json.getString("address");
-            this.phone = json.getString("phone");
-
-            if(json.getString("logoBase64")!=null && !json.getString("logoBase64").isEmpty()) {
-                this.logoBase64 = json.getString("logoBase64");
-            }
-            else this.logoBase64 = "default.png";
-            this.tax_fee = json.getInt("tax_fee");
-            this.additional_fee = json.getInt("additional_fee");
             Restaurant res = seller.getRestaurant();
 
             if(res == null) throw new NosuchRestaurantException();
 
-
             res = restaurantDAO.get_restaurant(res.getId());
 
-            if(!this.name.isEmpty())res.setName(this.name);
-            else throw new InvalidInputException("name");
+            if(json.has("logoBase64")) {
 
-            if(!this.address.isEmpty())res.setAddress(this.address);
-            else throw new InvalidInputException("address");
+                String logo_img = json.getString("logoBase64");
+                if (logo_img != null && !logo_img.isEmpty() && !logo_img.endsWith(".png") && !logo_img.endsWith(".jpg") && !logo_img.endsWith(".jpeg")) {
+                    throw new UnsupportedMediaException();
+                }
+                res.setLogoUrl(logo_img);
+            }
 
-            if(!this.phone.isEmpty())res.setPhone(this.phone);
-            else throw new InvalidInputException("phone");
-
-            if(!this.logoBase64.isEmpty())res.setLogoUrl(this.logoBase64);
-
-            res.setTax_fee(this.tax_fee);
-            res.setAdditional_fee(this.additional_fee);
+            if(json.has("name")){
+                String name = json.getString("name");
+                if(name.isEmpty()) throw new InvalidInputException("name");
+                res.setName(name);
+            }
+            if(json.has("address")){
+                String address = json.getString("address");
+                if(address.isEmpty()) throw new InvalidInputException("address");
+                res.setAddress(address);
+            }
+            if(json.has("phone")){
+                String res_phone = json.getString("phone");
+                if(res_phone.isEmpty()) throw new InvalidInputException("phone");
+                res.setPhone(res_phone);
+            }
+            if(json.has("tax_fee")){
+                int tax_fee = json.getInt("tax_fee");
+                if(tax_fee < 0) throw new InvalidInputException("tax_fee");
+                res.setTax_fee(tax_fee);
+            }
+            if(json.has("additional_fee")){
+                int additional_fee = json.getInt("additional_fee");
+                if(additional_fee < 0) throw new InvalidInputException("additional_fee");
+                res.setAdditional_fee(additional_fee);
+            }
 
             restaurantDAO.updateRestaurant(res);
-
-
         }
 
-        public void update() throws NosuchRestaurantException {
-
-            Seller seller = sellerDAO.getSeller(phone);
-        }
     }
 
 
