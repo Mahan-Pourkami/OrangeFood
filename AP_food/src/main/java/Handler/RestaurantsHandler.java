@@ -1,22 +1,20 @@
 package Handler;
 
-import DAO.FoodDAO;
-import DAO.RestaurantDAO;
-import DAO.SellerDAO;
+import DAO.*;
 import DTO.RestaurantDTO;
 import Exceptions.*;
-import Model.Food;
-import Model.Restaurant;
-import Model.Seller;
-import Model.Userstatue;
+import Model.*;
 import Utils.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class RestaurantsHandler implements HttpHandler {
@@ -24,11 +22,16 @@ public class RestaurantsHandler implements HttpHandler {
     private SellerDAO sellerDAO ;
     private RestaurantDAO restaurantDAO ;
     private FoodDAO foodDAO ;
+    private BasketDAO basketDAO ;
+    private CouponDAO couponDAO ;
 
-    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO) {
+    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO , BasketDAO basketDAO  , CouponDAO couponDAO) {
         this.sellerDAO = sellerDAO;
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
+        this.basketDAO = basketDAO;
+        this.couponDAO = couponDAO;
+
     }
 
 
@@ -467,9 +470,6 @@ public class RestaurantsHandler implements HttpHandler {
 
             }
 
-            else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("item")) {
-
-            }
 
             else {
                 response = generate_error("Endpoint not found");
@@ -477,6 +477,7 @@ public class RestaurantsHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(404, response.getBytes().length);
             }
+
 
 
         }
@@ -948,6 +949,29 @@ public class RestaurantsHandler implements HttpHandler {
 
         return result;
     }
+
+    public JSONObject getBasketJsonObject(Basket basket) {
+        JSONObject basketJson = new JSONObject();
+        basketJson.put("id", basket.getId());
+        basketJson.put("delivery_address", basket.getAddress());
+        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
+        JSONArray itemIdsArray = new JSONArray(basket.getItems().keySet());
+        basketJson.put("item_ids", itemIdsArray);
+        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee",basket.getCOURIER_FEE());
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
+        basketJson.put("courier_id",basket.getCourier_id());
+        basketJson.put("status",basket.getStateofCart());
+        basketJson.put("created_at",basket.getCreated_at());
+        basketJson.put("updated_at",basket.getUpadated_at());
+        return basketJson;
+    }
+
+
 }
 
 

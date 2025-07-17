@@ -96,12 +96,14 @@ public class OrderHandler implements HttpHandler {
                     int itemId = item.getInt("item_id");
                     int quantity = item.getInt("quantity");
                     basket.addItem(itemId, quantity);
+                    foodDAO.add_to_cart(itemId, quantity);
                 }
                 if(basket.getCoupon_id()!=null&&couponDAO.getCoupon(basket.getCoupon_id())!=null){
                     if(!couponDAO.getCoupon(basket.getCoupon_id()).is_valid(basket.getPayPrice(restaurantDAO,foodDAO,couponDAO))) {
                         response = generate_error("Coupon not valid");
                         throw new OrangeException(response, 400);
                     }
+                    couponDAO.use_Coupon(basket.getCoupon_id());
                 }
                 basketDAO.saveBasket(basket);
                 response = getBasketJsonObject(basket).toString();

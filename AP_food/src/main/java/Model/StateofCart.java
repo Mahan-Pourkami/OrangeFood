@@ -9,5 +9,4 @@ public enum StateofCart {
      delivered,
      waiting,//در انتظار پرداخت
      payed //پرداخت شده در انتظار رستوران
-
 }

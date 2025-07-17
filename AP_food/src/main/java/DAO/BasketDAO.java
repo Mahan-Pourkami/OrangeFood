@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.awt.print.Book;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -197,6 +198,20 @@ public class BasketDAO implements AutoCloseable {
                 session.close(); // always close session
             }
         }
+    }
+
+    public List<Basket> getBasketforvendor(Long vendorId) {
+
+        List<Basket> baskets = getAllBasket();
+        List <Basket> result = new ArrayList<>();
+
+        for (Basket basket : baskets) {
+            if (basket.getRes_id() == vendorId && (basket.getStateofCart().equals(StateofCart.waiting) || basket.getStateofCart().equals(StateofCart.received) || basket.getStateofCart().equals(StateofCart.accepted))) {
+                result.add(basket);
+            }
+        }
+        return result;
+
     }
 
 

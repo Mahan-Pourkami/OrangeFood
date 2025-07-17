@@ -31,7 +31,7 @@ public class Basket {
     @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "basket_items",
             joinColumns = @JoinColumn(name = "basket_id")
