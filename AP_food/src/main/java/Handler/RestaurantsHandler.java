@@ -948,26 +948,7 @@ public class RestaurantsHandler implements HttpHandler {
         return result;
     }
 
-    public JSONObject getBasketJsonObject(Basket basket) {
-        JSONObject basketJson = new JSONObject();
-        basketJson.put("id", basket.getId());
-        basketJson.put("delivery_address", basket.getAddress());
-        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("vendor_id",basket.getRes_id());
-        basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
-        JSONArray itemIdsArray = new JSONArray(basket.getItems().keySet());
-        basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
-        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
-        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
-        basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
-        basketJson.put("courier_id",basket.getCourier_id());
-        basketJson.put("status",basket.getStateofCart());
-        basketJson.put("created_at",basket.getCreated_at());
-        basketJson.put("updated_at",basket.getUpadated_at());
-        return basketJson;
-    }
+
 
 
 }
