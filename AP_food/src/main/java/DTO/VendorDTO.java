@@ -37,9 +37,11 @@ public class VendorDTO {
 
             Set<Restaurant> vendors = restaurantDAO.findbyfilters(jsonObject.getString("search"));
 
+
             for(String key : keywords){
             for(Food food : foods) {
                 if(food.getMenuTitle()!=null && !food.getMenuTitle().isEmpty()) {
+
                     for (String keyword : food.getKeywords()) {
                         if ( keyword.contains(key)) {
                             vendors.add(restaurantDAO.get_restaurant(food.getRestaurant()));

@@ -44,9 +44,6 @@ public class RestaurantDTO {
             if(json.getString("logoBase64")==null || json.getString("logoBase64").isEmpty()) {
                 this.logoBase64 = json.getString("logoBase64");
             }
-            else this.logoBase64 = "default.png";
-
-
 
             this.tax_fee = json.getInt("tax_fee");
             this.additional_fee = json.getInt("additional_fee");
@@ -310,38 +307,50 @@ public class RestaurantDTO {
     public static class Update_Item_request {
 
         FoodDAO foodDAO  ;
-        public String name ;
-        public String logoBase64 ;
-        public String description ;
-        public int price;
-        public int supply;
-        public List<String> keywords ;
+
 
         public Update_Item_request(JSONObject json,long id,FoodDAO foodDAO) throws IOException {
 
 
             this.foodDAO = foodDAO;
             Food food = foodDAO.getFood(id);
-            this.name = json.getString("name");
-            this.logoBase64 = json.getString("imageBase64");
-            this.description = json.getString("description");
-            this.price = json.getInt("price");
-            this.supply = json.getInt("supply");
-            this.keywords=convertjsonarraytolist(json.getJSONArray("keywords"));
 
-            if(!name.equals(food.getName()) && foodDAO.findFoodByName(name,food.getRestaurantId())!=null){
-                throw new DuplicatedItemexception();
+
+            if(json.has("name")){
+                String name = json.getString("name");
+                if(!name.equals(food.getName()) && foodDAO.findFoodByName(name,food.getRestaurantId())!=null){
+                    throw new DuplicatedItemexception();
+                }
+                if(name.isEmpty()) throw new InvalidInputException("Name");
+                food.setName(name);
             }
 
-            if(!name.isEmpty()) food.setName(this.name);
+            if(json.has("description")){
+                String description = json.getString("description");
+                if(description.isEmpty()) throw new InvalidInputException("Description");
+                food.setDescription(description);
+            }
 
-            if(!description.isEmpty()) food.setDescription(this.description);
-            food.setPrice(this.price);
-            food.setSupply(this.supply);
-            if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || logoBase64.endsWith(".jpg") || logoBase64.endsWith(".jpeg")))  food.setPictureUrl(this.logoBase64);
-            else throw new UnsupportedMediaException();
+            if(json.has("logoBase64")){
+                String logoBase64 = json.getString("logoBase64");
+                if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || logoBase64.endsWith(".jpg") || logoBase64.endsWith(".jpeg")))  food.setPictureUrl(logoBase64);
+                else throw new UnsupportedMediaException();
+            }
 
-            food.setkeywords(this.keywords);
+            if(json.has("price")){
+                int price = json.getInt("price");
+                food.setPrice(price);
+            }
+            if(json.has("supply")){
+                int supply = json.getInt("supply");
+                food.setSupply(supply);
+            }
+            if(json.has("keywords")){
+                JSONArray keywords = json.getJSONArray("keywords");
+                List<String> keywordslist = convertjsonarraytolist(keywords);
+                food.setkeywords(keywordslist);
+            }
+
             foodDAO.updateFood(food);
         }
     }

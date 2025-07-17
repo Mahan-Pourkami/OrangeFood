@@ -202,20 +202,37 @@ public class UserDTO {
 
            this.userDAO = userDAO;
             User user = userDAO.getUserByPhone(phone);
-            if(!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email"))!=null && !jsonObject.getString("email").isEmpty()) {
-                throw new EmailException();
+
+            if(jsonObject.has("email")) {
+                if (!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email")) != null && !jsonObject.getString("email").isEmpty()) {
+                    throw new EmailException();
+                }
+                user.setEmail(jsonObject.getString("email"));
             }
-            String prof = jsonObject.getString("profileImageBase64");
-            if(prof!=null && !prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
-                throw new UnsupportedMediaException();
+            if(jsonObject.has("profileImageBase64")) {
+                String prof = jsonObject.getString("profileImageBase64");
+                if (prof != null && !prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
+                    throw new UnsupportedMediaException();
+                }
+                user.setProfile(prof);
             }
 
-            user.setfullname(jsonObject.getString("full_name"));
-            user.setEmail(jsonObject.getString("email"));
-            user.setAddress(jsonObject.getString("address"));
-            user.setProfile(jsonObject.getString("profileImageBase64"));
+            if(jsonObject.has("full_name")) {
+
+                if(jsonObject.getString("full_name").isEmpty()){
+                    throw new InvalidInputException("full_name");
+                }
+                user.setfullname(jsonObject.getString("full_name"));
+            }
+            if(jsonObject.has("address")) {
+                if(jsonObject.getString("address").isEmpty()){
+                    throw new InvalidInputException("address");
+                }
+                user.setAddress(jsonObject.getString("address"));
+            }
+
             JSONObject bankobject = jsonObject.optJSONObject("bank_info");
-           if(!bankobject.getString("bank_name").isEmpty() && !bankobject.getString("account_number").isEmpty()) {
+           if((bankobject.has("bank_name") && bankobject.has("account_number")) && !bankobject.getString("bank_name").isEmpty() && !bankobject.getString("account_number").isEmpty()) {
             Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
             user.setBankinfo(bankinfo);
             }

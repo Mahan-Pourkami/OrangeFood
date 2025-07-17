@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.layout.Layer?>
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.SearchRestaurantController">
+   <children>
+      <TextField fx:id="search_field" layoutX="39.0" layoutY="169.0" prefHeight="34.0" prefWidth="286.0" promptText="Search Restaurants" styleClass="white-button">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TextField>
+      <TextArea fx:id="key_area" layoutX="39.0" layoutY="232.0" prefHeight="87.0" prefWidth="200.0" promptText="Keywords" styleClass="white-button">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </TextArea>
+      <ImageView fitHeight="52.0" fitWidth="51.0" layoutX="252.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/mag.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <styleClass>
+            <String fx:value="white-button" />
+            <String fx:value="wobbly-image" />
+         </styleClass>
+      </ImageView>
+      <ListView fx:id="res_list" layoutX="398.0" layoutY="147.0" prefHeight="713.0" prefWidth="882.0" />
+      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="67.0" layoutY="410.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Layer layoutX="201.0" layoutY="477.0" />
+      <Label layoutX="118.0" layoutY="550.0" text="Orange Food !" textFill="#d18f00">
+         <font>
+            <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutY="648.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="74.0" layoutY="62.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label layoutX="514.0" layoutY="14.0" prefHeight="96.0" prefWidth="397.0" text="Orange Restaurants !" textFill="#ffb900">
+         <font>
+            <Font name="System Bold" size="38.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
