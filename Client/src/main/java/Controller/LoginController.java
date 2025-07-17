@@ -47,7 +47,7 @@ public class LoginController {
 
 
         System.out.println(phonefield.getText());
-        URL address = new URL("http://localhost:8080/auth/login");
+        URL address = new URL(Methods.url+"auth/login");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
 
         connection.setRequestMethod("POST");

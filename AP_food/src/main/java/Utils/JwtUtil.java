@@ -17,7 +17,7 @@ public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long EXPIRATION_TIME_MS = 15 * 60 * 1000;
+    private static final long EXPIRATION_TIME_MS = 60 * 60 * 1000;
     private static  ArrayList<String> black_list = new ArrayList<>();
 
 

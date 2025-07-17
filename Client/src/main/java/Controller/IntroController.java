@@ -69,7 +69,7 @@ public class IntroController {
                 return;
             }
 
-            URL profileUrl = new URL("http://localhost:8080/auth/profile");
+            URL profileUrl = new URL(Methods.url+"auth/profile");
             HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
 
 

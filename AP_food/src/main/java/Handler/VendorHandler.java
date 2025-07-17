@@ -7,14 +7,17 @@ import Exceptions.ForbiddenroleException;
 import Exceptions.InvalidTokenexception;
 import Exceptions.NosuchRestaurantException;
 import Exceptions.OrangeException;
+import Model.Food;
 import Utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 import java.io.*;
+import java.util.List;
 
 public class VendorHandler implements HttpHandler {
 
@@ -96,6 +99,57 @@ public class VendorHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
         }
+
+        else if (paths.length == 5 && paths[3].equals("menu")){
+
+            try{
+                Long res_id = Long.parseLong(paths[2]);
+                String menu_title = paths[4];
+                String token = JwtUtil.get_token_from_server(exchange);
+
+                if (restaurantDAO.get_restaurant(res_id) == null) {
+                    throw new NosuchRestaurantException();
+                }
+
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("buyer")) {
+                    throw new ForbiddenroleException();
+                }
+
+                List<Food> foods = foodDAO.getFoodsByMenu(res_id, menu_title);
+                JSONArray array = new JSONArray();
+                for (Food food : foods) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", food.getId());
+                    obj.put("name", food.getName());
+                    obj.put("price", food.getPrice());
+                    obj.put("imageBase64", food.getPictureUrl());
+                    obj.put("description", food.getDescription());
+                    array.put(obj);
+                }
+                response = array.toString();
+                http_code = 200;
+            }
+            catch (IllegalArgumentException e){
+                response = generate_error(e.getMessage());
+                http_code = 400;
+            }
+
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(http_code, response.length());
+
+            try(OutputStream os = exchange.getResponseBody()){
+                os.write(response.getBytes());
+            }
+        }
+
 
         return response;
     }

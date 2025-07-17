@@ -32,23 +32,49 @@ public class VendorDTO {
                 throw new InvalidInputException("Search");
             }
 
-            List<String> keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
-            List<Food> foods = foodDAO.getAllFoods();
+            List<String> keywords = new ArrayList<>();
+
+            if(jsonObject.has("keywords")){
+               keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
+            }
+
+
 
             Set<Restaurant> vendors = restaurantDAO.findbyfilters(jsonObject.getString("search"));
 
+            Iterator<Restaurant> iterator = vendors.iterator();
+            while (iterator.hasNext()) {
+                Restaurant r = iterator.next();
+                List<Food> foods = foodDAO.getFoodsByRestaurantId(r.getId());
 
-            for(String key : keywords){
-            for(Food food : foods) {
-                if(food.getMenuTitle()!=null && !food.getMenuTitle().isEmpty()) {
+                if(foods.isEmpty()){
+                    iterator.remove();
+                    continue;
+                }
 
-                    for (String keyword : food.getKeywords()) {
-                        if ( keyword.contains(key)) {
-                            vendors.add(restaurantDAO.get_restaurant(food.getRestaurant()));
+
+                boolean shouldRemoveRestaurant = true; // Assume we'll remove unless proven otherwise
+
+                for (Food f : foods) {
+
+                    boolean containsAllKeywords = true;
+                    for (String keyword : keywords) {
+
+                        if (!f.getKeywords().contains(keyword) && !keyword.isEmpty()) {
+                            containsAllKeywords = false;
+                            break;
                         }
                     }
+
+                    if (containsAllKeywords) {
+                        shouldRemoveRestaurant = false;
+                        break; // Found at least one matching food, keep the restaurant
+                    }
                 }
-            }
+
+                if (shouldRemoveRestaurant) {
+                    iterator.remove();
+                }
             }
 
             JSONArray jsonArray = new JSONArray();
@@ -62,6 +88,7 @@ public class VendorDTO {
                 jsonObject1.put("phone", r.getPhone());
                 jsonObject1.put("tax_fee",r.getTax_fee());
                 jsonObject1.put("additional_fee",r.getAdditional_fee());
+                jsonObject1.put("logoBase64",r.getLogoUrl());
                 jsonArray.put(jsonObject1);
 
             }

@@ -74,7 +74,7 @@ public class SignupController {
     @FXML
     void handleSignupButton(MouseEvent event) throws IOException {
 
-        URL address = new URL("http://localhost:8080/auth/register");
+        URL address = new URL(Methods.url+"auth/register");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
 
         connection.setRequestMethod("POST");

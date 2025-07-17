@@ -289,7 +289,7 @@ public class AuthHandler implements HttpHandler {
                             json.put("message", "Login successful");
                             json.put("token", token);
                             JSONObject userJson = new JSONObject();
-                            userJson.put("id", user.getPhone().substring(2));
+                            userJson.put("id", Long.parseLong(user.getPhone().substring(2)));
                             userJson.put("full_name", user.getfullname());
                             userJson.put("phone", user.getPhone());
                             userJson.put("email", user.getEmail());

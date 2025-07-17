@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.ListFoodsController">
+   <children>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="1079.0" layoutY="-9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="-11.0" layoutY="641.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="94.0" layoutY="82.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ListView fx:id="food_list" layoutX="338.0" layoutY="7.0" prefHeight="847.0" prefWidth="666.0" />
+      <ImageView fitHeight="150.0" fitWidth="151.0" layoutX="50.0" layoutY="253.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="62.0" layoutY="413.0" prefHeight="64.0" prefWidth="203.0" text="Orange Food ! " textFill="#ff7b00">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

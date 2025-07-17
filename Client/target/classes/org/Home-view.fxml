@@ -20,7 +20,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button layoutX="191.0" layoutY="250.0" mnemonicParsing="false" prefHeight="343.0" prefWidth="234.0" styleClass="white-button" />
+      <Button layoutX="191.0" layoutY="250.0" mnemonicParsing="false" onMousePressed="#handleSearchVendor" prefHeight="343.0" prefWidth="234.0" styleClass="white-button" />
       <ImageView fitHeight="158.0" fitWidth="170.0" layoutX="229.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/restaurant3d.png" />
@@ -41,7 +41,7 @@
             <Image url="@../asset/images/star.png" />
          </image>
       </ImageView>
-      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="white-button" text="                       Order History">
+      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="white-button" text="                       Orders">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

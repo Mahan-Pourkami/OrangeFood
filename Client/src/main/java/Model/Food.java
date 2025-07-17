@@ -14,6 +14,8 @@ public class Food {
 
     private int quantity ;
 
+    private String logo ;
+
     public Food(long id, long res_id, String name, String description, int price, int quantity) {
         this.setId(id);
         this.setRes_id(res_id);
@@ -31,6 +33,14 @@ public class Food {
         this.setDescription(description);
         this.setPrice(price);
 
+    }
+
+    public Food(long id, String name, String description, int price, String logo) {
+        this.id = id;
+        this.name = name;
+        this.price=price;
+        this.description = description;
+        this.setLogo(logo);
     }
 
     public long getId() {
@@ -79,5 +89,13 @@ public class Food {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

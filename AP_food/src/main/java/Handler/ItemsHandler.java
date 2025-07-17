@@ -145,7 +145,7 @@ public class ItemsHandler implements HttpHandler {
                             Object keywordObj = keywordsArray.get(i);
                             if (keywordObj instanceof String) {
                                 String keyword = ((String) keywordObj).toLowerCase();
-                                if (!foodKeywords.contains(keyword)) {
+                                if (!foodKeywords.contains(keyword) && !keyword.isEmpty()) {
                                     allKeywordsMatch = false;
                                     break;
                                 }
