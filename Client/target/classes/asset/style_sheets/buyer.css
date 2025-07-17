@@ -206,3 +206,32 @@
 .list-cell {
     -fx-background-radius: 10px;
 }
+
+.cart-button {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #ff7000; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.cart-button:hover {
+
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #ff871b;
+    -fx-padding: 5 10 5 10;
+    -fx-border-color: orange;
+}
+
+.cart-button:pressed {
+
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+    -fx-border-color: orange;
+
+}
+
