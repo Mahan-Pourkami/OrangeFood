@@ -22,15 +22,13 @@ public class RestaurantsHandler implements HttpHandler {
     private SellerDAO sellerDAO ;
     private RestaurantDAO restaurantDAO ;
     private FoodDAO foodDAO ;
-    private BasketDAO basketDAO ;
-    private CouponDAO couponDAO ;
 
-    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO , BasketDAO basketDAO  , CouponDAO couponDAO) {
+
+    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO ) {
         this.sellerDAO = sellerDAO;
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
-        this.basketDAO = basketDAO;
-        this.couponDAO = couponDAO;
+
 
     }
 

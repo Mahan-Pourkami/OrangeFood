@@ -37,7 +37,7 @@ public class Server {
             server.setExecutor(executor);
             
             server.createContext("/auth" , new AuthHandler(courierDAO,sellerDAO,buyerDAO,userDAO,restaurantDAO));
-            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO,basketDAO,couponDAO));
+            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO));
             server.createContext("/favorites" , new FavoriteHandler(buyerDAO,restaurantDAO));
             server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO));
             server.createContext("/rating" , new RatingHandler(ratingDAO,foodDAO,userDAO));
