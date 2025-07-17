@@ -169,7 +169,7 @@ public class EditfoodController {
         obj.put("name",name_field.getText());
         obj.put("price",price_field.getText());
         obj.put("description",des_field.getText());
-        obj.put("imageBase64",image_path);
+        obj.put("logoBase64",image_path);
         obj.put("supply",sup_field.getText());
         JSONArray array = new JSONArray();
         List<String> list = List.of(key_box.getText().split(" "));

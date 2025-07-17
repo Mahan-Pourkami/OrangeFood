@@ -327,8 +327,10 @@ public class RestaurantDTO {
 
             if(json.has("logoBase64")){
                 String logoBase64 = json.getString("logoBase64");
-                if(logoBase64!=null && !logoBase64.isEmpty() && (logoBase64.endsWith(".png") || logoBase64.endsWith(".jpg") || logoBase64.endsWith(".jpeg")))  food.setPictureUrl(logoBase64);
-                else throw new UnsupportedMediaException();
+                if(!logoBase64.endsWith(".png") && !logoBase64.endsWith(".jpg") && !logoBase64.endsWith(".jpeg"))
+               throw new UnsupportedMediaException();
+
+                food.setPictureUrl(logoBase64);
             }
 
             if(json.has("price")){
