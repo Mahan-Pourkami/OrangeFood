@@ -146,12 +146,10 @@ public class BasketDAO implements AutoCloseable {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Basket> cq = cb.createQuery(Basket.class);
-            Root<Basket> root = cq.from(Basket.class);
-            cq.select(root);
+            List<Basket> baskets = session.createQuery(
+                    "SELECT DISTINCT b FROM Basket b LEFT JOIN FETCH b.items", Basket.class
+            ).getResultList();
 
-            List<Basket> baskets = session.createQuery(cq).getResultList();
             transaction.commit();
             return baskets;
 
@@ -162,6 +160,7 @@ public class BasketDAO implements AutoCloseable {
             throw new DataAccessException("Failed to retrieve all baskets: " + e.getMessage(), e);
         }
     }
+
 
     public List<Object[]> getBasketIdAndPhone() {
         Transaction transaction = null;
@@ -198,6 +197,31 @@ public class BasketDAO implements AutoCloseable {
             }
         }
     }
+
+    public List<Basket> getBasketsByState(StateofCart state) {
+        Objects.requireNonNull(state, "StateofCart must not be null.");
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            String hql = "SELECT DISTINCT b FROM Basket b LEFT JOIN FETCH b.items WHERE b.stateofCart = :state";
+            List<Basket> baskets = session.createQuery(hql, Basket.class)
+                    .setParameter("state", state)
+                    .getResultList();
+
+            transaction.commit();
+            return baskets;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to retrieve baskets by state: " + e.getMessage(), e);
+        }
+    }
+
+
 
 
 

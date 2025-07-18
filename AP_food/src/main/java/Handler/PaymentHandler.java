@@ -52,7 +52,7 @@ public class PaymentHandler implements HttpHandler {
             }
         }
         catch(ArithmeticException e){
-            http_code = 409;
+            http_code = 403;
             response = generate_error("Not enough money");
         }
         catch(OrangeException e){
