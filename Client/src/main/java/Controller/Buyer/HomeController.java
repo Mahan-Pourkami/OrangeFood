@@ -97,4 +97,22 @@ public class HomeController {
 
     }
 
+    @FXML
+    void handleFavorites (MouseEvent event) throws IOException {
+
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Favorite-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = users.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
+
+    @FXML
+    void handleSearchItem (MouseEvent event) throws IOException {
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/ItemSearch-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = users.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
 }

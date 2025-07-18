@@ -5,7 +5,6 @@ import DTO.RestaurantDTO;
 import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -22,13 +21,24 @@ public class RestaurantsHandler implements HttpHandler {
     private SellerDAO sellerDAO ;
     private RestaurantDAO restaurantDAO ;
     private FoodDAO foodDAO ;
+    private CouponDAO couponDAO ;
+    private BasketDAO basketDAO ;
+    private TransactionTDAO transactionTDAO ;
+    private BuyerDAO buyerDAO ;
+    private UserDAO userDAO ;
 
 
-    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO ) {
+    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO , FoodDAO foodDAO , CouponDAO couponDAO , BasketDAO basketDAO , TransactionTDAO transactionTDAO , BuyerDAO buyerDAO , UserDAO userDAO) {
+
+
         this.sellerDAO = sellerDAO;
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
-
+        this.couponDAO = couponDAO;
+        this.basketDAO = basketDAO;
+        this.transactionTDAO = transactionTDAO;
+        this.buyerDAO = buyerDAO;
+        this.userDAO = userDAO;
 
     }
 
@@ -62,6 +72,11 @@ public class RestaurantsHandler implements HttpHandler {
                 case "DELETE":
                     System.out.println("DELETE res request received");
                     response = handleDeleteRequest(exchange,paths);
+                    break;
+
+                case "PATCH":
+                    System.out.println("PATCH res request received");
+                    response=handlePatchRequest(exchange,paths);
                     break;
 
                 default:
@@ -466,6 +481,64 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(200, response.getBytes().length);
 
 
+            }
+
+            else if(paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("orders")) {
+                String token = JwtUtil.get_token_from_server(exchange);
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("seller")) {
+                    throw new ForbiddenroleException();
+                }
+                if (!paths[2].matches("\\d+")){
+                    throw new InvalidInputException("item id");
+                }
+                Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+                String status = queryParams.getOrDefault("status", null);
+                String search = queryParams.getOrDefault("search", null);
+                String user = queryParams.getOrDefault("user", null);
+                String courier = queryParams.getOrDefault("courier", null);
+
+                List<Basket> baskets = basketDAO.getAllBasket();
+                JSONArray basketsArray = new JSONArray();
+                for (Basket basket : baskets) {
+                    if(basket.getRes_id()==Long.parseLong(paths[2])){
+                        boolean matches = true;
+
+                        if (search != null && !search.isEmpty()) {
+                            matches &= basket.getAddress().contains(search);
+                        }
+
+                        if (status != null && !status.isEmpty()) {
+                            if (status.equals("accepted")) {
+                                matches &= basket.getStateofCart() == StateofCart.accepted
+                                        || basket.getStateofCart() == StateofCart.acceptedbycourier;
+                            }
+                            else {
+                                matches &= basket.getStateofCart().toString().equals(status);
+                            }
+                        }
+
+
+                        if (user != null && !user.isEmpty()) {
+                            matches &= basket.getBuyerName().contains(user);
+                        }
+                        if (courier != null && !courier.isEmpty()) {
+                            matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                        }
+
+                        if (matches) {
+                            Map<Long, Integer> items = basket.getItems();
+                            JSONArray itemIdsArray = new JSONArray(items.keySet());
+                            basketsArray.put(getBasketJsonObject(basket, itemIdsArray));
+                        }
+                    }
+                }
+                response = basketsArray.toString();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
             }
 
 
@@ -878,6 +951,68 @@ public class RestaurantsHandler implements HttpHandler {
 
     }
 
+    public String handlePatchRequest ( HttpExchange exchange , String[] paths) throws IOException {
+        String response = "";
+        int http_code = 200;
+        if(paths.length==4 && paths[1].equals("restaurants") && paths[2].equals("orders")) {
+            String token = JwtUtil.get_token_from_server(exchange);
+
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("seller")) {
+                throw new ForbiddenroleException();
+            }
+            if (!paths[3].matches("\\d+")){
+                throw new InvalidInputException("order_id");
+            }
+            JSONObject jsonobject = getJsonObject(exchange);
+            try {
+                if (invalid_input_orders_id(jsonobject).isEmpty()) {
+                    String order_id = paths[3];
+                    Long orderIdLong = Long.valueOf(order_id);
+                    Basket basket = basketDAO.getBasket(orderIdLong);
+                    String statusString = jsonobject.get("status").toString();
+                    Buyer buyer = buyerDAO.getBuyer(basket.getBuyerPhone());
+                    Seller seller = sellerDAO.getSeller(JwtUtil.extractSubject(token));
+                    if(seller.getRestaurant().getId()!=basket.getRes_id()) {
+                        throw new InvalidInputException("order_id");
+                    }
+                    if ( ( statusString.equals("accepted") || statusString.equals("rejected") ) && basket.getStateofCart() != StateofCart.payed) {
+                        throw new InvalidInputException("order_id");
+                    }
+                    if( statusString.equals("served") && basket.getStateofCart() != StateofCart.accepted)
+                        throw new InvalidInputException("order_id");
+                    StateofCart state = StateofCart.valueOf(statusString);
+                    basket.setStateofCart(state);
+                    basketDAO.updateBasket(basket);
+                    if (statusString.equals("rejected")) {
+                        int price = basket.getPayPrice(restaurantDAO, foodDAO,couponDAO);
+                        buyer.charge(price);
+                        buyerDAO.updateBuyer(buyer);
+                        String seller_id = JwtUtil.extractSubject(token);
+                        TransactionT transaction = new TransactionT(orderIdLong, seller_id, "wallet", "success");
+                        transactionTDAO.saveTransaction(transaction);
+                    }
+                    response = generate_msg(statusString);
+                } else {
+                    response = generate_error("Invalid " + invalid_input_orders_id(jsonobject));
+                    throw new OrangeException(response, 400);
+                }
+            }
+            catch(OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code=e.http_code;
+            }
+            finally {
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(http_code, response.length());
+            }
+        }
+        return response;
+    }
+
     private static String invalid_input_restaurants(JSONObject jsonObject) {
 
         String result = "" ;
@@ -950,6 +1085,62 @@ public class RestaurantsHandler implements HttpHandler {
 
 
 
+    private Map<String, String> parseQueryParams(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query != null && !query.isEmpty()) {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                String[] kv = pair.split("=", 2); // only split on first '='
+                String key = kv[0];
+                String value = kv.length > 1 ? kv[1] : "";
+                params.put(key, value);
+            }
+        }
+        return params;
+    }
+    public JSONObject getBasketJsonObject(Basket basket,JSONArray itemIdsArray) {
+        JSONObject basketJson = new JSONObject();
+        basketJson.put("id", basket.getId());
+        basketJson.put("delivery_address", basket.getAddress());
+        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
+        basketJson.put("item_ids", itemIdsArray);
+        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee",basket.getCOURIER_FEE());
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
+        basketJson.put("courier_id",basket.getCourier_id());
+        basketJson.put("status",basket.getStateofCart());
+        basketJson.put("created_at",basket.getCreated_at());
+        basketJson.put("updated_at",basket.getUpadated_at());
+        return basketJson;
+    }
+
+    private String invalid_input_orders_id(JSONObject jsonObject){
+        String result = "" ;
+
+        String [] fields = {"status"};
+
+        for (String field : fields) {
+            if(!jsonObject.has(field)) {
+                result = "Invalid " + field;
+                return result;
+            }
+        }
+
+        try {
+            Object statusObj = jsonObject.get("status");
+            if (!(statusObj instanceof String)) {
+                return "status";
+            }
+        }
+        catch(Exception e){
+            result = "type";
+        }
+        return result;
+    }
 
 }
 

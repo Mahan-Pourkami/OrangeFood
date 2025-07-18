@@ -37,16 +37,19 @@ public class Server {
             server.setExecutor(executor);
             
             server.createContext("/auth" , new AuthHandler(courierDAO,sellerDAO,buyerDAO,userDAO,restaurantDAO));
-            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO));
+            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO,couponDAO,basketDAO,transactionTDAO,buyerDAO,userDAO));
             server.createContext("/favorites" , new FavoriteHandler(buyerDAO,restaurantDAO));
-            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO));
+            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO,foodDAO,basketDAO));
             server.createContext("/rating" , new RatingHandler(ratingDAO,foodDAO,userDAO));
-            server.createContext("/wallet" , new WalletHandler(buyerDAO));
+            server.createContext("/wallet" , new WalletHandler(buyerDAO,transactionTDAO));
             server.createContext("/coupon" , new CouponHandler(couponDAO));
-            server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO));
+            server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO,buyerDAO));
             server.createContext("/items" , new ItemsHandler(foodDAO));
             server.createContext("/orders" , new OrderHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
             server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDAO,couponDAO));
+            server.createContext("/transactions" , new TransactionsHandler(transactionTDAO));
+            server.createContext("/deliveries" , new DeliveryHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
+
 
 
             server.start();

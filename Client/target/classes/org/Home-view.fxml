@@ -31,7 +31,7 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Label>
-      <Button layoutX="438.0" layoutY="255.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="280.0" styleClass="white-button" text="                 Favorite Restaurants">
+      <Button layoutX="438.0" layoutY="255.0" mnemonicParsing="false" onMousePressed="#handleFavorites" prefHeight="150.0" prefWidth="280.0" styleClass="white-button" text="                 Favorite Restaurants">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -84,7 +84,7 @@
       </ImageView>
       <TextField layoutX="495.0" layoutY="41.0" />
       <TextField layoutX="569.0" layoutY="66.0" />
-      <TextField layoutX="497.0" layoutY="31.0" prefHeight="35.0" prefWidth="280.0" promptText="Search items" styleClass="white-button">
+      <TextField layoutX="497.0" layoutY="31.0" onMousePressed="#handleSearchItem" prefHeight="35.0" prefWidth="280.0" promptText="Search items" styleClass="white-button">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>

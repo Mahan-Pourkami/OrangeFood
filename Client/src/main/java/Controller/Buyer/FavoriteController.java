@@ -9,9 +9,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -21,77 +22,32 @@ import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.invoke.MethodType;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchRestaurantController {
-
-
-    @FXML
-    TextField search_field ;
-
-    @FXML
-    TextField key_area ;
+public class FavoriteController {
 
     @FXML
     ListView<HBox> res_list;
 
+
     @FXML
     void initialize() throws IOException {
 
-
-        search_field.setOnKeyPressed(event -> {
-           if(event.getCode() == KeyCode.ENTER) {
-                try {
-                    initialize();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-        key_area.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER) {
-                try {
-                    initialize();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-
-
-        URL get_restaurants = new URL(Methods.url+"vendors");
+        URL get_restaurants = new URL(Methods.url+"favorites");
         HttpURLConnection connection = (HttpURLConnection) get_restaurants.openConnection();
 
-        connection.setRequestMethod("POST");
+        connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
 
         connection.setRequestProperty("Authorization", "Bearer "+token);
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
-        JSONObject obj = new JSONObject();
-        obj.put("search", search_field.getText());
-        JSONArray arr = new JSONArray();
-        List<String> keywords = List.of(key_area.getText().split("-"));
-        for (String keyword : keywords) {
-            arr.put(keyword);
-        }
-        obj.put("keywords", arr);
-
-        try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = obj.toString().getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
 
         int http_code = connection.getResponseCode();
 
@@ -106,15 +62,14 @@ public class SearchRestaurantController {
                         json.getString("name"),
                         json.getString("address"),
                         json.getLong("id"),
-                        json.getString("logoBase64"),
-                        json.getString("favorite :")
+                        json.getString("logoBase64")
                 ));
             }
             List<HBox> cards = convert_to_card(vendors);
             res_list.getItems().clear();
             res_list.getItems().addAll(cards);
+            System.out.println("done");
         }
-
     }
 
 
@@ -135,13 +90,16 @@ public class SearchRestaurantController {
         image.setFitHeight(100);
         image.setFitWidth(100);
         image.setPreserveRatio(true);
-        Button favorite = new Button("Add to Favorite");
-        favorite.setOnAction(event -> {
+
+        Button delete = new Button("Delete from Favorites");
+        delete.getStyleClass().add("delete-button");
+
+        delete.setOnMouseClicked((MouseEvent event) -> {
 
             try {
                 URL add_to_favorite = new URL(Methods.url+"favorites/"+vendor.getId());
                 HttpURLConnection connection = (HttpURLConnection) add_to_favorite.openConnection();
-                connection.setRequestMethod("PUT");
+                connection.setRequestMethod("DELETE");
                 String token = Methods.Get_saved_token();
                 connection.setRequestProperty("Authorization", "Bearer "+token);
 
@@ -156,16 +114,15 @@ public class SearchRestaurantController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
         });
-        favorite.getStyleClass().add("view-button");
-
-        if(vendor.getFavorite().equals("yes")) favorite.setVisible(false);
-
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        cell.getChildren().addAll(image,vbox,spacer,favorite);
+        cell.getChildren().addAll(image,vbox,spacer,delete);
+
+
         cell.setOnMouseClicked(event -> {
 
             ViewMenuController.setRes_id(vendor.getId());
@@ -193,13 +150,6 @@ public class SearchRestaurantController {
         return cells;
     }
 
-
-
-    @FXML
-    void refresh(MouseEvent event) throws IOException {
-        initialize();
-    }
-
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
@@ -210,6 +160,8 @@ public class SearchRestaurantController {
         SceneManager.fadeScene(stage, scene);
 
     }
+
+
 
 
 }

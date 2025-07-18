@@ -56,16 +56,8 @@ public class Buyer extends User{
         return favorite_restaurants;
     }
 
-    public List<Restaurant> getfavorite_restaurants() {
-
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
-        List<Restaurant> result = new ArrayList<>();
-
-        for (Long id : favorite_restaurants) {
-
-            result.add(restaurantDAO.get_restaurant(id));
-        }
-        return result;
+    public List<Long> getfavorite_restaurants() {
+             return favorite_restaurants;
     }
 
 

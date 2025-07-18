@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.ItemSearchController">
+   <children>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutY="645.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ListView fx:id="res_list" layoutX="462.0" layoutY="-8.0" prefHeight="868.0" prefWidth="818.0" />
+      <TextField layoutX="166.0" layoutY="103.0" prefHeight="41.0" prefWidth="253.0" promptText="Search Box" styleClass="white-button">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </TextField>
+      <TextField layoutX="166.0" layoutY="152.0" prefHeight="115.0" prefWidth="253.0" promptText="Search Box" styleClass="white-button">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </TextField>
+      <Slider layoutX="166.0" layoutY="296.0" prefHeight="20.0" prefWidth="253.0" styleClass="list-cell" />
+      <Label layoutX="62.0" layoutY="111.0" text="Search">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="62.0" layoutY="197.0" text="Keywords">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="62.0" layoutY="283.0" text="Price">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="49.0" layoutY="355.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="81.0" layoutY="502.0" text="Orange Items !" textFill="#ffa500">
+         <font>
+            <Font name="System Bold" size="41.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="47.0" layoutY="37.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</Pane>

@@ -112,7 +112,7 @@ public class RatingDTO {
                     array_temp.put(photo);
                 }
                 temp.put("imageBase64",array_temp);
-                temp.put("user_name",rating.getAuthor_name());
+                temp.put("user_id",Long.parseLong(rating.getAuthor_phone().substring(2)));
                 temp.put("created_at",rating.getDate_added());
                 jsonArray.put(temp);
             }

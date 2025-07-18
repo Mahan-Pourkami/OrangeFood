@@ -630,7 +630,7 @@ public class AdminHandler implements HttpHandler {
         basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
         basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
         basketJson.put("courier_id",basket.getCourier_id());
         basketJson.put("status",basket.getStateofCart());
         basketJson.put("created_at",basket.getCreated_at());

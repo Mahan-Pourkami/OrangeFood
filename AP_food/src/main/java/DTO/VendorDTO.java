@@ -1,8 +1,10 @@
 package DTO;
 
+import DAO.BuyerDAO;
 import DAO.FoodDAO;
 import DAO.RestaurantDAO;
 import Exceptions.InvalidInputException;
+import Model.Buyer;
 import Model.Food;
 import Model.Restaurant;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -20,13 +22,17 @@ public class VendorDTO {
     public static class Get_Vendors {
 
         private RestaurantDAO restaurantDAO;
+        private BuyerDAO buyerDAO;
+        private String phone ;
         private JSONObject jsonObject;
         private String response ;
 
-        public Get_Vendors(JSONObject json , RestaurantDAO restaurantDAO , FoodDAO foodDAO) throws InvalidInputException {
+        public Get_Vendors(JSONObject json , RestaurantDAO restaurantDAO , FoodDAO foodDAO , BuyerDAO buyerDAO , String phone) throws InvalidInputException {
 
             this.restaurantDAO = restaurantDAO;
             this.jsonObject = json;
+            this.phone = phone;
+            this.buyerDAO=buyerDAO;
 
             if(!jsonObject.has("search")){
                 throw new InvalidInputException("Search");
@@ -79,6 +85,8 @@ public class VendorDTO {
 
             JSONArray jsonArray = new JSONArray();
 
+            Buyer buyer = buyerDAO.getBuyer(phone);
+
             for(Restaurant r : vendors){
 
                 JSONObject jsonObject1 = new JSONObject();
@@ -89,6 +97,7 @@ public class VendorDTO {
                 jsonObject1.put("tax_fee",r.getTax_fee());
                 jsonObject1.put("additional_fee",r.getAdditional_fee());
                 jsonObject1.put("logoBase64",r.getLogoUrl());
+                jsonObject1.put("favorite :" , buyer.getfavorite_restaurants().contains(r.getId())? "yes" :"no" );
                 jsonArray.put(jsonObject1);
 
             }

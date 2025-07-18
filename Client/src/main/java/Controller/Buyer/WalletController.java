@@ -107,7 +107,6 @@ public class WalletController {
             Parent root = users.load();
             Scene scene = new Scene(root);
             SceneManager.fadeScene(stage, scene);
-
     }
 
     @FXML

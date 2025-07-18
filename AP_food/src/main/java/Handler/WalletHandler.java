@@ -1,11 +1,13 @@
 package Handler;
 
 import DAO.BuyerDAO;
+import DAO.TransactionTDAO;
 import Exceptions.ForbiddenroleException;
 import Exceptions.InvalidInputException;
 import Exceptions.InvalidTokenexception;
 import Exceptions.OrangeException;
 import Model.Buyer;
+import Model.TransactionT;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,9 +18,11 @@ import java.io.*;
 public class WalletHandler implements HttpHandler {
 
     BuyerDAO buyerDAO ;
+    TransactionTDAO transactionTDAO ;
 
-    public WalletHandler(BuyerDAO buyerDAO) {
+    public WalletHandler(BuyerDAO buyerDAO, TransactionTDAO transactionTDAO) {
         this.buyerDAO = buyerDAO;
+        this.transactionTDAO = transactionTDAO;
     }
 
     @Override
@@ -130,6 +134,8 @@ public class WalletHandler implements HttpHandler {
 
                 buyer.charge(amount);
                 buyerDAO.updateBuyer(buyer);
+                TransactionT transactionT = new TransactionT(0L,phone,"online","success");
+                transactionTDAO.saveTransaction(transactionT);
                 http_code = 200;
                 response = generate_msg("Your wallet toned up successfully");
             }

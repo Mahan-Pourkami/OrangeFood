@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteHandler implements HttpHandler {
@@ -77,9 +78,13 @@ public class FavoriteHandler implements HttpHandler {
 
                 String phone = JwtUtil.extractSubject(token);
                 Buyer buyer = buyerDAO.getBuyer(phone);
-                List<Restaurant> restaurantList = buyer.getfavorite_restaurants();
+                List<Long> restaurantList_id = buyer.getfavorite_restaurants();
+                List<Restaurant> restaurantList = new ArrayList<Restaurant>();
 
-                // Create a JSON array of restaurants
+                for (Long id : restaurantList_id) {
+                    restaurantList.add(restaurantDAO.get_restaurant(id));
+                }
+
                 JSONArray restaurantsArray = new JSONArray();
                 for (Restaurant restaurant : restaurantList) {
 

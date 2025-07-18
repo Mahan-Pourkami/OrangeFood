@@ -1,5 +1,6 @@
 package Handler;
 
+import DAO.BuyerDAO;
 import DAO.FoodDAO;
 import DAO.RestaurantDAO;
 import DTO.VendorDTO;
@@ -23,10 +24,13 @@ public class VendorHandler implements HttpHandler {
 
     RestaurantDAO restaurantDAO ;
     FoodDAO foodDAO ;
+    BuyerDAO buyerDAO ;
 
-    public VendorHandler(RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
+    public VendorHandler(RestaurantDAO restaurantDAO, FoodDAO foodDAO , BuyerDAO buyerDAO) {
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
+        this.buyerDAO = buyerDAO;
+
     }
 
     @Override
@@ -174,7 +178,9 @@ public class VendorHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO ,foodDAO);
+                String phone = JwtUtil.extractSubject(token);
+
+                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO ,foodDAO , buyerDAO ,phone);
 
                 response = vendors.getResponse();
                 http_code = 200;

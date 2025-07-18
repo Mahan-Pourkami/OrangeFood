@@ -4,14 +4,12 @@ import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -200,6 +198,29 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
+    public List<Basket> getBasketsByState(StateofCart state) {
+        Objects.requireNonNull(state, "StateofCart must not be null.");
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            String hql = "SELECT DISTINCT b FROM Basket b LEFT JOIN FETCH b.items WHERE b.stateofCart = :state";
+            List<Basket> baskets = session.createQuery(hql, Basket.class)
+                    .setParameter("state", state)
+                    .getResultList();
+
+            transaction.commit();
+            return baskets;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to retrieve baskets by state: " + e.getMessage(), e);
+        }
+    }
+
     public List<Basket> getBasketforvendor(Long vendorId) {
 
         List<Basket> baskets = getAllBasket();
@@ -213,8 +234,6 @@ public class BasketDAO implements AutoCloseable {
         return result;
 
     }
-
-
 
 
     @Override
