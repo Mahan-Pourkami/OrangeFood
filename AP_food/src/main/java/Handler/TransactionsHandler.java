@@ -11,26 +11,15 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.Base64;
+import java.util.List;
 
 //فرض میکنیم همه پرداخت های موفق اند
-public class PaymentHandler implements HttpHandler {
+public class TransactionsHandler implements HttpHandler {
 
-    BasketDAO basketDAO;
-    UserDAO userDAO;
-    FoodDAO foodDAO;
-    RestaurantDAO restaurantDAO;
     TransactionTDAO transactionTDAO;
-    BuyerDAO buyerDAO;
-    CouponDAO couponDAO;
 
-    public PaymentHandler(BasketDAO basketDAO,UserDAO userDAO,FoodDAO foodDAO,RestaurantDAO restaurantDAO,TransactionTDAO transactionTDAO,BuyerDAO buyerDAO ,CouponDAO couponDAO) {
-        this.basketDAO = basketDAO;
-        this.userDAO = userDAO;
-        this.foodDAO = foodDAO;
-        this.restaurantDAO = restaurantDAO;
+    public TransactionsHandler(TransactionTDAO transactionTDAO) {
         this.transactionTDAO = transactionTDAO;
-        this.buyerDAO = buyerDAO;
-        this.couponDAO = couponDAO;
     }
 
     @Override
@@ -43,8 +32,8 @@ public class PaymentHandler implements HttpHandler {
 
         try{
             switch (methode) {
-                case "POST":
-                    response = handlePostRequest(exchange,paths);
+                case "GET":
+                    response = handleGetRequest(exchange,paths);
                     break;
 
                 default:
@@ -52,10 +41,6 @@ public class PaymentHandler implements HttpHandler {
                     response = generate_error("Method not supported");
                     break;
             }
-        }
-        catch(ArithmeticException e){
-            http_code = 403;
-            response = generate_error("Not enough money");
         }
         catch(OrangeException e){
             http_code = e.http_code;
@@ -71,12 +56,12 @@ public class PaymentHandler implements HttpHandler {
         }
     }
 
-    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
 
         String token = JwtUtil.get_token_from_server(exchange);
         String response ="";
 
-        if(paths.length == 3&&paths[2].equals("online")){
+        if(paths.length == 2){
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -86,44 +71,14 @@ public class PaymentHandler implements HttpHandler {
 
             JSONObject jsonobject = getJsonObject(exchange);
             String user_id = JwtUtil.extractSubject(token);
-            if(invalidInputItems(jsonobject).isEmpty()){
-                Long orderId = ((Number) jsonobject.get("order_id")).longValue();
 
-                //check if order exists
-                if(!basketDAO.existBasket(orderId)){
-                    throw new NosuchItemException();
-                }
-                Basket basket = basketDAO.getBasket(orderId);
-                if(!(basket.getStateofCart()==StateofCart.waiting)){
-                    throw new NosuchItemException();
-                }
-                if(jsonobject.get("method").equals("wallet")){
-                    try {
-                        Buyer buyer = buyerDAO.getBuyer(user_id);
-                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO,couponDAO));
-                        buyerDAO.updateBuyer(buyer);
-                    }
-                    catch(ArithmeticException e){
-                        throw new ArithmeticException();
-                    }
-                }
-
-                TransactionT transaction = new TransactionT(
-                        orderId,
-                        user_id,
-                        (String)jsonobject.get("method"),
-                        "success"
-                );
-
-                transactionTDAO.saveTransaction(transaction);
-                basket.setStateofCart(StateofCart.payed);
-                basketDAO.updateBasket(basket);
-                response = getTransactionJsonObject(transaction).toString();
+            List<TransactionT> transactionTList = transactionTDAO.getTransactionsByUserId(user_id);
+            JSONArray transactionjsonArray = new JSONArray();
+            for(TransactionT transactionT : transactionTList){
+                JSONObject jsontransactiont = getTransactionJsonObject(transactionT);
+                transactionjsonArray.put(jsontransactiont);
             }
-            else {
-                response = generate_error("Invalid "+invalidInputItems(jsonobject));
-                throw new OrangeException(response, 400);
-            }
+            response = transactionjsonArray.toString();
             return response;
         }
         else {

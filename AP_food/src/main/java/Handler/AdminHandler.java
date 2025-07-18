@@ -9,11 +9,20 @@ import Utils.JwtUtil;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/*
+تغییرات ادمین :
+foodDAO و basketDAO در constructor
+handlegetrequest : history + کامنت شده try در انتها
+new nethods : parseQueryParams + getBasketJsonObject
+ */
 public class AdminHandler implements HttpHandler {
 
     UserDAO userDAO ;
@@ -21,14 +30,17 @@ public class AdminHandler implements HttpHandler {
     CourierDAO courierDAO ;
     CouponDAO couponDAO ;
     RestaurantDAO restaurantDAO ;
+    FoodDAO foodDAO ;
+    BasketDAO basketDAO ;
 
-    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO) {
+    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO,FoodDAO foodDAO,BasketDAO basketDAO) {
         this.userDAO = userDAO;
         this.sellerDAO = sellerDAO;
         this.courierDAO = courierDAO;
         this.couponDAO = couponDAO;
         this.restaurantDAO = restaurantDAO;
-
+        this.foodDAO = foodDAO;
+        this.basketDAO = basketDAO;
     }
 
 
@@ -378,15 +390,71 @@ public class AdminHandler implements HttpHandler {
             }
         }
 
+        else if(paths.length == 3 && paths[2].equals("orders")){
+
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("admin")) {
+                throw new ForbiddenroleException();
+            }
+
+            Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+            String search = queryParams.getOrDefault("search", null);
+            String vendor = queryParams.getOrDefault("vendor", null);
+            String courier = queryParams.getOrDefault("courier", null);
+            String customer = queryParams.getOrDefault("customer", null);
+            String status = queryParams.getOrDefault("status", null);
+
+            List<Basket> baskets = basketDAO.getAllBasket();
+            JSONArray basketsArray = new JSONArray();
+            for (Basket basket : baskets) {
+                    boolean matches = true;
+
+                    if (search != null && !search.isEmpty()) {
+                        matches &= basket.getAddress().contains(search);
+                    }
+
+                    if (vendor != null && !vendor.isEmpty()) {
+                        matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().contains(vendor);
+                    }
+
+                    if (courier != null && !courier.isEmpty()) {
+                        matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                    }
+
+                    if (customer != null && !customer.isEmpty()) {
+                        matches &= basket.getBuyerName().contains(customer);
+                    }
+
+                    if (status != null && !status.isEmpty()) {
+                        if (status.equals("accepted")) {
+                            matches &= basket.getStateofCart() == StateofCart.accepted
+                                    || basket.getStateofCart() == StateofCart.acceptedbycourier;
+                        }
+                        else {
+                            matches &= basket.getStateofCart().toString().equals(status);
+                        }
+                    }
+
+                    if (matches) {
+                        Map<Long, Integer> items = basket.getItems();
+                        JSONArray itemIdsArray = new JSONArray(items.keySet());
+                        basketsArray.put(getBasketJsonObject(basket, itemIdsArray));
+                    }
+            }
+            response = basketsArray.toString();
+        }
+
         Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.getBytes().length);
-
+/*
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
-
-        return  response;
+*/
+        return response;
     }
 
 
@@ -535,5 +603,38 @@ public class AdminHandler implements HttpHandler {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
+    }
+
+    private Map<String, String> parseQueryParams(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query != null && !query.isEmpty()) {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                String[] kv = pair.split("=", 2); // only split on first '='
+                String key = kv[0];
+                String value = kv.length > 1 ? kv[1] : "";
+                params.put(key, value);
+            }
+        }
+        return params;
+    }
+    public JSONObject getBasketJsonObject(Basket basket,JSONArray itemIdsArray) {
+        JSONObject basketJson = new JSONObject();
+        basketJson.put("id", basket.getId());
+        basketJson.put("delivery_address", basket.getAddress());
+        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
+        basketJson.put("item_ids", itemIdsArray);
+        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee",basket.getCOURIER_FEE());
+        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
+        basketJson.put("courier_id",basket.getCourier_id());
+        basketJson.put("status",basket.getStateofCart());
+        basketJson.put("created_at",basket.getCreated_at());
+        basketJson.put("updated_at",basket.getUpadated_at());
+        return basketJson;
     }
 }

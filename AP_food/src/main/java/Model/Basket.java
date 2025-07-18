@@ -48,7 +48,7 @@ public class Basket {
     private Long coupon_id ;
 
     @Column
-    private Long courier_id ;
+    private String courier_id ;
 
     @Column
     private String created_at ;
@@ -110,11 +110,11 @@ public class Basket {
         this.stateofCart = stateofCart;
     }
 
-    public void setCourier_id(long courier_id) {
+    public void setCourier_id(String courier_id) {
         this.courier_id = courier_id;
     }
 
-    public Long getCourier_id() {
+    public String getCourier_id() {
         if(courier_id==null) {
             return null;
         }
