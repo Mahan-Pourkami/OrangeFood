@@ -151,6 +151,13 @@ public class ProfileController{
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             }
+            else if (role.equals("courier")) {
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = users.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
         }
         catch(Exception e){
             redirectToLogin(event);

@@ -25,31 +25,31 @@
             <Image url="@../asset/images/pizza_2d.png" />
          </image>
       </ImageView>
-      <TextField fx:id="name_field" layoutX="186.0" layoutY="152.0" prefHeight="36.0" prefWidth="200.0" styleClass="white-button" />
+      <TextField fx:id="name_field" layoutX="186.0" layoutY="152.0" prefHeight="36.0" prefWidth="200.0" styleClass="dark-button" />
       <Label layoutX="133.0" layoutY="160.0" text="Name">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="phone_field" layoutX="186.0" layoutY="258.0" prefHeight="36.0" prefWidth="200.0" promptText="021....." styleClass="white-button" />
+      <TextField fx:id="phone_field" layoutX="186.0" layoutY="258.0" prefHeight="36.0" prefWidth="200.0" promptText="021....." styleClass="dark-button" />
       <Label layoutX="131.0" layoutY="266.0" text="Phone">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="add_field" layoutX="186.0" layoutY="344.0" prefHeight="92.0" prefWidth="590.0" styleClass="white-button" />
+      <TextField fx:id="add_field" layoutX="186.0" layoutY="344.0" prefHeight="92.0" prefWidth="590.0" styleClass="dark-button" />
       <Label layoutX="126.0" layoutY="370.0" text="Address">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="tax_field" layoutX="186.0" layoutY="507.0" prefHeight="36.0" prefWidth="200.0" styleClass="white-button" text="0" />
+      <TextField fx:id="tax_field" layoutX="186.0" layoutY="507.0" prefHeight="36.0" prefWidth="200.0" styleClass="dark-button" text="0" />
       <Label layoutX="125.0" layoutY="515.0" text="Tax fee">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="addfee_field" layoutX="557.0" layoutY="507.0" prefHeight="36.0" prefWidth="200.0" styleClass="white-button" text="0" />
+      <TextField fx:id="addfee_field" layoutX="557.0" layoutY="507.0" prefHeight="36.0" prefWidth="200.0" styleClass="dark-button" text="0" />
       <Label layoutX="457.0" layoutY="515.0" text="Additional fee">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -57,7 +57,7 @@
       </Label>
       <ImageView fx:id="prof_view" fitHeight="151.0" fitWidth="159.0" layoutX="890.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="prof_chooser" layoutX="922.0" layoutY="352.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="36.0" prefWidth="119.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="Choose  Prof" />
-      <Button fx:id="submit_button" layoutX="922.0" layoutY="452.0" mnemonicParsing="false" onMousePressed="#handleSubmit" prefHeight="42.0" prefWidth="119.0" styleClass="white-button" stylesheets="@../asset/style_sheets/input.css" text="Submit">
+      <Button fx:id="submit_button" layoutX="922.0" layoutY="452.0" mnemonicParsing="false" onMousePressed="#handleSubmit" prefHeight="42.0" prefWidth="119.0" styleClass="dark-button" stylesheets="@../asset/style_sheets/input.css" text="Submit">
          <font>
             <Font size="15.0" />
          </font>

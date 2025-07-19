@@ -19,12 +19,12 @@
          </image>
       </ImageView>
       <ListView fx:id="res_list" layoutX="462.0" layoutY="-8.0" prefHeight="868.0" prefWidth="818.0" />
-      <TextField layoutX="166.0" layoutY="103.0" prefHeight="41.0" prefWidth="253.0" promptText="Search Box" styleClass="white-button">
+      <TextField layoutX="166.0" layoutY="103.0" prefHeight="41.0" prefWidth="253.0" promptText="Search Box" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </TextField>
-      <TextField layoutX="166.0" layoutY="152.0" prefHeight="115.0" prefWidth="253.0" promptText="Search Box" styleClass="white-button">
+      <TextField layoutX="166.0" layoutY="152.0" prefHeight="115.0" prefWidth="253.0" promptText="Search Box" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

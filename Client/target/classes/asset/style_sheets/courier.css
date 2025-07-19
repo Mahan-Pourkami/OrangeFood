@@ -1,0 +1,69 @@
+.courier-pane {
+    /* Gradient background from peach to orange */
+    -fx-background-color: linear-gradient(to right, #000000, #13132b, #1f0154);
+
+    /* Glass effect styling */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+
+    /* For the frosted glass overlay effect */
+    -fx-background-insets: 0;
+}
+
+.dark-button {
+    -fx-background-color: #000000;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 3px;
+    -fx-text-fill: white;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.dark-button:hover {
+    -fx-background-color: #001537;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 3px;
+    -fx-cursor: hand;
+}
+
+.dark-button:pressed {
+    -fx-background-color: #000000;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+.dark-button:focused {
+    -fx-border-color: #ffffff;
+    -fx-border-width: 1.5px;
+}
+
+.view-button {
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.view-button:hover {
+
+    -fx-font-family: "B Nazanin";
+    -fx-font-size: 12px;
+    -fx-background-color: #186b1b;
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+}
+
+.view-button:pressed {
+
+    -fx-translate-y: 1px;
+    -fx-translate-x: 1px;
+
+}
+

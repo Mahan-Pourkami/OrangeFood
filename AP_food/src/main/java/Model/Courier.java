@@ -16,6 +16,9 @@ public class Courier extends User {
     @Column
     private Userstatue statue;
 
+    @Column
+    private Integer wallet ;
+
     //TODO add a list of orders
 
     public Courier() {}

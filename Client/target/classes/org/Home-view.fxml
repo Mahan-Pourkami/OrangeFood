@@ -20,7 +20,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button layoutX="191.0" layoutY="250.0" mnemonicParsing="false" onMousePressed="#handleSearchVendor" prefHeight="343.0" prefWidth="234.0" styleClass="white-button" />
+      <Button layoutX="191.0" layoutY="250.0" mnemonicParsing="false" onMousePressed="#handleSearchVendor" prefHeight="343.0" prefWidth="234.0" styleClass="dark-button" />
       <ImageView fitHeight="158.0" fitWidth="170.0" layoutX="229.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../asset/images/restaurant3d.png" />
@@ -31,7 +31,7 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Label>
-      <Button layoutX="438.0" layoutY="255.0" mnemonicParsing="false" onMousePressed="#handleFavorites" prefHeight="150.0" prefWidth="280.0" styleClass="white-button" text="                 Favorite Restaurants">
+      <Button layoutX="438.0" layoutY="255.0" mnemonicParsing="false" onMousePressed="#handleFavorites" prefHeight="150.0" prefWidth="280.0" styleClass="dark-button" text="                 Favorite Restaurants">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -41,7 +41,7 @@
             <Image url="@../asset/images/star.png" />
          </image>
       </ImageView>
-      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="white-button" text="                       Orders">
+      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="dark-button" text="                       Orders">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -51,7 +51,7 @@
             <Image url="@../asset/images/cart.png" />
          </image>
       </ImageView>
-      <Button layoutX="890.0" layoutY="260.0" mnemonicParsing="false" onMousePressed="#handlecharge" prefHeight="331.0" prefWidth="223.0" styleClass="white-button" />
+      <Button layoutX="890.0" layoutY="260.0" mnemonicParsing="false" onMousePressed="#handlecharge" prefHeight="331.0" prefWidth="223.0" styleClass="dark-button" />
       <Label layoutX="932.0" layoutY="454.0" text="Charge Wallet">
          <font>
             <Font name="System Bold" size="21.0" />
@@ -62,7 +62,7 @@
             <Image url="@../asset/images/wallet.png" />
          </image>
       </ImageView>
-      <Button layoutX="728.0" layoutY="260.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="150.0" styleClass="white-button">
+      <Button layoutX="728.0" layoutY="260.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="150.0" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -84,7 +84,7 @@
       </ImageView>
       <TextField layoutX="495.0" layoutY="41.0" />
       <TextField layoutX="569.0" layoutY="66.0" />
-      <TextField layoutX="497.0" layoutY="31.0" onMousePressed="#handleSearchItem" prefHeight="35.0" prefWidth="280.0" promptText="Search items" styleClass="white-button">
+      <TextField layoutX="497.0" layoutY="31.0" onMousePressed="#handleSearchItem" prefHeight="35.0" prefWidth="280.0" promptText="Search items" styleClass="dark-button">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>
@@ -98,7 +98,7 @@
          <font>
             <Font name="System Bold" size="50.0" />
          </font></Label>
-      <Button layoutX="438.0" layoutY="414.0" mnemonicParsing="false" onMousePressed="#handleprofilebutton" prefHeight="174.0" prefWidth="131.0" styleClass="white-button">
+      <Button layoutX="438.0" layoutY="414.0" mnemonicParsing="false" onMousePressed="#handleprofilebutton" prefHeight="174.0" prefWidth="131.0" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

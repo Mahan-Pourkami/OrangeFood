@@ -23,32 +23,32 @@
             <Image url="@../asset/images/pizza_2d.png" />
          </image>
       </ImageView>
-      <TextField fx:id="phonefield" layoutX="211.0" layoutY="203.0" prefHeight="36.0" prefWidth="190.0" promptText="09XXXXXXXXX" styleClass="white-button">
+      <TextField fx:id="phonefield" layoutX="211.0" layoutY="203.0" prefHeight="36.0" prefWidth="190.0" promptText="09XXXXXXXXX" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="namefield" layoutX="560.0" layoutY="199.0" prefHeight="36.0" prefWidth="190.0" styleClass="white-button">
+      <TextField fx:id="namefield" layoutX="560.0" layoutY="199.0" prefHeight="36.0" prefWidth="190.0" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="emailfield" layoutX="218.0" layoutY="433.0" prefHeight="36.0" prefWidth="276.0" promptText="user@example.com" styleClass="white-button">
+      <TextField fx:id="emailfield" layoutX="218.0" layoutY="433.0" prefHeight="36.0" prefWidth="276.0" promptText="user@example.com" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="addfield" layoutX="207.0" layoutY="298.0" prefHeight="69.0" prefWidth="596.0" styleClass="white-button">
+      <TextField fx:id="addfield" layoutX="207.0" layoutY="298.0" prefHeight="69.0" prefWidth="596.0" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="accountnumberfield" layoutX="356.0" layoutY="664.0" prefHeight="36.0" prefWidth="276.0" promptText="XXXX-XXXX-XXXX-XXXX" styleClass="white-button">
+      <TextField fx:id="accountnumberfield" layoutX="356.0" layoutY="664.0" prefHeight="36.0" prefWidth="276.0" promptText="XXXX-XXXX-XXXX-XXXX" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="banknamefield" layoutX="351.0" layoutY="587.0" prefHeight="36.0" prefWidth="190.0" styleClass="white-button">
+      <TextField fx:id="banknamefield" layoutX="351.0" layoutY="587.0" prefHeight="36.0" prefWidth="190.0" styleClass="dark-button">
          <font>
             <Font size="15.0" />
          </font>
@@ -88,7 +88,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button fx:id="updateprof" layoutX="859.0" layoutY="660.0" mnemonicParsing="false" onMousePressed="#handleupdate" prefHeight="47.0" prefWidth="224.0" styleClass="white-button" text="Update Profile">
+      <Button fx:id="updateprof" layoutX="859.0" layoutY="660.0" mnemonicParsing="false" onMousePressed="#handleupdate" prefHeight="47.0" prefWidth="224.0" styleClass="dark-button" text="Update Profile">
          <font>
             <Font size="15.0" />
          </font>

@@ -36,12 +36,12 @@
          </cursor>
       </ImageView>
       <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#d2d5d757" height="480.0" layoutX="398.0" layoutY="182.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="582.0" />
-      <Button fx:id="pay_button" layoutX="766.0" layoutY="574.0" mnemonicParsing="false" onMousePressed="#handle_paybutton" prefHeight="34.0" prefWidth="172.0" styleClass="white-button" text="Pay">
+      <Button fx:id="pay_button" layoutX="766.0" layoutY="574.0" mnemonicParsing="false" onMousePressed="#handle_paybutton" prefHeight="34.0" prefWidth="172.0" styleClass="dark-button" text="Pay">
          <font>
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
-      <TextField fx:id="acc_field" layoutX="581.0" layoutY="269.0" prefHeight="44.0" prefWidth="330.0" promptText="XXXX-XXXX-XXXX-XXXX" styleClass="white-button">
+      <TextField fx:id="acc_field" layoutX="581.0" layoutY="269.0" prefHeight="44.0" prefWidth="330.0" promptText="XXXX-XXXX-XXXX-XXXX" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -51,19 +51,19 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField layoutX="586.0" layoutY="371.0" prefHeight="44.0" prefWidth="109.0" styleClass="white-button" />
+      <TextField layoutX="586.0" layoutY="371.0" prefHeight="44.0" prefWidth="109.0" styleClass="dark-button" />
       <Label layoutX="531.0" layoutY="380.0" text="CVV2">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField layoutX="791.0" layoutY="371.0" prefHeight="44.0" prefWidth="109.0" styleClass="white-button" />
+      <TextField layoutX="791.0" layoutY="371.0" prefHeight="44.0" prefWidth="109.0" styleClass="dark-button" />
       <Label layoutX="752.0" layoutY="380.0" text="Exp">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="amount_field" layoutX="586.0" layoutY="463.0" prefHeight="44.0" prefWidth="169.0" promptText="X $" styleClass="white-button" />
+      <TextField fx:id="amount_field" layoutX="586.0" layoutY="463.0" prefHeight="44.0" prefWidth="169.0" promptText="X $" styleClass="dark-button" />
       <Label layoutX="510.0" layoutY="473.0" text="Amount">
          <font>
             <Font name="System Bold" size="16.0" />

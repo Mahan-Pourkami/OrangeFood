@@ -37,7 +37,7 @@ public class HomeController {
                 return;
             }
 
-            URL logouturl = new URL("http://localhost:8080/auth/logout");
+            URL logouturl = new URL(Methods.url+"auth/logout");
             HttpURLConnection connection = (HttpURLConnection) logouturl.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Authorization", "Bearer " + token);

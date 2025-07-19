@@ -89,6 +89,10 @@ public class IntroController {
                    else if (obj.getString("role").equals("seller")){
                        redirect_to_vendor(mouseEvent);
                    }
+                   else if (obj.getString("role").equals("courier")){
+                       redirectToCourier(mouseEvent);
+
+                   }
                 } else {
                     redirectToLogin(mouseEvent);
                 }
@@ -130,5 +134,13 @@ public class IntroController {
         } catch (IOException e) {
             SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
         }
+    }
+
+    private void redirectToCourier(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
     }
 }

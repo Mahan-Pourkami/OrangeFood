@@ -14,16 +14,16 @@
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.EditfoodController">
    <children>
       <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#dfe6ed6d" height="547.0" layoutX="410.0" layoutY="165.0" stroke="#ee9c286e" strokeType="INSIDE" strokeWidth="5.0" width="559.0" />
-      <TextField fx:id="name_field" layoutX="581.0" layoutY="257.0" styleClass="white-button" />
+      <TextField fx:id="name_field" layoutX="581.0" layoutY="257.0" styleClass="dark-button" />
       <Label layoutX="519.0" layoutY="265.0" text="Name">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="price_field" layoutX="581.0" layoutY="335.0" prefHeight="17.0" prefWidth="169.0" styleClass="white-button" text="1" />
-      <TextField fx:id="sup_field" layoutX="583.0" layoutY="406.0" styleClass="white-button" text="1" />
-      <TextField fx:id="des_field" layoutX="581.0" layoutY="467.0" styleClass="white-button" />
-      <TextArea fx:id="key_box" layoutX="576.0" layoutY="551.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="white-button" />
+      <TextField fx:id="price_field" layoutX="581.0" layoutY="335.0" prefHeight="17.0" prefWidth="169.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="sup_field" layoutX="583.0" layoutY="406.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="des_field" layoutX="581.0" layoutY="467.0" styleClass="dark-button" />
+      <TextArea fx:id="key_box" layoutX="576.0" layoutY="551.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="dark-button" />
       <Label layoutX="519.0" layoutY="343.0" text="price">
          <font>
             <Font name="System Bold" size="13.0" />
@@ -46,7 +46,7 @@
       </Label>
       <Button fx:id="profchooser" layoutX="832.0" layoutY="396.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="35.0" prefWidth="84.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="add Image" />
       <ImageView fx:id="prof_view" fitHeight="150.0" fitWidth="169.0" layoutX="774.0" layoutY="217.0" onMousePressed="#handleSelectImage" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="832.0" layoutY="465.0" mnemonicParsing="false" onMousePressed="#handleupdate" prefHeight="35.0" prefWidth="84.0" styleClass="white-button" text="Submit">
+      <Button layoutX="832.0" layoutY="465.0" mnemonicParsing="false" onMousePressed="#handleupdate" prefHeight="35.0" prefWidth="84.0" styleClass="dark-button" text="Submit">
          <font>
             <Font size="14.0" />
          </font>

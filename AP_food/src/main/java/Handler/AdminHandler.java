@@ -392,27 +392,40 @@ public class AdminHandler implements HttpHandler {
 
         else if(paths.length == 3 && paths[2].equals("orders")){
 
-            if (!JwtUtil.validateToken(token)) {
-                throw new InvalidTokenexception();
-            }
-            if (!JwtUtil.extractRole(token).equals("admin")) {
-                throw new ForbiddenroleException();
-            }
+            try{
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
 
-            Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
-            String search = queryParams.getOrDefault("search", null);
-            String vendor = queryParams.getOrDefault("vendor", null);
-            String courier = queryParams.getOrDefault("courier", null);
-            String customer = queryParams.getOrDefault("customer", null);
-            String status = queryParams.getOrDefault("status", null);
+                Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+                String search = queryParams.getOrDefault("search", null);
+                String vendor = queryParams.getOrDefault("vendor", null);
+                String courier = queryParams.getOrDefault("courier", null);
+                String customer = queryParams.getOrDefault("customer", null);
+                String status = queryParams.getOrDefault("status", null);
 
-            List<Basket> baskets = basketDAO.getAllBasket();
-            JSONArray basketsArray = new JSONArray();
-            for (Basket basket : baskets) {
+                List<Basket> baskets = basketDAO.getAllBasket();
+                JSONArray basketsArray = new JSONArray();
+                for (Basket basket : baskets) {
                     boolean matches = true;
 
                     if (search != null && !search.isEmpty()) {
-                        matches &= basket.getAddress().contains(search);
+                        boolean match_food = false;
+
+                        for (long food_id : basket.getItems().keySet()) {
+                            Food food = foodDAO.getFood(food_id);
+                            if (food == null) {
+                                break;
+                            }
+                            if (food.getName().contains(search)) {
+                                match_food = true;
+                                break;
+                            }
+                        }
+                        matches &= match_food;
                     }
 
                     if (vendor != null && !vendor.isEmpty()) {
@@ -431,8 +444,7 @@ public class AdminHandler implements HttpHandler {
                         if (status.equals("accepted")) {
                             matches &= basket.getStateofCart() == StateofCart.accepted
                                     || basket.getStateofCart() == StateofCart.acceptedbycourier;
-                        }
-                        else {
+                        } else {
                             matches &= basket.getStateofCart().toString().equals(status);
                         }
                     }
@@ -442,8 +454,13 @@ public class AdminHandler implements HttpHandler {
                         JSONArray itemIdsArray = new JSONArray(items.keySet());
                         basketsArray.put(getBasketJsonObject(basket, itemIdsArray));
                     }
+                }
+                response = basketsArray.toString();
             }
-            response = basketsArray.toString();
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
         }
 
         Headers headers = exchange.getResponseHeaders();

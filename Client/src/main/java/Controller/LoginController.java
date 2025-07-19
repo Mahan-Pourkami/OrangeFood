@@ -74,6 +74,8 @@ public class LoginController {
         int httpCode = connection.getResponseCode();
         if(httpCode == 200) {
 
+            System.out.println("Login successful");
+
             File tokenFile = new File("src/main/resources/token.txt");
             try (FileWriter writer = new FileWriter(tokenFile)) {
                 writer.write(response.getString("token"));
@@ -112,6 +114,16 @@ public class LoginController {
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             }
+
+            else if(role.equals("courier")) {
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
+
+
         }
         else {
             error_lable.setVisible(true);

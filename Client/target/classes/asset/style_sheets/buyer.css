@@ -5,7 +5,7 @@
 
 }
 
-.white-button {
+.dark-button {
     -fx-background-color: #ffffff;
     -fx-padding: 8px 16px;
     -fx-border-color: #cccccc;
@@ -15,17 +15,17 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
-.white-button:hover {
+.dark-button:hover {
     -fx-background-color: #f5f5f5;
     -fx-cursor: hand;
 }
 
-.white-button:pressed {
+.dark-button:pressed {
     -fx-background-color: #ebebeb;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
 }
 
-.white-button:focused {
+.dark-button:focused {
     -fx-border-color: #999999;
     -fx-border-width: 1.5px;
 }

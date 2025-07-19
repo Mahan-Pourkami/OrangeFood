@@ -11,7 +11,6 @@ import java.util.Objects;
 public class OrangeApp extends Application {
 
 
-
     @Override
     public void start(Stage stage) throws IOException {
 

@@ -981,6 +981,7 @@ public class RestaurantsHandler implements HttpHandler {
                     if ( ( statusString.equals("accepted") || statusString.equals("rejected") ) && basket.getStateofCart() != StateofCart.payed) {
                         throw new InvalidInputException("order_id");
                     }
+
                     if( statusString.equals("served") && basket.getStateofCart() != StateofCart.accepted)
                         throw new InvalidInputException("order_id");
                     StateofCart state = StateofCart.valueOf(statusString);

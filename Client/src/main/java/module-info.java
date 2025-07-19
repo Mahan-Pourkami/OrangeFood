@@ -26,5 +26,7 @@ module org.example.client {
     opens Controller.Buyer to javafx.fxml;
     exports Controller.Vendor;
     opens Controller.Vendor to javafx.fxml;
+    exports Controller.Courier to javafx.fxml;
+    opens Controller.Courier to javafx.fxml;
 
 }

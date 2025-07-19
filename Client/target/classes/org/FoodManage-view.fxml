@@ -21,16 +21,16 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#dfe6ed6d" height="702.0" layoutX="42.0" layoutY="128.0" stroke="#ee9c286e" strokeType="INSIDE" strokeWidth="5.0" width="334.0" />
-      <TextField fx:id="name_field" layoutX="150.0" layoutY="222.0" styleClass="white-button" />
+      <TextField fx:id="name_field" layoutX="150.0" layoutY="222.0" styleClass="dark-button" />
       <Label layoutX="80.0" layoutY="228.0" text="Name">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="price_field" layoutX="150.0" layoutY="300.0" prefHeight="17.0" prefWidth="169.0" styleClass="white-button" text="1" />
-      <TextField fx:id="sup_field" layoutX="150.0" layoutY="369.0" styleClass="white-button" text="1" />
-      <TextField fx:id="des_field" layoutX="150.0" layoutY="431.0" styleClass="white-button" />
-      <TextArea fx:id="key_box" layoutX="145.0" layoutY="492.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="white-button" />
+      <TextField fx:id="price_field" layoutX="150.0" layoutY="300.0" prefHeight="17.0" prefWidth="169.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="sup_field" layoutX="150.0" layoutY="369.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="des_field" layoutX="150.0" layoutY="431.0" styleClass="dark-button" />
+      <TextArea fx:id="key_box" layoutX="145.0" layoutY="492.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="dark-button" />
       <Label layoutX="80.0" layoutY="306.0" text="price">
          <font>
             <Font name="System Bold" size="13.0" />
@@ -58,7 +58,7 @@
       </Label>
       <Button fx:id="profchooser" layoutX="244.0" layoutY="685.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="35.0" prefWidth="84.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="add Image" />
       <ImageView fx:id="prof_view" fitHeight="150.0" fitWidth="169.0" layoutX="61.0" layoutY="657.0" onMousePressed="#handleSelectImage" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="244.0" layoutY="760.0" mnemonicParsing="false" onMousePressed="#control_save_food" prefHeight="35.0" prefWidth="84.0" styleClass="white-button" text="Submit">
+      <Button layoutX="244.0" layoutY="760.0" mnemonicParsing="false" onMousePressed="#control_save_food" prefHeight="35.0" prefWidth="84.0" styleClass="dark-button" text="Submit">
          <font>
             <Font size="14.0" />
          </font>

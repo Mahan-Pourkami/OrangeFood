@@ -142,7 +142,20 @@ public class OrderHandler implements HttpHandler {
                     boolean matches = true;
 
                     if (search != null && !search.isEmpty()) {
-                        matches &= basket.getAddress().contains(search);
+
+                        boolean match_food = false;
+
+                        for(long food_id : basket.getItems().keySet()){
+                        Food food = foodDAO.getFood(food_id);
+                            if(food==null){
+                                break;
+                            }
+                            if(food.getName().contains(search)){
+                               match_food = true;
+                               break;
+                            }
+                        }
+                        matches &= match_food;
                     }
 
                     if (vendor != null && !vendor.isEmpty()) {
