@@ -79,7 +79,7 @@ public class HomeController {
     @FXML
     void handlecharge(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Wallet-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Wallet-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -89,7 +89,7 @@ public class HomeController {
 
     @FXML
     void handleSearchVendor(MouseEvent event) throws IOException {
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/SearchRestaurants-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/SearchRestaurants-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -100,7 +100,7 @@ public class HomeController {
     @FXML
     void handleFavorites (MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Favorite-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Favorite-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -109,7 +109,7 @@ public class HomeController {
 
     @FXML
     void handleSearchItem (MouseEvent event) throws IOException {
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/ItemSearch-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ItemSearch-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

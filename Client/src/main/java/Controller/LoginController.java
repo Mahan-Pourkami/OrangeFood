@@ -91,7 +91,7 @@ public class LoginController {
                 int courier_count = response.getInt("courier_counts");
                 int vendors_count = response.getInt("vendors_counts");
                 AdminController.setvalues(buyer_count, seller_count, courier_count, vendors_count);
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);
@@ -99,7 +99,7 @@ public class LoginController {
 
             }
             else if(role.equals("buyer")) {
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);
@@ -108,7 +108,7 @@ public class LoginController {
 
             else if(role.equals("seller")) {
 
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);
@@ -116,7 +116,7 @@ public class LoginController {
             }
 
             else if(role.equals("courier")) {
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);

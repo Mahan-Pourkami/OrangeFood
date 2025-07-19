@@ -66,7 +66,7 @@ public class CourierHomeController {
     @FXML
     void handleAvailable (MouseEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/AvailableDeliv-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/AvailableDeliv-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -76,7 +76,7 @@ public class CourierHomeController {
     @FXML
     void handlePending (MouseEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/PendingOrder-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/PendingOrder-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);

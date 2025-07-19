@@ -21,10 +21,8 @@ import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -145,7 +143,7 @@ public class MenuManageController {
     void handle_view_button(ActionEvent event , String menu_title) throws IOException {
 
         AddFoodMenuController.SetMenu_title(menu_title);
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/AddFoodtoMenu-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/AddFoodtoMenu-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -172,7 +170,7 @@ public class MenuManageController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -182,7 +180,7 @@ public class MenuManageController {
     @FXML
     void refresh(ActionEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/MenuManage-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/MenuManage-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -192,7 +190,7 @@ public class MenuManageController {
     @FXML
     void refresh(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/MenuManage-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/MenuManage-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

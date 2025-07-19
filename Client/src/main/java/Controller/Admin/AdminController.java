@@ -131,7 +131,7 @@ public class AdminController {
     @FXML
     void handleGetAllusers(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Alluser-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Alluser-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -140,7 +140,7 @@ public class AdminController {
 
     @FXML
     private void handle_approve(MouseEvent event) throws IOException {
-        FXMLLoader approve = new FXMLLoader(getClass().getResource("/org/Approval-view.fxml"));
+        FXMLLoader approve = new FXMLLoader(getClass().getResource("/org/Admin/Approval-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = approve.load();
         Scene scene = new Scene(root);
@@ -150,7 +150,7 @@ public class AdminController {
 
     @FXML
     void handleGetAllvendors(MouseEvent event) throws IOException {
-        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Allvendors-view.fxml"));
+        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Allvendors-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = vendors.load();
         Scene scene = new Scene(root);
@@ -159,7 +159,7 @@ public class AdminController {
 
     @FXML
     void handleGetAllcoupons(MouseEvent event) throws IOException {
-        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Coupon-view.fxml"));
+        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = vendors.load();
         Scene scene = new Scene(root);

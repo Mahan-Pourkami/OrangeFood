@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EditfoodController {
@@ -114,7 +113,7 @@ public class EditfoodController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/FoodManage-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

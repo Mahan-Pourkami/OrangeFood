@@ -87,7 +87,7 @@ public class EditCouponController {
 
     @FXML
     private void control_back(MouseEvent event) throws IOException {
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Coupon-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

@@ -267,7 +267,7 @@ public class AddFoodMenuController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/MenuManage-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/MenuManage-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);
@@ -277,7 +277,7 @@ public class AddFoodMenuController {
     @FXML
     void refresh(ActionEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/AddFoodtoMenu-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/AddFoodtoMenu-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

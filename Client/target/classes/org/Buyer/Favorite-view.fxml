@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.FavoriteController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="39.0" layoutY="345.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="195.0" layoutY="-16.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="37.0" layoutY="509.0" text="Favorite Restaurants !" textFill="#d18f00">
+         <font>
+            <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="1.0" layoutY="659.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="37.0" layoutY="27.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ListView fx:id="res_list" layoutX="396.0" layoutY="-16.0" prefHeight="868.0" prefWidth="896.0" />
+      <ImageView fitHeight="134.0" fitWidth="134.0" layoutX="203.0" layoutY="372.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/star.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>

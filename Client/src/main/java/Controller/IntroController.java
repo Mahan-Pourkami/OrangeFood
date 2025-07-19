@@ -17,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Objects;
 
 public class IntroController {
 
@@ -109,7 +108,7 @@ public class IntroController {
 
     private void redirectToHome(MouseEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -117,7 +116,7 @@ public class IntroController {
     }
 
     private void redirect_to_vendor(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -137,7 +136,7 @@ public class IntroController {
     }
 
     private void redirectToCourier(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);

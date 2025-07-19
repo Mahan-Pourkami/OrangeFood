@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -126,7 +125,7 @@ public class FavoriteController {
         cell.setOnMouseClicked(event -> {
 
             ViewMenuController.setRes_id(vendor.getId());
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Menu-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Menu-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = null;
             try {
@@ -153,7 +152,7 @@ public class FavoriteController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

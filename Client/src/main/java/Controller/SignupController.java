@@ -129,7 +129,7 @@ public class SignupController {
                     writer.write(response.getString("token"));
                 }
 
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);

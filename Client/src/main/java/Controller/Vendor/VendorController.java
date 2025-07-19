@@ -94,7 +94,7 @@ public class VendorController {
             return;
         }
 
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/FoodManage-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = users.load();
             Scene scene = new Scene(root);
@@ -116,7 +116,7 @@ public class VendorController {
     @FXML
     void handle_add_restaurant_button (MouseEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/AddRestaurant-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/AddRestaurant-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -131,7 +131,7 @@ public class VendorController {
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/MenuManage-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/MenuManage-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -146,7 +146,7 @@ public class VendorController {
             SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/UpdateRestaurant-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/UpdateRestaurant-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);

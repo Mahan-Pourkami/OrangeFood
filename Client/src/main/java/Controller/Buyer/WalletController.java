@@ -103,7 +103,7 @@ public class WalletController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = users.load();
             Scene scene = new Scene(root);

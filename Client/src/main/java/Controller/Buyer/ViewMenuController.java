@@ -81,7 +81,7 @@ public class ViewMenuController {
         card.setOnMouseClicked((MouseEvent event) -> {
 
             ListFoodsController.set_Value(menu.getVendorId(),menu.getTitle());
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/ListFoods-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = null;
             try {
@@ -106,7 +106,7 @@ public class ViewMenuController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/SearchRestaurants-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/SearchRestaurants-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = users.load();
         Scene scene = new Scene(root);

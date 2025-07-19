@@ -138,21 +138,21 @@ public class ProfileController{
 
         try{
             if (role.equals("buyer")) {
-                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = users.load();
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             } else if (role.equals("seller")) {
 
-                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = users.load();
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             }
             else if (role.equals("courier")) {
-                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+                FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = users.load();
                 Scene scene = new Scene(root);
