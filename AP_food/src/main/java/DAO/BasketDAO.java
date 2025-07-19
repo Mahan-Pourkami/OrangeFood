@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import java.awt.print.Book;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -127,6 +127,8 @@ public class BasketDAO implements AutoCloseable {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Basket basket = session.get(Basket.class, id);
+            // Force initialization of lazy collection
+            basket.getItems().size(); // or use Hibernate.initialize(basket.getItems());
             transaction.commit();
             return basket;
         } catch (Exception e) {
@@ -136,6 +138,7 @@ public class BasketDAO implements AutoCloseable {
             throw new DataAccessException("Failed to retrieve basket with ID " + id + ": " + e.getMessage(), e);
         }
     }
+
 
     public List<Basket> getAllBasket() {
         Transaction transaction = null;
@@ -159,11 +162,84 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
+    public List<Object[]> getBasketIdAndPhone() {
+        Transaction transaction = null;
+        Session session = null;
+
+        try {
+            session = sessionFactory.openSession(); // manually open session
+            transaction = session.beginTransaction(); // manually begin transaction
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+            Root<Basket> root = cq.from(Basket.class);
+
+            // Use entity field names, not column names
+            cq.multiselect(root.get("id"), root.get("buyerPhone"));
+
+            List<Object[]> results = session.createQuery(cq).getResultList();
+
+            transaction.commit(); // commit transaction
+            return results;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                try {
+                    transaction.rollback(); // rollback safely
+                } catch (IllegalStateException ise) {
+                    System.err.println("Rollback failed: " + ise.getMessage());
+                }
+            }
+            throw new DataAccessException("Failed to retrieve basket data: " + e.getMessage(), e);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close(); // always close session
+            }
+        }
+    }
+
+    public List<Basket> getBasketsByState(StateofCart state) {
+        Objects.requireNonNull(state, "StateofCart must not be null.");
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            String hql = "SELECT DISTINCT b FROM Basket b LEFT JOIN FETCH b.items WHERE b.stateofCart = :state";
+            List<Basket> baskets = session.createQuery(hql, Basket.class)
+                    .setParameter("state", state)
+                    .getResultList();
+
+            transaction.commit();
+            return baskets;
+
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new DataAccessException("Failed to retrieve baskets by state: " + e.getMessage(), e);
+        }
+    }
+
+    public List<Basket> getBasketforvendor(Long vendorId) {
+
+        List<Basket> baskets = getAllBasket();
+        List <Basket> result = new ArrayList<>();
+
+        for (Basket basket : baskets) {
+            if (basket.getRes_id() == vendorId && (basket.getStateofCart().equals(StateofCart.waiting) || basket.getStateofCart().equals(StateofCart.received) || basket.getStateofCart().equals(StateofCart.accepted))) {
+                result.add(basket);
+            }
+        }
+        return result;
+
+    }
+
+
     @Override
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
-            System.out.println("SessionFactory closed.");
         }
     }
 }

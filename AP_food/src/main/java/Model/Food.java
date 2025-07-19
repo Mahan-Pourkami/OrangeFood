@@ -36,9 +36,9 @@ public class Food {
     @Column
     private String description;
 
-    @Column (name = "menu_title")
-    @JsonIgnore
-    private String menuTitle;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> menuTitle;
 
     @Column (name = "restaurant_id")
     @JsonIgnore
@@ -65,6 +65,7 @@ public class Food {
         this.restaurantId = res_id ;
         this.description = description;
         this.keywords = new ArrayList<String>();
+        this.menuTitle = new ArrayList<>();
 
     }
 
@@ -90,7 +91,7 @@ public class Food {
 
     public void setMenuTitle(String menuTitle) {
 
-        this.menuTitle = menuTitle;
+        this.menuTitle.add(menuTitle);
     }
 
     public void setkeywords(List<String> keywords) {
@@ -98,12 +99,17 @@ public class Food {
     }
 
     @JsonIgnore
-    public Restaurant getRestaurant() {
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
+    public Long getRestaurant() {
 
+        return restaurantId;
+    }
 
-        Restaurant restaurant = restaurantDAO.get_restaurant(restaurantId);
-        return restaurant;
+    public List<String> getMenuTitle() {
+        return menuTitle;
+    }
+
+    public void removeMenuTitle(String menuTitle) {
+        this.menuTitle.remove(menuTitle);
     }
 
 }

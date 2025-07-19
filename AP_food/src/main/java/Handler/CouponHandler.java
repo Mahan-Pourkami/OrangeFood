@@ -12,7 +12,11 @@ import java.io.*;
 
 public class CouponHandler implements HttpHandler {
 
-    CouponDAO couponDAO = new CouponDAO();
+    CouponDAO couponDAO;
+
+    public CouponHandler(CouponDAO couponDAO) {
+        this.couponDAO = couponDAO;
+    }
 
     @Override
     public void handle (HttpExchange exchange) throws IOException {
@@ -46,7 +50,7 @@ public class CouponHandler implements HttpHandler {
         JSONObject jsonObject = getJsonObject(exchange);
         int httpCode = 200;
 
-        if(paths.length==2 ){
+        if(paths.length==3 ){
 
            try {
                 if (!JwtUtil.validateToken(token)) {
@@ -55,11 +59,12 @@ public class CouponHandler implements HttpHandler {
                 if (!JwtUtil.extractRole(token).equals("buyer")) {
                     throw new ForbiddenroleException();
                 }
-                if (!jsonObject.has("coupon_code")) {
-                    throw new InvalidInputException("coupon_code");
-                }
-                String couponCode = jsonObject.getString("coupon_code");
+
+                //"coupon_code="
+
+                String couponCode = paths[2].substring("coupon_code=".length());
                 Coupon coupon = couponDAO.findCouponByCode(couponCode);
+
                 if (coupon == null) {
                     throw new NosuchItemException("coupon");
                 }
@@ -126,6 +131,8 @@ public class CouponHandler implements HttpHandler {
         msgJson.put("message", msg);
         return msgJson.toString();
     }
+
+
 
 
 

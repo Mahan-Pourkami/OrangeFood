@@ -39,9 +39,9 @@ public class Buyer extends User{
     }
 
     public void discharge(Integer discharge) {
-        Token -= discharge;
         if(Token < -100)
             throw new ArithmeticException("Not enough money");
+        Token -= discharge;
     }
 
     public void add_tofavorite_restaurants(long id) {
@@ -56,16 +56,8 @@ public class Buyer extends User{
         return favorite_restaurants;
     }
 
-    public List<Restaurant> getfavorite_restaurants() {
-
-        RestaurantDAO restaurantDAO = new RestaurantDAO();
-        List<Restaurant> result = new ArrayList<>();
-
-        for (Long id : favorite_restaurants) {
-
-            result.add(restaurantDAO.get_restaurant(id));
-        }
-        return result;
+    public List<Long> getfavorite_restaurants() {
+             return favorite_restaurants;
     }
 
 

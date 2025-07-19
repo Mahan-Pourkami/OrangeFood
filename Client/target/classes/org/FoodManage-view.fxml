@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="vendor" stylesheets="@../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.FoodManageController">
+   <children>
+      <ImageView fitHeight="172.0" fitWidth="215.0" layoutX="1114.0" layoutY="-13.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#dfe6ed6d" height="702.0" layoutX="42.0" layoutY="128.0" stroke="#ee9c286e" strokeType="INSIDE" strokeWidth="5.0" width="334.0" />
+      <TextField fx:id="name_field" layoutX="150.0" layoutY="222.0" styleClass="dark-button" />
+      <Label layoutX="80.0" layoutY="228.0" text="Name">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <TextField fx:id="price_field" layoutX="150.0" layoutY="300.0" prefHeight="17.0" prefWidth="169.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="sup_field" layoutX="150.0" layoutY="369.0" styleClass="dark-button" text="1" />
+      <TextField fx:id="des_field" layoutX="150.0" layoutY="431.0" styleClass="dark-button" />
+      <TextArea fx:id="key_box" layoutX="145.0" layoutY="492.0" prefHeight="107.0" prefWidth="183.0" promptText="please Enter the keywords with space" styleClass="dark-button" />
+      <Label layoutX="80.0" layoutY="306.0" text="price">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="375.0" text="supply">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="55.0" layoutY="437.0" text="Description">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="60.0" layoutY="525.0" text="Keywords">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="172.0" layoutY="149.0" prefHeight="35.0" prefWidth="60.0" text="Add Item">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="profchooser" layoutX="244.0" layoutY="685.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="35.0" prefWidth="84.0" styleClass="adminbutton" stylesheets="@../asset/style_sheets/input.css" text="add Image" />
+      <ImageView fx:id="prof_view" fitHeight="150.0" fitWidth="169.0" layoutX="61.0" layoutY="657.0" onMousePressed="#handleSelectImage" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="244.0" layoutY="760.0" mnemonicParsing="false" onMousePressed="#control_save_food" prefHeight="35.0" prefWidth="84.0" styleClass="dark-button" text="Submit">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TableView fx:id="food_table" layoutX="388.0" layoutY="163.0" prefHeight="659.0" prefWidth="851.0">
+        <columns>
+          <TableColumn fx:id="name_col" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="price_col" prefWidth="75.0" text="price" />
+            <TableColumn fx:id="sup_col" prefWidth="75.0" text="supply" />
+            <TableColumn fx:id="des_col" prefWidth="261.0" text="Description" />
+            <TableColumn fx:id="id_col" prefWidth="91.0" text="ID" />
+            <TableColumn fx:id="res_col" prefWidth="132.0" text="Res ID" />
+            <TableColumn fx:id="action_col" prefWidth="141.0" />
+        </columns>
+      </TableView>
+      <Label layoutX="542.0" layoutY="36.0" text="Manage Items" textFill="#ff9012">
+         <font>
+            <Font name="System Bold" size="39.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="51.0" layoutY="51.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="error_label" layoutX="81.0" layoutY="624.0" textFill="RED" underline="true">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

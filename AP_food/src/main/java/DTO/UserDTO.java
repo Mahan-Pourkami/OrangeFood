@@ -11,12 +11,10 @@ public class UserDTO {
 
     public static class UserRegisterDTO {
 
-        UserDAO userDAO = new UserDAO();
-        SellerDAO sellerDAO = new SellerDAO();
-        BuyerDAO buyerDAO = new BuyerDAO();
-        CourierDAO courierDAO = new CourierDAO();
-
-
+        UserDAO userDAO ;
+        SellerDAO sellerDAO ;
+        BuyerDAO buyerDAO ;
+        CourierDAO courierDAO ;
         public String fullName;
         public String phone;
         public String password;
@@ -26,8 +24,12 @@ public class UserDTO {
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
 
-        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account) throws UnsupportedMediaException, DuplicatedUserexception, EmailException {
+        public UserRegisterDTO(String fullName, String phone, String password, String role, String address, String email, String profileImageBase64,String bankname , String account, UserDAO userDAO ,SellerDAO sellerDAO , BuyerDAO buyerDAO , CourierDAO courierDAO) throws UnsupportedMediaException, DuplicatedUserexception, EmailException {
 
+            this.userDAO = userDAO ;
+            this.sellerDAO = sellerDAO;
+            this.buyerDAO = buyerDAO;
+            this.courierDAO = courierDAO;
             this.fullName = fullName;
             this.phone = phone;
             this.password = password;
@@ -97,11 +99,11 @@ public class UserDTO {
         public String password;
         UserDAO userDAO;
 
-        public UserLoginRequestDTO(String phone, String password) {
+        public UserLoginRequestDTO(String phone, String password,UserDAO userDAO) {
 
             this.phone = phone;
             this.password = password;
-            this.userDAO = new UserDAO();
+            this.userDAO = userDAO;
 
         }
         public User getUserByPhoneAndPass() {
@@ -115,7 +117,6 @@ public class UserDTO {
 
     public static class UserResponprofileDTO {
 
-        UserDAO userDAO = new UserDAO();
         JSONObject jsonObject = new JSONObject();
         JSONObject bankjson = new JSONObject();
 
@@ -128,7 +129,7 @@ public class UserDTO {
         public String profileImageBase64;
         public BankinfoDTO bankinfo;
 
-       public UserResponprofileDTO (String phone) {
+       public UserResponprofileDTO (String phone,UserDAO userDAO) {
 
            User user = userDAO.getUserByPhone(phone);
 
@@ -152,6 +153,7 @@ public class UserDTO {
            jsonObject.put("phone", phone);
            jsonObject.put("role", role);
            jsonObject.put("address", address);
+           jsonObject.put("email", email);
            jsonObject.put("profileImageBase64", this.profileImageBase64);
            bankjson.put("bank_name", bankinfo.bankName);
            bankjson.put("account_number", bankinfo.accountNumber);
@@ -193,26 +195,44 @@ public class UserDTO {
 
     public static class Userupdateprof{
 
-        UserDAO userDAO = new UserDAO();
+        UserDAO userDAO ;
 
 
-       public Userupdateprof(String phone , JSONObject jsonObject ) throws EmailException, UnsupportedMediaException, InvalidInputException {
+       public Userupdateprof(String phone , JSONObject jsonObject, UserDAO userDAO ) throws EmailException, UnsupportedMediaException, InvalidInputException {
 
+           this.userDAO = userDAO;
             User user = userDAO.getUserByPhone(phone);
-            if(!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email"))!=null && !jsonObject.getString("email").isEmpty()) {
-                throw new EmailException();
+
+            if(jsonObject.has("email")) {
+                if (!jsonObject.getString("email").equals(user.getEmail()) && userDAO.getUserByEmail(jsonObject.getString("email")) != null && !jsonObject.getString("email").isEmpty()) {
+                    throw new EmailException();
+                }
+                user.setEmail(jsonObject.getString("email"));
             }
-            String prof = jsonObject.getString("profileImageBase64");
-            if(prof!=null && !prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
-                throw new UnsupportedMediaException();
+            if(jsonObject.has("profileImageBase64")) {
+                String prof = jsonObject.getString("profileImageBase64");
+                if (prof != null && !prof.isEmpty() && !prof.endsWith("png") && !prof.endsWith("jpg") && !prof.endsWith("jpeg")) {
+                    throw new UnsupportedMediaException();
+                }
+                user.setProfile(prof);
             }
 
-            user.setfullname(jsonObject.getString("full_name"));
-            user.setEmail(jsonObject.getString("email"));
-            user.setAddress(jsonObject.getString("address"));
-            user.setProfile(jsonObject.getString("profileImageBase64"));
+            if(jsonObject.has("full_name")) {
+
+                if(jsonObject.getString("full_name").isEmpty()){
+                    throw new InvalidInputException("full_name");
+                }
+                user.setfullname(jsonObject.getString("full_name"));
+            }
+            if(jsonObject.has("address")) {
+                if(jsonObject.getString("address").isEmpty()){
+                    throw new InvalidInputException("address");
+                }
+                user.setAddress(jsonObject.getString("address"));
+            }
+
             JSONObject bankobject = jsonObject.optJSONObject("bank_info");
-           if(!bankobject.getString("bank_name").isEmpty() && !bankobject.getString("account_number").isEmpty()) {
+           if((bankobject.has("bank_name") && bankobject.has("account_number")) && !bankobject.getString("bank_name").isEmpty() && !bankobject.getString("account_number").isEmpty()) {
             Bankinfo bankinfo = new Bankinfo(bankobject.getString("bank_name"),bankobject.getString("account_number"));
             user.setBankinfo(bankinfo);
             }

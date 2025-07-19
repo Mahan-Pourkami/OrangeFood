@@ -1,19 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AllusersController">
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Admin.AllusersController">
    <children>
-      <TableView fx:id="userstable" layoutX="119.0" layoutY="113.0" prefHeight="465.0" prefWidth="1043.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="99.0" layoutY="-2.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1280.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.006700779777020216" green="0.15280011296272278" blue="0.28947368264198303" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.46052631735801697" green="0.13645224273204803" blue="0.13645224273204803" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+      <TableView fx:id="userstable" layoutX="118.0" layoutY="154.0" prefHeight="627.0" prefWidth="1045.0">
         <columns>
           <TableColumn fx:id="phone_col" prefWidth="150.0" text="Phone" />
           <TableColumn fx:id="id_col" prefWidth="197.0" text="ID" />
             <TableColumn fx:id="name_col" prefWidth="255.0" text="Name" />
-            <TableColumn prefWidth="193.0" text="Role" />
-            <TableColumn fx:id="email_col" prefWidth="247.0" text="email" />
+            <TableColumn fx:id="role_col" prefWidth="84.0" text="Role" />
+            <TableColumn fx:id="email_col" prefWidth="356.0" styleClass="table" text="email" />
         </columns>
       </TableView>
+      <Label layoutX="514.0" layoutY="21.0" text="All Users Table ">
+         <font>
+            <Font name="System Bold" size="37.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9736841917037964" green="0.9736841917037964" blue="0.9736841917037964" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.3719512195121951">
+                     <color>
+                        <Color red="0.6312134265899658" green="0.7340034246444702" blue="0.8684210777282715" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.761744966442953">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.951219512195122">
+                     <color>
+                        <Color red="1.0" green="0.5740740895271301" blue="0.5740740895271301" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.5740740895271301" blue="0.5740740895271301" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="28.0" layoutY="32.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fitHeight="54.0" fitWidth="62.0" layoutX="1012.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Line endX="1179.0" layoutX="100.0" layoutY="103.0" startX="-100.0" stroke="WHITE" strokeWidth="5.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9736841917037964" green="0.9736841917037964" blue="0.9736841917037964" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.3719512195121951">
+                     <color>
+                        <Color red="0.6312134265899658" green="0.7340034246444702" blue="0.8684210777282715" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.761744966442953">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.951219512195122">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Line>
+      <Label layoutX="1081.0" layoutY="54.0" text="Orange Food !" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

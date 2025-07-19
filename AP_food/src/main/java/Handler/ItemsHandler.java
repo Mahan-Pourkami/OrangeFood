@@ -4,7 +4,7 @@ import DAO.BuyerDAO;
 import DAO.FoodDAO;
 import Exceptions.*;
 import Model.Buyer;
-import Model.Food; // Import the Food model
+import Model.Food;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,6 +18,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ItemsHandler implements HttpHandler {
+
+    FoodDAO foodDAO;
+
+    public ItemsHandler(FoodDAO foodDAO) {
+
+        this.foodDAO = foodDAO;
+    }
+
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -58,7 +66,7 @@ public class ItemsHandler implements HttpHandler {
     }
 
     private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        FoodDAO foodDAO = new FoodDAO();
+
         String token = JwtUtil.get_token_from_server(exchange);
 
         if(paths.length == 3){
@@ -86,7 +94,7 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("name", food.getName());
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
-            foodJson.put("vendor_id", food.getRestaurant().getId());
+            foodJson.put("vendor_id", food.getRestaurant());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
             foodJson.put("keywords", food.getKeywords());
@@ -99,7 +107,7 @@ public class ItemsHandler implements HttpHandler {
     }
 
     private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
-        FoodDAO foodDAO = new FoodDAO();
+
         String token = JwtUtil.get_token_from_server(exchange);
         String response ="";
 
@@ -137,14 +145,14 @@ public class ItemsHandler implements HttpHandler {
                             Object keywordObj = keywordsArray.get(i);
                             if (keywordObj instanceof String) {
                                 String keyword = ((String) keywordObj).toLowerCase();
-                                if (!foodKeywords.contains(keyword)) {
+                                if (!foodKeywords.contains(keyword) && !keyword.isEmpty()) {
                                     allKeywordsMatch = false;
                                     break;
                                 }
                             }
                         }
 
-                        if (allKeywordsMatch) {
+                        if (allKeywordsMatch && !food.getMenuTitle().isEmpty()) {
                             foundFoods.add(food);
                         }
                     }
@@ -158,7 +166,7 @@ public class ItemsHandler implements HttpHandler {
                     foodJson.put("name", food.getName());
                     foodJson.put("imageBase64", food.getPictureUrl());
                     foodJson.put("description", food.getDescription());
-                    foodJson.put("vendor_id", food.getRestaurant().getId());
+                    foodJson.put("vendor_id", food.getRestaurant());
                     foodJson.put("price", food.getPrice());
                     foodJson.put("supply", food.getSupply());
                     foodJson.put("keywords", food.getKeywords());

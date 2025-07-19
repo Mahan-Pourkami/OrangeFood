@@ -1,6 +1,8 @@
 package MainServer;
 
+import DAO.*;
 import Handler.*;
+import Model.Courier;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -17,22 +19,39 @@ public class Server {
 
         try {
 
+            UserDAO userDAO = new UserDAO();
+            SellerDAO sellerDAO = new SellerDAO();
+            CourierDAO courierDAO = new CourierDAO();
+            CouponDAO couponDAO = new CouponDAO();
+            BuyerDAO buyerDAO = new BuyerDAO();
+            RestaurantDAO restaurantDAO = new RestaurantDAO();
+            FoodDAO foodDAO = new FoodDAO();
+            RatingDAO ratingDAO = new RatingDAO();
+            BasketDAO basketDAO = new BasketDAO();
+            TransactionTDAO transactionTDAO = new TransactionTDAO();
+
+
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
             server.setExecutor(executor);
-
             
-            server.createContext("/auth" , new AuthHandler());
-            server.createContext("/restaurants",new RestaurantsHandler());
-            server.createContext("/favorites" , new FavoriteHandler());
-            server.createContext("/admin",new AdminHandler());
-            server.createContext("/rating" , new RatingHandler());
-            server.createContext("/wallet" , new WalletHandler());
-            server.createContext("/coupon" , new CouponHandler());
-            server.createContext("/vendors" , new VendorHandler());
-            server.createContext("/items" , new ItemsHandler());
+            server.createContext("/auth" , new AuthHandler(courierDAO,sellerDAO,buyerDAO,userDAO,restaurantDAO));
+            server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO,couponDAO,basketDAO,transactionTDAO,buyerDAO,userDAO));
+            server.createContext("/favorites" , new FavoriteHandler(buyerDAO,restaurantDAO));
+            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO,foodDAO,basketDAO));
+            server.createContext("/rating" , new RatingHandler(ratingDAO,foodDAO,userDAO));
+            server.createContext("/wallet" , new WalletHandler(buyerDAO,transactionTDAO));
+            server.createContext("/coupon" , new CouponHandler(couponDAO));
+            server.createContext("/vendors" , new VendorHandler(restaurantDAO,foodDAO,buyerDAO));
+            server.createContext("/items" , new ItemsHandler(foodDAO));
+            server.createContext("/orders" , new OrderHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
+            server.createContext("/payment" , new PaymentHandler(basketDAO,userDAO,foodDAO,restaurantDAO,transactionTDAO,buyerDAO,couponDAO));
+            server.createContext("/transactions" , new TransactionsHandler(transactionTDAO));
+            server.createContext("/deliveries" , new DeliveryHandler(userDAO,couponDAO,basketDAO, restaurantDAO, foodDAO));
+
+
 
             server.start();
 

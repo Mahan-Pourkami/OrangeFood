@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -68,22 +69,38 @@ public class IntroController {
                 return;
             }
 
-            URL profileUrl = new URL("http://localhost:8080/auth/profile");
+            URL profileUrl = new URL(Methods.url+"auth/profile");
             HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
 
+
+
             try {
+
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + token);
 
+                JSONObject obj = Methods.getJsonResponse(connection);
+
                 int httpCode = connection.getResponseCode();
                 if (httpCode == HttpURLConnection.HTTP_OK) {
-                    redirectToHome(mouseEvent);
+                   if (obj.getString("role").equals("buyer")){
+                       redirectToHome(mouseEvent);
+                   }
+                   else if (obj.getString("role").equals("seller")){
+                       redirect_to_vendor(mouseEvent);
+                   }
+                   else if (obj.getString("role").equals("courier")){
+                       redirectToCourier(mouseEvent);
+
+                   }
                 } else {
                     redirectToLogin(mouseEvent);
                 }
+
             } finally {
                 connection.disconnect();
             }
+
         } catch (IOException e) {
             SceneManager.showErrorAlert("Connection Error",e.getMessage());
             redirectToLogin(mouseEvent);
@@ -93,6 +110,14 @@ public class IntroController {
     private void redirectToHome(MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
+
+    private void redirect_to_vendor(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -109,5 +134,13 @@ public class IntroController {
         } catch (IOException e) {
             SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
         }
+    }
+
+    private void redirectToCourier(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
     }
 }

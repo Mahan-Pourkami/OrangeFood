@@ -104,7 +104,7 @@ public class RestaurantDAO {
         Set<Restaurant> filteredVendors = new HashSet<Restaurant>();
         for (Restaurant vendor : vendors) {
 
-            if(vendor.getName().toLowerCase().contains(name.toLowerCase())){
+            if(vendor.getName().toLowerCase().contains(name.toLowerCase()) || vendor.getAddress().toLowerCase().contains(name.toLowerCase())) {
                 filteredVendors.add(vendor);
             }
         }

@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Admin.AdminController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -46,7 +47,7 @@ public class LoginController {
 
 
         System.out.println(phonefield.getText());
-        URL address = new URL("http://localhost:8080/auth/login");
+        URL address = new URL(Methods.url+"auth/login");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
 
         connection.setRequestMethod("POST");
@@ -73,6 +74,8 @@ public class LoginController {
         int httpCode = connection.getResponseCode();
         if(httpCode == 200) {
 
+            System.out.println("Login successful");
+
             File tokenFile = new File("src/main/resources/token.txt");
             try (FileWriter writer = new FileWriter(tokenFile)) {
                 writer.write(response.getString("token"));
@@ -86,7 +89,8 @@ public class LoginController {
                 int seller_count = response.getInt("seller_counts");
                 int buyer_count = response.getInt("buyer_counts");
                 int courier_count = response.getInt("courier_counts");
-                AdminController.setvalues(buyer_count, seller_count, courier_count);
+                int vendors_count = response.getInt("vendors_counts");
+                AdminController.setvalues(buyer_count, seller_count, courier_count, vendors_count);
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
@@ -94,13 +98,32 @@ public class LoginController {
                 SceneManager.fadeScene(stage, scene);
 
             }
-            else {
+            else if(role.equals("buyer")) {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = home.load();
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             }
+
+            else if(role.equals("seller")) {
+
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Vendor-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
+
+            else if(role.equals("courier")) {
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Courier-view.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Parent root = home.load();
+                Scene scene = new Scene(root);
+                SceneManager.fadeScene(stage, scene);
+            }
+
+
         }
         else {
             error_lable.setVisible(true);

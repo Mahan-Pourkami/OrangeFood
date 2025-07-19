@@ -70,6 +70,7 @@ public class SellerDAO {
        }
 
        catch (Exception e) {
+           e.printStackTrace();
            if(transaction!=null)transaction.rollback();
            throw new RuntimeException("failed to delete seller",e);
        }
