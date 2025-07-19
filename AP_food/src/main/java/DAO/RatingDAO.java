@@ -15,18 +15,18 @@ import java.util.List;
 public class RatingDAO {
 
     private final SessionFactory sessionFactory;
+
     public RatingDAO() {
         sessionFactory = new Configuration().addAnnotatedClass(Rating.class).configure().buildSessionFactory();
     }
 
     public void saveRating(Rating rating) {
-        Transaction transaction = null ;
-        try(Session session = sessionFactory.openSession()){
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(rating);
             transaction.commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             transaction.rollback();
             e.printStackTrace();
         }
@@ -34,22 +34,20 @@ public class RatingDAO {
 
     public Rating getRating(long id) {
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
 
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             transaction = session.beginTransaction();
             Rating rating = (Rating) session.get(Rating.class, id);
             transaction.commit();
 
-            if(rating != null) {
+            if (rating != null) {
                 return rating;
-            }
-            else return null;
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get Rating",e);
+            } else return null;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get Rating", e);
         }
     }
 
@@ -78,15 +76,14 @@ public class RatingDAO {
 
     public void updateRating(Rating rating) {
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(rating);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)  transaction.rollback();
-            throw new RuntimeException("failed to update rating",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to update rating", e);
         }
     }
 
@@ -94,7 +91,7 @@ public class RatingDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Rating rating= session.get(Rating.class, id);
+            Rating rating = session.get(Rating.class, id);
             if (rating != null) {
                 session.remove(rating);
                 transaction.commit();
@@ -109,8 +106,8 @@ public class RatingDAO {
         List<Rating> ratings = getAllRatings();
         List<Rating> results = new ArrayList<Rating>();
 
-        for(Rating rating : ratings) {
-            if(rating.getItem_id().equals(itemId)) {
+        for (Rating rating : ratings) {
+            if (rating.getItem_id().equals(itemId)) {
                 results.add(rating);
             }
         }
@@ -121,9 +118,9 @@ public class RatingDAO {
     public double calculate_avg_rating(long item_id) {
 
         List<Rating> ratings = getRatingsByitemId(item_id);
-        double avg_rating = 0 ;
+        double avg_rating = 0;
 
-        for(Rating rating : ratings) {
+        for (Rating rating : ratings) {
             avg_rating += rating.getRating();
         }
         avg_rating /= ratings.size();

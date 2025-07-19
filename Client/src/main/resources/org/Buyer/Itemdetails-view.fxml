@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.layout.Layer?>
+<?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -16,7 +17,7 @@
 
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.ItemDetailsController">
    <children>
-      <Rectangle arcHeight="20.0" arcWidth="20.0" height="565.0" layoutX="44.0" layoutY="129.0" strokeType="INSIDE" strokeWidth="5.0" width="387.0">
+      <Rectangle arcHeight="20.0" arcWidth="20.0" height="565.0" layoutX="44.0" layoutY="129.0" strokeType="INSIDE" strokeWidth="5.0" width="393.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -49,9 +50,42 @@
                </stops>
             </LinearGradient>
          </stroke></Rectangle>
+      <Rectangle arcHeight="20.0" arcWidth="20.0" height="77.0" layoutX="447.0" layoutY="129.0" strokeType="INSIDE" strokeWidth="5.0" width="783.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color opacity="0.22740457952022552" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+         <stroke>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9473684430122375" green="0.9473684430122375" blue="0.9473684430122375" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.9138888716697693" blue="0.7129629850387573" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke>
+      </Rectangle>
       <ImageView fx:id="food_image" fitHeight="259.0" fitWidth="265.0" layoutX="77.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../asset/images/images%20(3).jpg" />
          </image>
       </ImageView>
       <Label fx:id="name_label" layoutX="77.0" layoutY="437.0" prefHeight="77.0" prefWidth="343.0">
@@ -93,26 +127,42 @@
          </font>
       </Label>
       <ListView layoutX="447.0" layoutY="215.0" prefHeight="585.0" prefWidth="783.0" />
-      <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="958.0" layoutY="29.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+      <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="525.0" layoutY="37.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
             <Image url="@../../asset/images/logo.png" />
          </image>
       </ImageView>
-      <Label layoutX="1021.0" layoutY="29.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
+      <Label layoutX="586.0" layoutY="37.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
          <font>
             <Font name="System Bold" size="34.0" />
          </font>
       </Label>
-      <Button layoutX="40.0" layoutY="736.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="380.0" styleClass="view-button" text="Share your rating and comment about this item">
+      <Button layoutX="48.0" layoutY="709.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="387.0" styleClass="view-button" text="Rate this Item">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Button>
-      <Layer layoutX="471.0" layoutY="147.0" />
-      <Label layoutX="460.0" layoutY="137.0" prefHeight="51.0" prefWidth="335.0" text="Comments and Rating" textFill="#e48f49">
+
+      <Label layoutX="473.0" layoutY="142.0" prefHeight="51.0" prefWidth="335.0" text="Comments and Rating" textFill="#ff0061">
          <font>
-            <Font name="System Bold" size="32.0" />
+            <Font name="System Bold" size="23.0" />
          </font>
       </Label>
+      <ProgressBar layoutX="1005.0" layoutY="159.0" prefHeight="18.0" prefWidth="190.0" progress="0.0">
+         <styleClass>
+            <String fx:value="card-container" />
+            <String fx:value="table-row-cell" />
+         </styleClass>
+      </ProgressBar>
+      <Label layoutX="886.0" layoutY="157.0" text="Rating Average">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="92.0" fitWidth="89.0" layoutX="1190.0" layoutY="16.0" opacity="0.21" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/hambergur.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

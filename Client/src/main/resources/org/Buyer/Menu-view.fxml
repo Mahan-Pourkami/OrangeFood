@@ -50,14 +50,6 @@
             <Font name="System Bold" size="33.0" />
          </font>
       </Label>
-      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="84.0" layoutY="72.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../asset/images/backicon.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
       <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="60.0" layoutY="363.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/logo.png" />
@@ -68,5 +60,13 @@
             <Font name="System Bold" size="32.0" />
          </font>
       </Label>
+      <ImageView fitHeight="47.0" fitWidth="40.0" layoutX="29.0" layoutY="31.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
    </children>
 </Pane>

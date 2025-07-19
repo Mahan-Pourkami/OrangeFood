@@ -222,7 +222,7 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
-    public boolean is_in_the_order (long item_id ) {
+    public boolean is_in_the_order(long item_id) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -254,10 +254,11 @@ public class BasketDAO implements AutoCloseable {
         }
 
     }
+
     public List<Basket> getBasketforvendor(Long vendorId) {
 
         List<Basket> baskets = getAllBasket();
-        List <Basket> result = new ArrayList<>();
+        List<Basket> result = new ArrayList<>();
 
         for (Basket basket : baskets) {
             if (basket.getRes_id() == vendorId && (basket.getStateofCart().equals(StateofCart.waiting) || basket.getStateofCart().equals(StateofCart.received) || basket.getStateofCart().equals(StateofCart.accepted))) {

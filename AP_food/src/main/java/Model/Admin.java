@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class Admin{
+public class Admin {
     @Getter
     private final String id;
     @Getter
@@ -15,9 +15,10 @@ public class Admin{
     private HashSet<User> users;
     private HashSet<Restaurant> restaurants;
     private HashSet<Restaurant> waitingRestaurants;
+
     //TODO delete the lists
-    public Admin(String id, String password){
-        if(isNullOrEmpty(id) || isNullOrEmpty(password)){
+    public Admin(String id, String password) {
+        if (isNullOrEmpty(id) || isNullOrEmpty(password)) {
             throw new IllegalArgumentException("id or password cannot be null or empty");
         }
         this.id = id;
@@ -26,18 +27,21 @@ public class Admin{
         this.users = new HashSet<>();
         this.restaurants = new HashSet<>();
     }
+
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
 
-    public void showStatus(){}
+    public void showStatus() {
+    }
 
 
-    public void askToConfirmRestaurant(Restaurant res){ //seller asks admin to confirm the restaurant by adding it to waiting list
+    public void askToConfirmRestaurant(Restaurant res) { //seller asks admin to confirm the restaurant by adding it to waiting list
         if (res == null) return;
         waitingRestaurants.add(res);
     }
-//    public void confirmRestaurant(String name){ //admin confirms the restaurant by making confirmation true and removing from list
+
+    //    public void confirmRestaurant(String name){ //admin confirms the restaurant by making confirmation true and removing from list
 //        if (name == null || name.trim().isEmpty()) return;
 //        Iterator<Restaurant> iterator = waitingRestaurants.iterator();
 //        while(iterator.hasNext()){
@@ -71,15 +75,17 @@ public class Admin{
 //        res.setConfirmed(false);
 //        waitingRestaurants.remove(res);
 //    }
-    public void addUser(User user){
-        if(user == null) return;
+    public void addUser(User user) {
+        if (user == null) return;
         users.add(user);
     }
-    public void removeUser(User user){
+
+    public void removeUser(User user) {
         if (user == null) return;
         users.remove(user);
     }
-    public void removeUser(String phone){
+
+    public void removeUser(String phone) {
         if (phone == null || phone.trim().isEmpty()) return;
         users.removeIf(user -> phone.equals(user.getPhone()));
     }

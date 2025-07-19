@@ -17,8 +17,8 @@ import java.io.*;
 
 public class WalletHandler implements HttpHandler {
 
-    BuyerDAO buyerDAO ;
-    TransactionTDAO transactionTDAO ;
+    BuyerDAO buyerDAO;
+    TransactionTDAO transactionTDAO;
 
     public WalletHandler(BuyerDAO buyerDAO, TransactionTDAO transactionTDAO) {
         this.buyerDAO = buyerDAO;
@@ -30,18 +30,18 @@ public class WalletHandler implements HttpHandler {
 
         String response = "";
         String methode = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
 
-        try{
+        try {
             switch (methode) {
 
-                case "GET" :
-                    response=handleGetRequest(exchange,paths);
+                case "GET":
+                    response = handleGetRequest(exchange, paths);
                     break;
 
 
                 case "POST":
-                    handlePostRequest(exchange,paths);
+                    handlePostRequest(exchange, paths);
                     break;
 
                 default:
@@ -50,26 +50,24 @@ public class WalletHandler implements HttpHandler {
                     exchange.sendResponseHeaders(405, response.length());
                     break;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             send_Response(exchange, response);
         }
     }
 
 
-    private String handleGetRequest(HttpExchange exchange,String [] paths) throws IOException {
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         int http_code = 200;
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject obj = new JSONObject();
 
-        if(paths.length == 3 && paths[2].equals("quantity")){
+        if (paths.length == 3 && paths[2].equals("quantity")) {
 
-            try{
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -86,8 +84,7 @@ public class WalletHandler implements HttpHandler {
                 obj.put("quantity", quantity);
                 response = obj.toString();
                 http_code = 200;
-            }
-            catch(OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -95,7 +92,7 @@ public class WalletHandler implements HttpHandler {
             exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(http_code, response.length());
 
-            try(OutputStream os = exchange.getResponseBody()) {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
         }
@@ -104,16 +101,16 @@ public class WalletHandler implements HttpHandler {
         return response;
     }
 
-    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handlePostRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject jsonObject = getJsonObject(exchange);
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length == 3 && paths[2].equals("top-up")){
+        if (paths.length == 3 && paths[2].equals("top-up")) {
 
-           try {
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -134,18 +131,15 @@ public class WalletHandler implements HttpHandler {
 
                 buyer.charge(amount);
                 buyerDAO.updateBuyer(buyer);
-                TransactionT transactionT = new TransactionT(0L,phone,"online","success");
+                TransactionT transactionT = new TransactionT(0L, phone, "online", "success");
                 transactionTDAO.saveTransaction(transactionT);
                 http_code = 200;
                 response = generate_msg("Your wallet toned up successfully");
+            } catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
-           catch(OrangeException e){
-               response = generate_error(e.getMessage());
-               http_code = e.http_code;
-           }
-        }
-
-        else {
+        } else {
 
             response = generate_error("endpoint not supported");
             http_code = 404;
@@ -164,8 +158,7 @@ public class WalletHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -182,14 +175,14 @@ public class WalletHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
     }
 
     public void send_Response(HttpExchange exchange, String response) throws IOException {
-        try(OutputStream os = exchange.getResponseBody()) {
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }

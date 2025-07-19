@@ -139,17 +139,20 @@
     -fx-background-color: #4CAF50; /* Green */
     -fx-text-fill: white;
     -fx-padding: 5 10 5 10;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
 }
 .view-button:hover {
 
     -fx-text-fill: white;
+    -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
 }
 
 .view-button:pressed {
 
     -fx-translate-y: 1px;
+    -fx-background-radius: 10px;
     -fx-translate-x: 1px;
 
 }

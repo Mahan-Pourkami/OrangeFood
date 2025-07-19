@@ -123,5 +123,13 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
+      <ImageView fitHeight="27.0" fitWidth="23.0" layoutX="1037.0" layoutY="160.0" onMousePressed="#handleDeleteImage" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/delete.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
    </children>
 </Pane>
