@@ -235,6 +235,7 @@ public class BasketDAO implements AutoCloseable {
             List<StateofCart> excludedStates = Arrays.asList(
                     StateofCart.acceptedbycourier,
                     StateofCart.rejected,
+                    StateofCart.received,
                     StateofCart.delivered
             );
 
@@ -253,8 +254,6 @@ public class BasketDAO implements AutoCloseable {
         }
 
     }
-
-
     public List<Basket> getBasketforvendor(Long vendorId) {
 
         List<Basket> baskets = getAllBasket();

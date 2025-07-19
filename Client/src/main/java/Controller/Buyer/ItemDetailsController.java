@@ -1,7 +1,6 @@
 package Controller.Buyer;
 
 import Controller.SceneManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

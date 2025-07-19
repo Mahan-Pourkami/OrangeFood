@@ -136,8 +136,6 @@
 }
 
 .view-button {
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 12px;
     -fx-background-color: #4CAF50; /* Green */
     -fx-text-fill: white;
     -fx-padding: 5 10 5 10;
@@ -145,9 +143,6 @@
 }
 .view-button:hover {
 
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 12px;
-    -fx-background-color: #186b1b;
     -fx-text-fill: white;
     -fx-padding: 5 10 5 10;
 }
