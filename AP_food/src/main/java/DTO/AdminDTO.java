@@ -19,9 +19,9 @@ public class AdminDTO {
 
     public static class Getusersresponse {
 
-        private String response ;
+        private String response;
 
-       public Getusersresponse(List<User> users) {
+        public Getusersresponse(List<User> users) {
 
             JSONArray jsonArray = new JSONArray();
 
@@ -30,17 +30,17 @@ public class AdminDTO {
                 JSONObject jsonObject = new JSONObject();
                 JSONObject bankinfo = new JSONObject();
 
-                bankinfo.put("bank_name" , user.getBankinfo().getBankName());
-                bankinfo.put("account_number" , user.getBankinfo().getAccountNumber());
+                bankinfo.put("bank_name", user.getBankinfo().getBankName());
+                bankinfo.put("account_number", user.getBankinfo().getAccountNumber());
 
                 jsonObject.put("id", user.getId());
-                jsonObject.put("full_name",user.getfullname());
-                jsonObject.put("phone",user.getPhone());
-                jsonObject.put("email",user.getEmail());
-                jsonObject.put("role",user.role.toString());
-                jsonObject.put("address",user.getAddress());
-                jsonObject.put("profileImageBase64",user.getProfile());
-                jsonObject.put("bankinfo",bankinfo);
+                jsonObject.put("full_name", user.getfullname());
+                jsonObject.put("phone", user.getPhone());
+                jsonObject.put("email", user.getEmail());
+                jsonObject.put("role", user.role.toString());
+                jsonObject.put("address", user.getAddress());
+                jsonObject.put("profileImageBase64", user.getProfile());
+                jsonObject.put("bankinfo", bankinfo);
                 jsonArray.put(jsonObject);
 
             }
@@ -56,18 +56,16 @@ public class AdminDTO {
 
     public static class Create_coupon_request {
 
-        private JSONObject jsonObject ;
+        private JSONObject jsonObject;
         private CouponDAO couponDAO;
 
-        private String code ;
-        private String type ;
-        private Number value ;
-        private int min_price ;
-        private int user_count ;
-        private String start_time ;
-        private String end_time ;
-
-
+        private String code;
+        private String type;
+        private Number value;
+        private int min_price;
+        private int user_count;
+        private String start_time;
+        private String end_time;
 
 
         public Create_coupon_request(JSONObject jsonObject, CouponDAO couponDAO) throws InvalidInputException {
@@ -75,12 +73,12 @@ public class AdminDTO {
             this.jsonObject = jsonObject;
             this.couponDAO = couponDAO;
 
-            String [] requierd = {"coupon_code" , "type" , "value" , "min_price" , "user_count"};
+            String[] requierd = {"coupon_code", "type", "value", "min_price", "user_count"};
 
-            for(String input : requierd){
+            for (String input : requierd) {
 
-                if(!this.jsonObject.has(input) || this.jsonObject.get(input) == null || this.jsonObject.get(input) == ""){
-                    throw  new InvalidInputException(input);
+                if (!this.jsonObject.has(input) || this.jsonObject.get(input) == null || this.jsonObject.get(input) == "") {
+                    throw new InvalidInputException(input);
                 }
             }
 
@@ -91,21 +89,19 @@ public class AdminDTO {
             this.min_price = jsonObject.getInt("min_price");
             this.user_count = jsonObject.getInt("user_count");
 
-            if(jsonObject.has("start_date") && jsonObject.has("end_date")){
+            if (jsonObject.has("start_date") && jsonObject.has("end_date")) {
 
                 this.start_time = jsonObject.getString("start_date");
                 this.end_time = jsonObject.getString("end_date");
-            }
-
-            else {
+            } else {
                 this.start_time = this.end_time = "";
             }
         }
 
         public void submit_coupon() throws DuplicatedItemexception {
-            Coupon coupon = new Coupon(this.code,this.value,this.type,this.min_price,this.user_count,this.start_time,this.end_time);
+            Coupon coupon = new Coupon(this.code, this.value, this.type, this.min_price, this.user_count, this.start_time, this.end_time);
 
-            if(couponDAO.findCouponByCode(code)!=null){
+            if (couponDAO.findCouponByCode(code) != null) {
                 throw new DuplicatedItemexception();
             }
 
@@ -113,13 +109,13 @@ public class AdminDTO {
         }
     }
 
-    public static class Create_coupon_response{
+    public static class Create_coupon_response {
 
-        private JSONObject jsonObject = new JSONObject() ;
+        private JSONObject jsonObject = new JSONObject();
         private CouponDAO couponDAO;
-        private String code ;
+        private String code;
 
-        public Create_coupon_response(CouponDAO couponDAO , String code) {
+        public Create_coupon_response(CouponDAO couponDAO, String code) {
             this.jsonObject = jsonObject;
             this.couponDAO = couponDAO;
             this.code = code;
@@ -129,49 +125,50 @@ public class AdminDTO {
 
             Coupon coupon = couponDAO.findCouponByCode(this.code);
 
-            jsonObject.put("id" , coupon.getId());
-            jsonObject.put("coupon_code" , coupon.getCode());
-            jsonObject.put("type" , coupon.getType());
-            jsonObject.put("value" , coupon.getValue());
-            jsonObject.put("min_price" , coupon.getMin_price());
-            jsonObject.put("user_counts",coupon.getUser_counts());
-            jsonObject.put("start_date" , coupon.getStart_time());
-            jsonObject.put("end_date" , coupon.getEnd_time());
+            jsonObject.put("id", coupon.getId());
+            jsonObject.put("coupon_code", coupon.getCode());
+            jsonObject.put("type", coupon.getType());
+            jsonObject.put("value", coupon.getValue());
+            jsonObject.put("min_price", coupon.getMin_price());
+            jsonObject.put("user_counts", coupon.getUser_counts());
+            jsonObject.put("start_date", coupon.getStart_time());
+            jsonObject.put("end_date", coupon.getEnd_time());
 
             return jsonObject.toString();
         }
 
     }
 
-    public static class Get_coupons_response{
+    public static class Get_coupons_response {
 
         private String response;
 
         public Get_coupons_response(List<Coupon> coupons) {
 
             JSONArray jsonArray = new JSONArray();
-            for(Coupon coupon : coupons){
+            for (Coupon coupon : coupons) {
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id" , coupon.getId());
-                jsonObject.put("coupon_code" , coupon.getCode());
-                jsonObject.put("type" , coupon.getType());
-                jsonObject.put("value" , coupon.getValue());
-                jsonObject.put("min_price" , coupon.getMin_price());
-                jsonObject.put("user_counts" , coupon.getUser_counts());
-                jsonObject.put("start_date" , coupon.getStart_time());
-                jsonObject.put("end_date" , coupon.getEnd_time());
+                jsonObject.put("id", coupon.getId());
+                jsonObject.put("coupon_code", coupon.getCode());
+                jsonObject.put("type", coupon.getType());
+                jsonObject.put("value", coupon.getValue());
+                jsonObject.put("min_price", coupon.getMin_price());
+                jsonObject.put("user_counts", coupon.getUser_counts());
+                jsonObject.put("start_date", coupon.getStart_time());
+                jsonObject.put("end_date", coupon.getEnd_time());
                 jsonArray.put(jsonObject);
 
             }
             this.response = jsonArray.toString();
         }
+
         public String getResponse() {
             return response;
         }
     }
 
-    public static class Update_coupon_request{
+    public static class Update_coupon_request {
 
         private String coupon_code;
         private String type;
@@ -181,48 +178,47 @@ public class AdminDTO {
         private String start_time;
         private String end_time;
 
-        public Update_coupon_request(JSONObject jsonObject, CouponDAO couponDAO , long id) throws IOException {
+        public Update_coupon_request(JSONObject jsonObject, CouponDAO couponDAO, long id) throws IOException {
 
 
             Coupon coupon = couponDAO.getCoupon(id);
 
-            String [] requierd = {"coupon_code" , "type" , "value" , "min_price" , "user_count"};
+            String[] requierd = {"coupon_code", "type", "value", "min_price", "user_count"};
 
-            for(String input : requierd){
+            for (String input : requierd) {
 
-                if(!jsonObject.has(input) || jsonObject.get(input) == null || jsonObject.get(input) == ""){
-                    throw  new InvalidInputException(input);
+                if (!jsonObject.has(input) || jsonObject.get(input) == null || jsonObject.get(input) == "") {
+                    throw new InvalidInputException(input);
                 }
             }
 
-            if(jsonObject.has("coupon_code"))this.coupon_code = jsonObject.getString("coupon_code");
+            if (jsonObject.has("coupon_code")) this.coupon_code = jsonObject.getString("coupon_code");
             else this.coupon_code = coupon.getCode();
 
-            if(jsonObject.has("type")) this.type = jsonObject.getString("type");
-            else this.type=coupon.getType().toString();
+            if (jsonObject.has("type")) this.type = jsonObject.getString("type");
+            else this.type = coupon.getType().toString();
 
-            if(jsonObject.has("value"))this.value = jsonObject.getNumber("value");
-            else this.value=coupon.getValue();
+            if (jsonObject.has("value")) this.value = jsonObject.getNumber("value");
+            else this.value = coupon.getValue();
 
-            if(jsonObject.has("min_price")) this.min_price = jsonObject.getInt("min_price");
-            else this.min_price=coupon.getMin_price();
+            if (jsonObject.has("min_price")) this.min_price = jsonObject.getInt("min_price");
+            else this.min_price = coupon.getMin_price();
 
-            if(jsonObject.has("user_count")) this.user_count = jsonObject.getInt("user_count");
-            else this.user_count=coupon.getUser_counts();
+            if (jsonObject.has("user_count")) this.user_count = jsonObject.getInt("user_count");
+            else this.user_count = coupon.getUser_counts();
 
-            if(jsonObject.has("start_date")) this.start_time = jsonObject.getString("start_date");
-            else this.start_time=coupon.getStart_time();
+            if (jsonObject.has("start_date")) this.start_time = jsonObject.getString("start_date");
+            else this.start_time = coupon.getStart_time();
 
-            if(jsonObject.has("end_date")) this.end_time = jsonObject.getString("end_date");
-            else this.end_time=coupon.getEnd_time();
+            if (jsonObject.has("end_date")) this.end_time = jsonObject.getString("end_date");
+            else this.end_time = coupon.getEnd_time();
 
 
-
-            if(coupon==null){
+            if (coupon == null) {
                 throw new NosuchItemException();
             }
 
-            if(couponDAO.findCouponByCode(coupon_code)!=null && !coupon_code.equals(coupon.getCode())){
+            if (couponDAO.findCouponByCode(coupon_code) != null && !coupon_code.equals(coupon.getCode())) {
                 throw new DuplicatedItemexception();
             }
 
@@ -237,46 +233,46 @@ public class AdminDTO {
         }
     }
 
-    public static class Get_approval_request{
+    public static class Get_approval_request {
 
         private String response;
         SellerDAO sellerDAO;
         CourierDAO courierDAO;
 
-        public Get_approval_request(SellerDAO sellerDAO , CourierDAO courierDAO) throws IOException {
+        public Get_approval_request(SellerDAO sellerDAO, CourierDAO courierDAO) throws IOException {
 
             this.sellerDAO = sellerDAO;
             this.courierDAO = courierDAO;
             JSONArray jsonArray = new JSONArray();
 
-            List<Seller> sellers_list= this.sellerDAO.getAllSellers();
-            List<Courier> couriers_list= this.courierDAO.getAllCouriers();
+            List<Seller> sellers_list = this.sellerDAO.getAllSellers();
+            List<Courier> couriers_list = this.courierDAO.getAllCouriers();
 
-            for(Courier courier : couriers_list){
+            for (Courier courier : couriers_list) {
                 JSONObject jsonObject = new JSONObject();
-                if(courier.getStatue().equals(Userstatue.requested)){
+                if (courier.getStatue().equals(Userstatue.requested)) {
 
-                    jsonObject.put("phone" , courier.getPhone());
-                    jsonObject.put("full_name" , courier.getfullname());
-                    jsonObject.put("address" , courier.getAddress());
-                    jsonObject.put("role" , courier.role.toString());
-                    jsonObject.put("id" , courier.getId());
+                    jsonObject.put("phone", courier.getPhone());
+                    jsonObject.put("full_name", courier.getfullname());
+                    jsonObject.put("address", courier.getAddress());
+                    jsonObject.put("role", courier.role.toString());
+                    jsonObject.put("id", courier.getId());
 
                     jsonArray.put(jsonObject);
                 }
 
 
             }
-            for (Seller seller : sellers_list){
+            for (Seller seller : sellers_list) {
                 JSONObject jsonObject = new JSONObject();
 
-                if(seller.getStatue().equals(Userstatue.requested)){
+                if (seller.getStatue().equals(Userstatue.requested)) {
 
-                    jsonObject.put("phone" , seller.getPhone());
-                    jsonObject.put("full_name" , seller.getfullname());
-                    jsonObject.put("address" , seller.getAddress());
-                    jsonObject.put("role" , seller.role.toString());
-                    jsonObject.put("id" , seller.getId());
+                    jsonObject.put("phone", seller.getPhone());
+                    jsonObject.put("full_name", seller.getfullname());
+                    jsonObject.put("address", seller.getAddress());
+                    jsonObject.put("role", seller.role.toString());
+                    jsonObject.put("id", seller.getId());
 
                     jsonArray.put(jsonObject);
                 }
@@ -293,7 +289,7 @@ public class AdminDTO {
     }
 
 
-    public static class Get_Restaurants_response{
+    public static class Get_Restaurants_response {
 
         private String response;
         private RestaurantDAO restaurantDAO;
@@ -302,19 +298,20 @@ public class AdminDTO {
 
             JSONArray jsonArray = new JSONArray();
             List<Restaurant> restaurants = restaurantDAO.getAllRestaurants();
-            for(Restaurant restaurant : restaurants){
+            for (Restaurant restaurant : restaurants) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id" , restaurant.getId());
-                jsonObject.put("name" , restaurant.getName());
-                jsonObject.put("address" , restaurant.getAddress());
-                jsonObject.put("phone" , restaurant.getPhone());
-                jsonObject.put("owner_phone",restaurant.getSeller().getPhone());
-                jsonObject.put("owner_name" , restaurant.getSeller().getfullname());
+                jsonObject.put("id", restaurant.getId());
+                jsonObject.put("name", restaurant.getName());
+                jsonObject.put("address", restaurant.getAddress());
+                jsonObject.put("phone", restaurant.getPhone());
+                jsonObject.put("owner_phone", restaurant.getSeller().getPhone());
+                jsonObject.put("owner_name", restaurant.getSeller().getfullname());
                 jsonArray.put(jsonObject);
             }
 
             this.response = jsonArray.toString();
         }
+
         public String getResponse() {
             return response;
         }

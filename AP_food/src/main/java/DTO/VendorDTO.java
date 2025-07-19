@@ -18,32 +18,30 @@ import java.util.*;
 public class VendorDTO {
 
 
-
     public static class Get_Vendors {
 
         private RestaurantDAO restaurantDAO;
         private BuyerDAO buyerDAO;
-        private String phone ;
+        private String phone;
         private JSONObject jsonObject;
-        private String response ;
+        private String response;
 
-        public Get_Vendors(JSONObject json , RestaurantDAO restaurantDAO , FoodDAO foodDAO , BuyerDAO buyerDAO , String phone) throws InvalidInputException {
+        public Get_Vendors(JSONObject json, RestaurantDAO restaurantDAO, FoodDAO foodDAO, BuyerDAO buyerDAO, String phone) throws InvalidInputException {
 
             this.restaurantDAO = restaurantDAO;
             this.jsonObject = json;
             this.phone = phone;
-            this.buyerDAO=buyerDAO;
+            this.buyerDAO = buyerDAO;
 
-            if(!jsonObject.has("search")){
+            if (!jsonObject.has("search")) {
                 throw new InvalidInputException("Search");
             }
 
             List<String> keywords = new ArrayList<>();
 
-            if(jsonObject.has("keywords")){
-               keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
+            if (jsonObject.has("keywords")) {
+                keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
             }
-
 
 
             Set<Restaurant> vendors = restaurantDAO.findbyfilters(jsonObject.getString("search"));
@@ -53,7 +51,7 @@ public class VendorDTO {
                 Restaurant r = iterator.next();
                 List<Food> foods = foodDAO.getFoodsByRestaurantId(r.getId());
 
-                if(foods.isEmpty()){
+                if (foods.isEmpty()) {
                     iterator.remove();
                     continue;
                 }
@@ -87,23 +85,24 @@ public class VendorDTO {
 
             Buyer buyer = buyerDAO.getBuyer(phone);
 
-            for(Restaurant r : vendors){
+            for (Restaurant r : vendors) {
 
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("id", r.getId());
                 jsonObject1.put("name", r.getName());
                 jsonObject1.put("address", r.getAddress());
                 jsonObject1.put("phone", r.getPhone());
-                jsonObject1.put("tax_fee",r.getTax_fee());
-                jsonObject1.put("additional_fee",r.getAdditional_fee());
-                jsonObject1.put("logoBase64",r.getLogoUrl());
-                jsonObject1.put("favorite :" , buyer.getfavorite_restaurants().contains(r.getId())? "yes" :"no" );
+                jsonObject1.put("tax_fee", r.getTax_fee());
+                jsonObject1.put("additional_fee", r.getAdditional_fee());
+                jsonObject1.put("logoBase64", r.getLogoUrl());
+                jsonObject1.put("favorite :", buyer.getfavorite_restaurants().contains(r.getId()) ? "yes" : "no");
                 jsonArray.put(jsonObject1);
 
             }
 
             this.response = jsonArray.toString();
         }
+
         public String getResponse() {
             return response;
         }
@@ -195,20 +194,20 @@ public class VendorDTO {
 
         private List<String> menu_titles;
 
-        private Map<String,List<Food>> items = new HashMap<>();
+        private Map<String, List<Food>> items = new HashMap<>();
 
 
-        public See_vendor_menu( RestaurantDAO restaurantDAO, FoodDAO foodDAO , long res_id) throws InvalidInputException {
+        public See_vendor_menu(RestaurantDAO restaurantDAO, FoodDAO foodDAO, long res_id) throws InvalidInputException {
 
 
             Restaurant restaurant = restaurantDAO.get_restaurant(res_id);
-            this.setVendor(new Get_Restaurants(res_id,restaurantDAO));
+            this.setVendor(new Get_Restaurants(res_id, restaurantDAO));
             this.setMenu_titles(restaurant.getMenu_titles());
 
             for (String menu_title : getMenu_titles()) {
 
-                List<Food> foods= foodDAO.getFoodsByMenu(res_id,menu_title);
-                getItems().put(menu_title,foods);
+                List<Food> foods = foodDAO.getFoodsByMenu(res_id, menu_title);
+                getItems().put(menu_title, foods);
 
             }
         }

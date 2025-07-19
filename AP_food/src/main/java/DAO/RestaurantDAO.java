@@ -16,15 +16,16 @@ import java.util.Set;
 public class RestaurantDAO {
 
     private final SessionFactory sessionFactory;
+
     public RestaurantDAO() {
 
-    this.sessionFactory = new Configuration().configure()
-            .addAnnotatedClass(Restaurant.class)
-            .addAnnotatedClass(Food.class)
-            .addAnnotatedClass(Seller.class)
-            .addAnnotatedClass(Bankinfo.class)
-            .addAnnotatedClass(Basket.class)
-            .buildSessionFactory();
+        this.sessionFactory = new Configuration().configure()
+                .addAnnotatedClass(Restaurant.class)
+                .addAnnotatedClass(Food.class)
+                .addAnnotatedClass(Seller.class)
+                .addAnnotatedClass(Bankinfo.class)
+                .addAnnotatedClass(Basket.class)
+                .buildSessionFactory();
     }
 
     public void saveRestaurant(Restaurant restaurant) {
@@ -34,8 +35,7 @@ public class RestaurantDAO {
             transaction = session.beginTransaction();
             session.persist(restaurant);
             transaction.commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -44,15 +44,14 @@ public class RestaurantDAO {
     }
 
     public void updateRestaurant(Restaurant restaurant) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(restaurant);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to update Restaurant",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to update Restaurant", e);
         }
     }
 
@@ -63,14 +62,12 @@ public class RestaurantDAO {
             Restaurant res = session.get(Restaurant.class, id);
             if (res != null) {
                 return res;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get seller",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get seller", e);
         }
     }
 
@@ -100,16 +97,28 @@ public class RestaurantDAO {
 
     public Set<Restaurant> findbyfilters(String name) {
 
-        List<Restaurant> vendors = getAllRestaurants();
-        Set<Restaurant> filteredVendors = new HashSet<Restaurant>();
-        for (Restaurant vendor : vendors) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
-            if(vendor.getName().toLowerCase().contains(name.toLowerCase()) || vendor.getAddress().toLowerCase().contains(name.toLowerCase())) {
-                filteredVendors.add(vendor);
+            String hql = "SELECT DISTINCT r FROM Restaurant r " +
+                    "WHERE LOWER(r.name) LIKE LOWER(:searchTerm) " +
+                    "OR LOWER(r.address) LIKE LOWER(:searchTerm)";
+
+            Set<Restaurant> result = new HashSet<>(
+                    session.createQuery(hql, Restaurant.class)
+                            .setParameter("searchTerm", "%" + name + "%")
+                            .getResultList()
+            );
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
         }
-
-        return filteredVendors;
     }
 
 }

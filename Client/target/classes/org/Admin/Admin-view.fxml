@@ -181,17 +181,7 @@
             <Image url="@../../asset/images/carticon.png" />
          </image>
       </ImageView>
-      <Label layoutX="511.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Orders :" textFill="#ffffffb9">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label layoutX="511.0" layoutY="767.0" prefHeight="30.0" prefWidth="199.0" text="Today's Orders :" textFill="#ffffffb9">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="835.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="835.0" layoutY="507.0" onMousePressed="#handleGetTransactions" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -206,16 +196,6 @@
             <Image url="@../../asset/images/transactionicon.png" />
          </image>
       </ImageView>
-      <Label layoutX="852.0" layoutY="727.0" prefHeight="30.0" prefWidth="199.0" text="Number of Transactions :" textFill="#ffffffb9">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label layoutX="852.0" layoutY="767.0" prefHeight="30.0" prefWidth="199.0" text="Todays Transactions :" textFill="#ffffffb9">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
       <ImageView fitHeight="59.0" fitWidth="56.0" layoutX="129.0" layoutY="18.0" nodeOrientation="INHERIT" onMousePressed="#handlehomebutton" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
             <Image url="@../../asset/images/logo.png" />

@@ -11,69 +11,83 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 
-public class ProfileController{
+public class ProfileController {
 
     @FXML
-    TextField phonefield ;
+    TextField phonefield;
 
     @FXML
-    TextField namefield ;
+    TextField namefield;
 
     @FXML
-    TextField emailfield ;
+    TextField emailfield;
 
     @FXML
-    TextField addfield ;
+    TextField addfield;
 
     @FXML
-    TextField banknamefield ;
+    TextField banknamefield;
 
     @FXML
     TextField accountnumberfield;
 
     @FXML
-    Button profchooser ;
+    Button profchooser;
 
     @FXML
-    Button updateprof ;
+    Button updateprof;
 
     @FXML
-    ImageView profview ;
+    ImageView profview;
 
     @FXML
-    Label errorlabel ;
+    Label errorlabel;
 
-    private String role ;
+    private String role;
 
-    Image default_prof = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/contact.png")),640,640,true,true);
-
+    Image default_prof = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/asset/images/contact.png")), 640, 640, true, true);
+    URL resourceUrl = getClass().getResource("/asset/images/contact.png");
     private String prof;
 
     @FXML
     void initialize() throws IOException {
 
-        URL get_prof = new URL(Methods.url+"auth/profile");
+        phonefield.setEditable(false);
+        profview.setFitHeight(150);
+        profview.setFitWidth(150);
+        Rectangle clip = new Rectangle(
+                profview.getFitWidth(),
+                profview.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        profview.setClip(clip);
+
+        URL get_prof = new URL(Methods.url + "auth/profile");
         HttpURLConnection connection = (HttpURLConnection) get_prof.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
-        connection.setRequestProperty("Authorization", "Bearer "+token);
+        connection.setRequestProperty("Authorization", "Bearer " + token);
 
         int httpCode = connection.getResponseCode();
 
         JSONObject obj = Methods.getJsonResponse(connection);
 
-        if(httpCode == 200) {
+        if (httpCode == 200) {
 
 
             phonefield.setText(obj.getString("phone"));
@@ -87,7 +101,7 @@ public class ProfileController{
             prof = prof_path;
             role = obj.getString("role");
 
-           try {
+            try {
                 if (prof_path.isEmpty() || prof_path == null) {
 
                     profview.setImage(default_prof);
@@ -95,13 +109,11 @@ public class ProfileController{
                     Image image = new Image((prof_path), 640, 640, true, true);
                     profview.setImage(image);
                 }
-            }
-           catch(IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
 
-               profview.setImage(default_prof);
-           }
-        }
-        else SceneManager.showErrorAlert("Error", obj.getString("error"));
+                profview.setImage(default_prof);
+            }
+        } else SceneManager.showErrorAlert("Error", obj.getString("error"));
 
     }
 
@@ -122,8 +134,8 @@ public class ProfileController{
 
         if (selectedFile != null) {
             try {
-                prof  = selectedFile.getAbsolutePath();
-                Image image = new Image(selectedFile.toURI().toString(),640,640,true,true);
+                prof = selectedFile.getAbsolutePath();
+                Image image = new Image(selectedFile.toURI().toString(), 640, 640, true, true);
                 profview.setImage(image);
 
                 profview.setPreserveRatio(true);
@@ -134,9 +146,16 @@ public class ProfileController{
     }
 
     @FXML
+    void handleDeleteImage() throws URISyntaxException {
+
+        profview.setImage(default_prof);
+        prof = new File(resourceUrl.toURI()).getAbsolutePath();
+    }
+
+    @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        try{
+        try {
             if (role.equals("buyer")) {
                 FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -150,16 +169,14 @@ public class ProfileController{
                 Parent root = users.load();
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
-            }
-            else if (role.equals("courier")) {
+            } else if (role.equals("courier")) {
                 FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Parent root = users.load();
                 Scene scene = new Scene(root);
                 SceneManager.fadeScene(stage, scene);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             redirectToLogin(event);
         }
     }
@@ -178,31 +195,28 @@ public class ProfileController{
         obj.put("profileImageBase64", prof);
         obj.put("bank_info", bank_info);
 
-        URL update_prof = new URL(Methods.url+"auth/profile");
+        URL update_prof = new URL(Methods.url + "auth/profile");
         HttpURLConnection connection = (HttpURLConnection) update_prof.openConnection();
         connection.setRequestMethod("PUT");
         String token = Methods.Get_saved_token();
-        connection.setRequestProperty("Authorization", "Bearer "+token);
+        connection.setRequestProperty("Authorization", "Bearer " + token);
 
         connection.setDoOutput(true);
 
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = obj.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
-        }
-
-        catch (Exception e) {
-            SceneManager.showErrorAlert("Connection failed" , "Cannot connect to server");
+        } catch (Exception e) {
+            SceneManager.showErrorAlert("Connection failed", "Cannot connect to server");
             control_back(event);
         }
 
         JSONObject result = Methods.getJsonResponse(connection);
 
         int httpCode = connection.getResponseCode();
-        if(httpCode == 200) {
+        if (httpCode == 200) {
             refresh(event);
-        }
-        else {
+        } else {
             errorlabel.setText(result.getString("error"));
         }
     }

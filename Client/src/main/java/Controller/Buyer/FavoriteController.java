@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,6 +89,13 @@ public class FavoriteController {
         label.setStyle("-fx-font-weight: bold ; -fx-font-size: 24px;");
         image.setFitHeight(100);
         image.setFitWidth(100);
+        Rectangle clip = new Rectangle(
+                image.getFitWidth(),
+                image.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        image.setClip(clip);
         image.setPreserveRatio(true);
 
         Button delete = new Button("Delete from Favorites");

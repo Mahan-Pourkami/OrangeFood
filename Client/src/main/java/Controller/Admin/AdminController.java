@@ -167,6 +167,17 @@ public class AdminController {
 
     }
 
+    @FXML
+    void handleGetTransactions(MouseEvent event) throws IOException {
+
+        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Transactions-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = vendors.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+
+    }
+
 
 
 }

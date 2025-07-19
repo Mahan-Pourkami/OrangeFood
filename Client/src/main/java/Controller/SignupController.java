@@ -206,7 +206,7 @@ public class SignupController {
     void initialize() {
 
         profview.setImage(default_prof);
-          rolechooser.getItems().addAll("buyer", "seller", "courier");
+        rolechooser.getItems().addAll("buyer", "seller", "courier");
         rolechooser.getSelectionModel().selectFirst();
         profview.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {

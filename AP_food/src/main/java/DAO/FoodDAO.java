@@ -15,7 +15,8 @@ import java.util.List;
 
 public class FoodDAO {
 
-    final private  SessionFactory sessionFactory;
+    final private SessionFactory sessionFactory;
+
     public FoodDAO() {
         sessionFactory = new Configuration().configure().
                 addAnnotatedClass(Food.class)
@@ -29,66 +30,59 @@ public class FoodDAO {
 
     public void saveFood(Food food) {
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(food);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to save food",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to save food", e);
         }
     }
 
     public void updateFood(Food food) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(food);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to update food",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to update food", e);
         }
     }
 
     public void deleteFood(Long id) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Food food = session.get(Food.class, id);
-            if(food!=null) {
+            if (food != null) {
                 session.remove(food);
                 transaction.commit();
-            }
-            else {
+            } else {
                 throw new RuntimeException("food not found");
             }
-        }
-
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to delete food",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to delete food", e);
         }
     }
 
     public boolean existFood(Long id) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Food food = session.get(Food.class, id);
-            if(food!=null) {
+            if (food != null) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to find exist food",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to find exist food", e);
         }
     }
 
@@ -99,19 +93,17 @@ public class FoodDAO {
             Food food = session.get(Food.class, id);
             if (food != null) {
                 return food;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get food",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get food", e);
         }
     }
 
 
-    public List<Food> getAllFoods(){
+    public List<Food> getAllFoods() {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -135,21 +127,31 @@ public class FoodDAO {
 
     public List<Food> getFoodsByRestaurantId(Long restaurantId) {
 
-        List<Food> result = new ArrayList<Food>();
-        List<Food> foods = getAllFoods();
-        for (Food food : foods) {
-            if(food.getRestaurant().equals(restaurantId)) {
-                result.add(food);
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            String hql = "FROM Food f WHERE f.restaurantId = :restaurantId";
+
+            List<Food> result = session.createQuery(hql, Food.class)
+                    .setParameter("restaurantId", restaurantId)
+                    .getResultList();
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
         }
-        return result;
     }
 
     public List<Food> getFoodsByMenu(Long restaurantId, String menu_title) {
-        List <Food> result = new ArrayList<>();
+        List<Food> result = new ArrayList<>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
-            if(food.getRestaurant().equals(restaurantId) && food.getMenuTitle().contains(menu_title)) {
+            if (food.getRestaurant().equals(restaurantId) && food.getMenuTitle().contains(menu_title)) {
                 result.add(food);
             }
         }
@@ -157,10 +159,10 @@ public class FoodDAO {
     }
 
     public List<Food> foodsnotinmenu(Long restaurantId, String menu_title) {
-        List <Food> result = new ArrayList<>();
+        List<Food> result = new ArrayList<>();
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
-            if(food.getRestaurant().equals(restaurantId) && !food.getMenuTitle().contains(menu_title)) {
+            if (food.getRestaurant().equals(restaurantId) && !food.getMenuTitle().contains(menu_title)) {
                 result.add(food);
             }
         }
@@ -168,36 +170,36 @@ public class FoodDAO {
     }
 
 
-    public Food findFoodByName(String name,long restaurantId) {
+    public Food findFoodByName(String name, long restaurantId) {
         List<Food> foods = getAllFoods();
 
         for (Food food : foods) {
-            if(food.getName().equals(name) && food.getRestaurantId().equals(restaurantId)) {
+            if (food.getName().equals(name) && food.getRestaurantId().equals(restaurantId)) {
                 return food;
             }
         }
         return null;
     }
 
-    public void delet_from_menu(String menu_title , long restaurantId) {
+    public void delet_from_menu(String menu_title, long restaurantId) {
         List<Food> foods = getAllFoods();
         for (Food food : foods) {
-            if(food.getMenuTitle()!=null && food.getMenuTitle().contains(menu_title) && food.getRestaurantId().equals(restaurantId)) {
+            if (food.getMenuTitle() != null && food.getMenuTitle().contains(menu_title) && food.getRestaurantId().equals(restaurantId)) {
                 food.removeMenuTitle(menu_title);
                 updateFood(food);
             }
         }
     }
 
-    public void add_to_cart(long foodid , int quantity) throws ForbiddenroleException {
+    public void add_to_cart(long foodid, int quantity) throws ForbiddenroleException {
 
         Food food = getFood(foodid);
 
-        if(food.getSupply() - quantity < 0) {
+        if (food.getSupply() - quantity < 0) {
             throw new ForbiddenroleException("Insufficient food supply");
         }
 
-        food.setSupply(food.getSupply()-quantity);
+        food.setSupply(food.getSupply() - quantity);
         updateFood(food);
     }
 
@@ -207,11 +209,6 @@ public class FoodDAO {
             sessionFactory.close();
         }
     }
-
-
-
-
-
 
 
 }

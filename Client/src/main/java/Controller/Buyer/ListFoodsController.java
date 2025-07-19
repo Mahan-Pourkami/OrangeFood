@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +43,10 @@ public class ListFoodsController {
        ListFoodsController.res_id = res_id;
        ListFoodsController.menu_title = menu_title;
 
+   }
+
+   public static String get_menu_title() {
+       return menu_title;
    }
 
    @FXML
@@ -81,37 +86,52 @@ public class ListFoodsController {
        HBox card = new HBox(10);
        card.setPadding(new Insets(18));
 
-
        ImageView image = new ImageView(food.getLogo());
        image.setFitHeight(150);
        image.setFitWidth(150);
+       Rectangle clip = new Rectangle(
+               image.getFitWidth(),
+               image.getFitHeight()
+       );
+       clip.setArcWidth(20);
+       clip.setArcHeight(20);
+       image.setClip(clip);
 
        VBox textVBox = new VBox(10);
        Label name = new Label(food.getName());
        name.setStyle("-fx-font-weight: bold; -fx-font-size: 30px;");
        Label description = new Label(food.getDescription());
-       description.setStyle("-fx-text-fill: #8d8383; -fx-font-size: 15px;");
+       description.setStyle("-fx-text-fill: #8d8383; -fx-font-size: 15px; -fx-font-weight: bold;");
        name.setPadding(new Insets(20));
        description.setPadding(new Insets(5, 20, 5, 20));
        textVBox.getChildren().addAll(name, description);
 
 
-       Label price = new Label(food.getPrice() + "$");
-       Button add = new Button("Add to Cart");
-       add.getStyleClass().add("cart-button");
-       add.setPadding(new Insets(40, 20, 20, 40));
-       price.setStyle("-fx-font-weight: bold; -fx-font-size: 40px; -fx-text-fill: #d15314");
+       Label price = new Label("price :"+food.getPrice() + "$");
+       price.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #900a53");
        price.setPadding(new Insets(20));
        VBox vbox3 = new VBox(10);
        vbox3.setPadding(new Insets(20));
-       vbox3.getChildren().addAll(price,add);
-
+       vbox3.getChildren().addAll(price);
 
        Region spacer = new Region();
        HBox.setHgrow(spacer, Priority.ALWAYS);
 
        card.getChildren().addAll(image, textVBox, spacer,vbox3);
        card.setSpacing(10);
+       card.setOnMouseClicked((MouseEvent event) -> {
+           ItemDetailsController.setItemId(food.getId());
+           FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
+           Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+           Parent root = null;
+           try {
+               root = users.load();
+           } catch (IOException e) {
+               throw new RuntimeException(e);
+           }
+           Scene scene = new Scene(root);
+           SceneManager.fadeScene(stage, scene);
+       });
 
        return card;
    }

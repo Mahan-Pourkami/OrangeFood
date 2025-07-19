@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * @author : Mahan Pourkami
  * @data : 11:49 am ~ 16/05/2025
- *
  */
 
 
@@ -25,7 +24,7 @@ public class BuyerDAO {
     public BuyerDAO() {
         this.sessionFactory = new Configuration()
                 .configure()
-                 .addAnnotatedClass(Buyer.class)
+                .addAnnotatedClass(Buyer.class)
                 .addAnnotatedClass(Food.class)
                 .addAnnotatedClass(Basket.class)
                 .addAnnotatedClass(Bankinfo.class)
@@ -38,8 +37,6 @@ public class BuyerDAO {
     /**
      * @param buyer
      * @Save : create a new object and add it to the tables
-     *
-     *
      */
     public void saveBuyer(Buyer buyer) {
         Transaction transaction = null;
@@ -57,7 +54,6 @@ public class BuyerDAO {
     /**
      * @param buyer
      * @operation : update the informations of a buyer in the tables
-     *
      */
     public void updateBuyer(Buyer buyer) {
         Transaction transaction = null;
@@ -75,8 +71,6 @@ public class BuyerDAO {
     /**
      * @param phone
      * @operation : delete the buyers from buyer's table & user's table if it is existed
-     *
-     *
      */
 
     public void deleteBuyer(String phone) {
@@ -95,10 +89,10 @@ public class BuyerDAO {
             throw new RuntimeException("Failed to delete buyer", e);
         }
     }
+
     /**
      * @param phone
      * @return true if the buyers is existed
-     *
      */
     public boolean buyerExists(String phone) {
         Buyer buyer = sessionFactory.getCurrentSession().get(Buyer.class, phone);
@@ -107,11 +101,12 @@ public class BuyerDAO {
 
     public Buyer getBuyer(String id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.get(Buyer.class,id);
+            return session.get(Buyer.class, id);
         } catch (Exception e) {
             throw new RuntimeException("Failed to get buyer", e);
         }
     }
+
     public List<Buyer> getAllBuyers() {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -136,7 +131,6 @@ public class BuyerDAO {
 
     /**
      * @operation : close the object that we have made from DAO
-     *
      */
     public void close() {
         if (sessionFactory != null) {

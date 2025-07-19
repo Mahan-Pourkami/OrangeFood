@@ -25,15 +25,16 @@ new nethods : parseQueryParams + getBasketJsonObject
  */
 public class AdminHandler implements HttpHandler {
 
-    UserDAO userDAO ;
-    SellerDAO sellerDAO ;
-    CourierDAO courierDAO ;
-    CouponDAO couponDAO ;
-    RestaurantDAO restaurantDAO ;
-    FoodDAO foodDAO ;
-    BasketDAO basketDAO ;
+    UserDAO userDAO;
+    SellerDAO sellerDAO;
+    CourierDAO courierDAO;
+    CouponDAO couponDAO;
+    RestaurantDAO restaurantDAO;
+    FoodDAO foodDAO;
+    BasketDAO basketDAO;
+    TransactionTDAO transactiontDAO;
 
-    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO,FoodDAO foodDAO,BasketDAO basketDAO) {
+    public AdminHandler(UserDAO userDAO, SellerDAO sellerDAO, CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO, BasketDAO basketDAO, TransactionTDAO transactionTDAO) {
         this.userDAO = userDAO;
         this.sellerDAO = sellerDAO;
         this.courierDAO = courierDAO;
@@ -41,42 +42,43 @@ public class AdminHandler implements HttpHandler {
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
         this.basketDAO = basketDAO;
+        this.transactiontDAO = transactionTDAO;
     }
 
 
     @Override
-    public void handle (HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
 
-    String response = "";
-    String method = exchange.getRequestMethod();
-    String []paths = exchange.getRequestURI().getPath().split("/");
+        String response = "";
+        String method = exchange.getRequestMethod();
+        String[] paths = exchange.getRequestURI().getPath().split("/");
 
-        try{
+        try {
             switch (method) {
                 case "GET":
 
                     System.out.println("GET request received");
-                    response = handleGetRequest(exchange,paths);
+                    response = handleGetRequest(exchange, paths);
                     break;
 
                 case "POST":
                     System.out.println("POST request received");
-                    response = handlePostRequest(exchange,paths);
+                    response = handlePostRequest(exchange, paths);
                     break;
 
                 case "PUT":
                     System.out.println("PUT request received");
-                    response = handlePutRequest(exchange,paths);
+                    response = handlePutRequest(exchange, paths);
                     break;
 
                 case "DELETE":
                     System.out.println("DELETE request received");
-                    response = handleDeleteRequest(exchange,paths);
+                    response = handleDeleteRequest(exchange, paths);
                     break;
 
-                case "PATCH" :
+                case "PATCH":
                     System.out.println("PATCH request received");
-                    response = handlePatchRequest(exchange,paths);
+                    response = handlePatchRequest(exchange, paths);
                     break;
 
                 default:
@@ -85,27 +87,24 @@ public class AdminHandler implements HttpHandler {
                     exchange.getResponseHeaders().set("Content-Type", "application/json");
                     exchange.sendResponseHeaders(405, response.getBytes().length);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        finally {
-            send_Response(exchange,response);
+        } finally {
+            send_Response(exchange, response);
         }
     }
 
 
-    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handlePostRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         int http_code = 200;
         JSONObject json = getJsonObject(exchange);
 
 
-        if(paths.length == 3 && paths[2].equals("coupons")){
+        if (paths.length == 3 && paths[2].equals("coupons")) {
 
-            try{
+            try {
                 String token = JwtUtil.get_token_from_server(exchange);
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
@@ -116,18 +115,14 @@ public class AdminHandler implements HttpHandler {
 
                 AdminDTO.Create_coupon_request req = new AdminDTO.Create_coupon_request(json, couponDAO);
                 req.submit_coupon();
-                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO,json.getString("coupon_code"));
+                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, json.getString("coupon_code"));
                 response = res.getResponse();
                 http_code = 201;
-            }
-
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
 
                 response = generate_error("Invalid date");
                 http_code = 400;
-            }
-
-            catch (OrangeException e){
+            } catch (OrangeException e) {
 
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
@@ -143,20 +138,20 @@ public class AdminHandler implements HttpHandler {
         }
 
 
-        return  response;
+        return response;
     }
 
 
-    private String handlePutRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handlePutRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         int http_code = 200;
         JSONObject jsonObject = getJsonObject(exchange);
         String token = JwtUtil.get_token_from_server(exchange);
 
-        if(paths.length == 4 && paths[2].equals("coupons")){
+        if (paths.length == 4 && paths[2].equals("coupons")) {
 
-            try{
+            try {
                 Long coupon_id = Long.parseLong(paths[3]);
 
                 if (!JwtUtil.validateToken(token)) {
@@ -172,20 +167,17 @@ public class AdminHandler implements HttpHandler {
                 response = update_res.getResponse();
                 http_code = 200;
 
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid input");
                 http_code = 400;
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
 
-        }
-        else if(paths.length==5 && paths[2].equals("users") && paths[4].equals("status")){
+        } else if (paths.length == 5 && paths[2].equals("users") && paths[4].equals("status")) {
 
-            try{
+            try {
                 if (!jsonObject.has("status")) {
                     throw new InvalidInputException("status");
                 }
@@ -202,7 +194,7 @@ public class AdminHandler implements HttpHandler {
                 String phone = "09" + paths[3];
                 User user = userDAO.getUserByPhone(phone);
 
-                if (user == null ) {
+                if (user == null) {
                     throw new NosuchItemException("User not found");
                 }
 
@@ -210,37 +202,30 @@ public class AdminHandler implements HttpHandler {
                     Seller seller = sellerDAO.getSeller(phone);
                     seller.setStatue(status);
 
-                    if(status.equals("approved")) {
+                    if (status.equals("approved")) {
                         sellerDAO.updateSeller(seller);
-                    }
-                    else {
+                    } else {
                         sellerDAO.deleteSeller(phone);
                     }
-                }
-                else if (user.role.equals(Role.courier)) {
+                } else if (user.role.equals(Role.courier)) {
 
                     Courier courier = courierDAO.getCourier(phone);
                     courier.setStatue(status);
-                    if(status.equals("approved")) {
+                    if (status.equals("approved")) {
                         courierDAO.updateCourier(courier);
+                    } else {
+                        courierDAO.deleteCourier(phone);
                     }
-                    else {
-                       courierDAO.deleteCourier(phone);
-                    }
-                }
-
-                else throw new ForbiddenroleException();
+                } else throw new ForbiddenroleException();
 
                 response = generate_msg("Status of User :" + paths[3] + " is " + status);
                 http_code = 200;
 
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
         }
-
 
 
         exchange.getResponseHeaders().set("Content-Type", "application/json");
@@ -249,51 +234,45 @@ public class AdminHandler implements HttpHandler {
             os.write(response.getBytes());
         }
 
-        return  response;
+        return response;
     }
 
 
-
-    private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException {
 
 
         String response = "";
-        int http_code = 200 ;
+        int http_code = 200;
         String token = JwtUtil.get_token_from_server(exchange);
-        if(paths.length == 3 && paths[2].equals("users")){
+        if (paths.length == 3 && paths[2].equals("users")) {
 
-            try{
+            try {
 
-            if(!JwtUtil.validateToken(token)){
-                throw new InvalidTokenexception();
-            }
-            if(!JwtUtil.extractRole(token).equals("admin")){
-                throw new ForbiddenroleException();
-            }
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
 
                 List<User> users = userDAO.getAllUsers();
                 AdminDTO.Getusersresponse getall = new AdminDTO.Getusersresponse(users);
                 response = getall.getResponse();
                 http_code = 200;
 
-            }
-            catch (InvalidTokenexception e){
+            } catch (InvalidTokenexception e) {
 
                 response = generate_error(e.getMessage());
                 http_code = 401;
-            }
-
-            catch (ForbiddenroleException e){
+            } catch (ForbiddenroleException e) {
                 response = generate_error(e.getMessage());
                 http_code = 403;
             }
 
-        }
-
-        else if (paths.length == 3 && paths[2].equals("coupons")){
+        } else if (paths.length == 3 && paths[2].equals("coupons")) {
 
 
-            try{
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -305,21 +284,17 @@ public class AdminHandler implements HttpHandler {
                 AdminDTO.Get_coupons_response getcoupons = new AdminDTO.Get_coupons_response(coupons);
                 response = getcoupons.getResponse();
                 http_code = 200;
-            }
-            catch (InvalidTokenexception e){
+            } catch (InvalidTokenexception e) {
                 response = generate_error(e.getMessage());
                 http_code = 401;
-            }
-            catch (ForbiddenroleException e){
+            } catch (ForbiddenroleException e) {
                 response = generate_error(e.getMessage());
                 http_code = 403;
             }
 
-        }
+        } else if (paths.length == 4 && paths[2].equals("coupons")) {
 
-        else if (paths.length == 4 && paths[2].equals("coupons")){
-
-            try{
+            try {
                 Long coupon_id = Long.parseLong(paths[3]);
 
                 if (!JwtUtil.validateToken(token)) {
@@ -331,28 +306,23 @@ public class AdminHandler implements HttpHandler {
 
                 Coupon coupon = couponDAO.getCoupon(coupon_id);
 
-                if(coupon == null){
+                if (coupon == null) {
                     throw new NosuchItemException();
                 }
 
                 AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, coupon.getCode());
                 response = res.getResponse();
                 http_code = 200;
-            }
-
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid coupon id");
                 http_code = 400;
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
-        }
+        } else if (paths.length == 3 && paths[2].equals("vendors")) {
 
-        else if (paths.length == 3 && paths[2].equals("vendors")){
-
-           try {
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -363,16 +333,13 @@ public class AdminHandler implements HttpHandler {
                 AdminDTO.Get_Restaurants_response res = new AdminDTO.Get_Restaurants_response(restaurantDAO);
                 response = res.getResponse();
                 http_code = 200;
+            } catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
             }
-           catch (OrangeException e){
-               response = generate_error(e.getMessage());
-               http_code = e.http_code;
-           }
-        }
+        } else if (paths.length == 3 && paths[2].equals("approvals")) {
 
-        else if (paths.length == 3 && paths[2].equals("approvals")){
-
-            try{
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -383,16 +350,13 @@ public class AdminHandler implements HttpHandler {
                 AdminDTO.Get_approval_request request = new AdminDTO.Get_approval_request(sellerDAO, courierDAO);
                 response = request.getResponse();
                 http_code = 200;
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
-        }
+        } else if (paths.length == 3 && paths[2].equals("orders")) {
 
-        else if(paths.length == 3 && paths[2].equals("orders")){
-
-            try{
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -456,34 +420,56 @@ public class AdminHandler implements HttpHandler {
                     }
                 }
                 response = basketsArray.toString();
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
+        } else if (paths.length == 3 && paths[2].equals("transactions")) {
+
+            try {
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                List<TransactionT> transactionTList = transactiontDAO.getAllTransactions();
+                JSONArray transactionsArray = new JSONArray();
+                for (TransactionT transactionT : transactionTList) {
+                    JSONObject transactionJson = new JSONObject();
+                    transactionJson.put("id", transactionT.getId());
+                    transactionJson.put("order_id", transactionT.getOrderId() == 0 ? "Charge Wallet" : transactionT.getOrderId().toString());
+                    transactionJson.put("Methode", transactionT.getMethod());
+                    transactionJson.put("User Phone", transactionT.getUserId());
+                    transactionJson.put("status", transactionT.getStatus());
+                    transactionsArray.put(transactionJson);
+                }
+                response = transactionsArray.toString();
+                http_code = 200;
+            } catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+
         }
 
         Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.getBytes().length);
-/*
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-*/
         return response;
     }
 
 
-    private String handleDeleteRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handleDeleteRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
-        int http_code = 200 ;
+        int http_code = 200;
         String token = JwtUtil.get_token_from_server(exchange);
 
-        if(paths.length == 4 && paths[2].equals("coupons")){
+        if (paths.length == 4 && paths[2].equals("coupons")) {
 
-            try{
+            try {
                 Long coupon_id = Long.parseLong(paths[3]);
 
                 if (!JwtUtil.validateToken(token)) {
@@ -501,12 +487,10 @@ public class AdminHandler implements HttpHandler {
                 couponDAO.deleteCoupon(coupon_id);
                 http_code = 200;
                 response = generate_msg("Coupon deleted successfully");
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid coupon id");
                 http_code = 400;
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -515,24 +499,23 @@ public class AdminHandler implements HttpHandler {
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.length());
 
-        try (OutputStream os = exchange.getResponseBody()){
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
         return response;
     }
 
 
-
-    private String handlePatchRequest(HttpExchange exchange , String [] paths) throws IOException {
+    private String handlePatchRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject jsonObject = getJsonObject(exchange);
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length==5 && paths[2].equals("users") && paths[4].equals("status")){
+        if (paths.length == 5 && paths[2].equals("users") && paths[4].equals("status")) {
 
-            try{
+            try {
                 if (!jsonObject.has("status")) {
                     throw new InvalidInputException("status");
                 }
@@ -549,7 +532,7 @@ public class AdminHandler implements HttpHandler {
                 String phone = "09" + paths[3];
                 User user = userDAO.getUserByPhone(phone);
 
-                if (user == null ) {
+                if (user == null) {
                     throw new NosuchItemException("User not found");
                 }
 
@@ -557,21 +540,17 @@ public class AdminHandler implements HttpHandler {
                     Seller seller = sellerDAO.getSeller(phone);
                     seller.setStatue(status);
                     sellerDAO.updateSeller(seller);
-                }
-                else if (user.role.equals(Role.courier)) {
+                } else if (user.role.equals(Role.courier)) {
 
                     Courier courier = courierDAO.getCourier(phone);
                     courier.setStatue(status);
                     courierDAO.updateCourier(courier);
-                }
-
-                else throw new ForbiddenroleException();
+                } else throw new ForbiddenroleException();
 
                 response = generate_msg("Status of User :" + paths[3] + " is " + status);
                 http_code = 200;
 
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -590,7 +569,7 @@ public class AdminHandler implements HttpHandler {
 
 
     public void send_Response(HttpExchange exchange, String response) throws IOException {
-        try(OutputStream os = exchange.getResponseBody()) {
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
         exchange.close();
@@ -605,8 +584,7 @@ public class AdminHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -616,7 +594,7 @@ public class AdminHandler implements HttpHandler {
         }
     }
 
-    public String generate_msg(String msg){
+    public String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
@@ -635,23 +613,24 @@ public class AdminHandler implements HttpHandler {
         }
         return params;
     }
-    public JSONObject getBasketJsonObject(Basket basket,JSONArray itemIdsArray) {
+
+    public JSONObject getBasketJsonObject(Basket basket, JSONArray itemIdsArray) {
         JSONObject basketJson = new JSONObject();
         basketJson.put("id", basket.getId());
         basketJson.put("delivery_address", basket.getAddress());
-        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("customer_id", basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id", basket.getRes_id());
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
-        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
-        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
-        basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO,couponDAO));
-        basketJson.put("courier_id",basket.getCourier_id());
-        basketJson.put("status",basket.getStateofCart());
-        basketJson.put("created_at",basket.getCreated_at());
-        basketJson.put("updated_at",basket.getUpadated_at());
+        basketJson.put("raw_price", basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee", basket.getCOURIER_FEE());
+        basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+        basketJson.put("courier_id", basket.getCourier_id());
+        basketJson.put("status", basket.getStateofCart());
+        basketJson.put("created_at", basket.getCreated_at());
+        basketJson.put("updated_at", basket.getUpadated_at());
         return basketJson;
     }
 }

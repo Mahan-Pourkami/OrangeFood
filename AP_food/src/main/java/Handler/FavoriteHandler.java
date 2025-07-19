@@ -19,8 +19,8 @@ import java.util.List;
 
 public class FavoriteHandler implements HttpHandler {
 
-    BuyerDAO buyerDAO ;
-    RestaurantDAO restaurantDAO ;
+    BuyerDAO buyerDAO;
+    RestaurantDAO restaurantDAO;
 
     public FavoriteHandler(BuyerDAO buyerDAO, RestaurantDAO restaurantDAO) {
         this.buyerDAO = buyerDAO;
@@ -31,39 +31,35 @@ public class FavoriteHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
 
-
         String request = exchange.getRequestMethod();
-        String [] paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
         String response = "";
 
-       try {
+        try {
             switch (request) {
                 case "GET":
                     System.out.println("GET Request");
-                    response=handleGetRequest(exchange, paths);
+                    response = handleGetRequest(exchange, paths);
                     break;
 
                 case "PUT":
 
                     System.out.println("PUT request delivered to favorite endpoints");
-                    response=handlePutRequest(exchange,paths);
+                    response = handlePutRequest(exchange, paths);
                     break;
 
                 case "DELETE":
                     System.out.println("DELETE request delivered to favorite endpoints");
-                    response=handleDeleteRequest(exchange,paths);
+                    response = handleDeleteRequest(exchange, paths);
                     break;
 
             }
+        } catch (Exception e) {
+            response = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            send_Response(exchange, response);
         }
-       catch (Exception e) {
-           response = e.getMessage();
-           e.printStackTrace();
-       }
-
-       finally {
-           send_Response(exchange,response);
-       }
     }
 
     private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException {
@@ -101,8 +97,7 @@ public class FavoriteHandler implements HttpHandler {
                 }
                 response = restaurantsArray.toString();
                 httpCode = 200;
-            }
-            catch (OrangeException e) {
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 httpCode = e.http_code;
             }
@@ -123,14 +118,14 @@ public class FavoriteHandler implements HttpHandler {
         return response;
     }
 
-    private String handlePutRequest(HttpExchange exchange , String[] paths) throws IOException {
+    private String handlePutRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length ==3) {
+        if (paths.length == 3) {
 
-            try{
+            try {
 
                 String token = JwtUtil.get_token_from_server(exchange);
                 Long res_id = Long.parseLong(paths[2]);
@@ -142,11 +137,10 @@ public class FavoriteHandler implements HttpHandler {
                 if (res == null) throw new NosuchRestaurantException();
 
 
-
                 String phone = JwtUtil.extractSubject(token);
                 Buyer buyer = buyerDAO.getBuyer(phone);
 
-                if(buyer.getFavorite_restaurants().contains(res_id)){
+                if (buyer.getFavorite_restaurants().contains(res_id)) {
                     throw new DuplicatedItemexception();
                 }
 
@@ -156,42 +150,33 @@ public class FavoriteHandler implements HttpHandler {
                 response = generate_msg(res.getName() + " Restaurant added to favorite restaurant");
                 http_code = 200;
 
-            }
-
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 response = generate_error("Invalid restaurant id");
                 http_code = 400;
-            }
-
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
-            }
-
-            catch (Exception e){
+            } catch (Exception e) {
                 response = generate_error(e.getMessage());
-                http_code = 500 ;
-            }
-            finally {
+                http_code = 500;
+            } finally {
 
                 Headers headers = exchange.getResponseHeaders();
                 headers.set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(http_code, response.getBytes().length);
 
             }
-        }
-
-        else {
+        } else {
             response = generate_error("not found");
             Headers headers = exchange.getRequestHeaders();
             headers.add("Content-Type", "application/json");
             exchange.sendResponseHeaders(404, response.getBytes().length);
         }
-        return  response;
+        return response;
     }
 
 
-    private String handleDeleteRequest(HttpExchange exchange , String[] paths) throws IOException {
+    private String handleDeleteRequest(HttpExchange exchange, String[] paths) throws IOException {
         String response = "";
         int http_code = 200;
         if (paths.length == 3) {
@@ -215,14 +200,13 @@ public class FavoriteHandler implements HttpHandler {
             } catch (NumberFormatException e) {
                 response = generate_error("Invalid restaurant id");
                 http_code = 400;
-            } catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
-        }
-        else {
+        } else {
             response = generate_error("endpoint not found");
-            http_code = 405 ;
+            http_code = 405;
         }
 
         Headers headers = exchange.getResponseHeaders();
@@ -234,8 +218,8 @@ public class FavoriteHandler implements HttpHandler {
         }
 
 
-        return  response;
-        }
+        return response;
+    }
 
 
     private String generate_error(String error) {
@@ -245,14 +229,14 @@ public class FavoriteHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
     }
 
     public void send_Response(HttpExchange exchange, String response) throws IOException {
-        try(OutputStream os = exchange.getResponseBody()) {
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }

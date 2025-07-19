@@ -136,25 +136,23 @@
 }
 
 .view-button {
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 12px;
     -fx-background-color: #4CAF50; /* Green */
     -fx-text-fill: white;
     -fx-padding: 5 10 5 10;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
 }
 .view-button:hover {
 
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 12px;
-    -fx-background-color: #186b1b;
     -fx-text-fill: white;
+    -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
 }
 
 .view-button:pressed {
 
     -fx-translate-y: 1px;
+    -fx-background-radius: 10px;
     -fx-translate-x: 1px;
 
 }
@@ -213,6 +211,7 @@
     -fx-font-weight: bold;
     -fx-background-color: #ff7000; /* Green */
     -fx-text-fill: white;
+    -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
     -fx-cursor: hand;
 }
@@ -222,9 +221,11 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
     -fx-text-fill: #ff871b;
     -fx-padding: 5 10 5 10;
     -fx-border-color: orange;
+    -fx-border-radius: 10px;
 }
 
 .cart-button:pressed {
@@ -232,6 +233,7 @@
     -fx-translate-y: 1px;
     -fx-translate-x: 1px;
     -fx-border-color: orange;
+    -fx-background-radius: 10px;
 
 }
 

@@ -130,7 +130,7 @@ public class MenuManageController {
 
         int http_code = connection.getResponseCode();
         if (http_code == 200) {
-            refresh(event);
+            initialize();
         }
         else {
             SceneManager.showErrorAlert("Error", response.getString("error"));
@@ -161,7 +161,7 @@ public class MenuManageController {
 
         int http_code = connection.getResponseCode();
         if (http_code == 200) {
-            refresh(event);
+            initialize();
         } else {
             SceneManager.showErrorAlert("Error", Methods.getJsonResponse(connection).getString("error"));
         }

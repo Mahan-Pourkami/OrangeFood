@@ -52,7 +52,7 @@ public class UserDAO {
 
     public void saveUser(User user) {
         // Check if user exists first
-        if (getUserByPhone(user.getPhone()) != null ){
+        if (getUserByPhone(user.getPhone()) != null) {
             throw new DataAccessException("Phone number " + user.getPhone() + " already exists");
         }
 
@@ -66,16 +66,15 @@ public class UserDAO {
             User user = session.get(User.class, phone);
             if (user != null) {
                 return user;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get user",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get user", e);
         }
     }
+
     public User getUserByPhoneAndPass(String phone, String password) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -85,14 +84,12 @@ public class UserDAO {
             System.out.println("user found");
             if (user != null && user.getPassword().equals(password)) {
                 return user;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get user",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get user", e);
         }
     }
 
@@ -121,26 +118,26 @@ public class UserDAO {
 
     public List<User> getAllUsers() {
 
-            Transaction transaction = null;
-            try (Session session = sessionFactory.openSession()) {
-                transaction = session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
-                CriteriaBuilder cb = session.getCriteriaBuilder();
-                CriteriaQuery<User> cq = cb.createQuery(User.class);
-                Root<User> root = cq.from(User.class);
-                cq.select(root);
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<User> cq = cb.createQuery(User.class);
+            Root<User> root = cq.from(User.class);
+            cq.select(root);
 
-                List<User> users = session.createQuery(cq).getResultList();
-                transaction.commit();
-                return users;
+            List<User> users = session.createQuery(cq).getResultList();
+            transaction.commit();
+            return users;
 
-            } catch (Exception e) {
-                if (transaction != null && transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw new DataAccessException("Failed to retrieve users", e);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
             }
-            }
+            throw new DataAccessException("Failed to retrieve users", e);
+        }
+    }
 
     public User getUserByEmail(String email) {
         List<User> users = getAllUsers();

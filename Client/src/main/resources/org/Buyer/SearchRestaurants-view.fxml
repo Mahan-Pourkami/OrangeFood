@@ -16,6 +16,11 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </TextField>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="173.0" layoutY="-88.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
       <ListView fx:id="res_list" layoutX="384.0" layoutY="-1.0" prefHeight="860.0" prefWidth="896.0" />
       <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="48.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -32,7 +37,7 @@
             <Image url="@../../asset/images/pizza_2d.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="29.0" layoutY="22.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="47.0" fitWidth="40.0" layoutX="19.0" layoutY="21.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/backicon.png" />
          </image>
