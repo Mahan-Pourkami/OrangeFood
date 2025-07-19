@@ -11,6 +11,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -223,14 +224,34 @@ public class BasketDAO implements AutoCloseable {
 
     public boolean is_in_the_order (long item_id ) {
 
-        List<Basket> orders = getAllBasket();
-        for (Basket basket : orders) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
-            if(basket.getItems().containsKey(item_id) && !basket.getStateofCart().equals(StateofCart.acceptedbycourier) && !basket.getStateofCart().equals(StateofCart.rejected) && !basket.getStateofCart().equals(StateofCart.delivered) ) {
-                return true;
+            String hql = "SELECT COUNT(b) > 0 FROM Basket b " +
+                    "WHERE :itemId IN (KEY(b.items)) " +
+                    "AND b.stateofCart NOT IN (:excludedStates)";
+
+            List<StateofCart> excludedStates = Arrays.asList(
+                    StateofCart.acceptedbycourier,
+                    StateofCart.rejected,
+                    StateofCart.delivered
+            );
+
+            Boolean result = session.createQuery(hql, Boolean.class)
+                    .setParameter("itemId", item_id)
+                    .setParameter("excludedStates", excludedStates)
+                    .getSingleResult();
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
         }
-        return false;
+
     }
 
 

@@ -1,12 +1,10 @@
 package Handler;
 
-import DAO.BuyerDAO;
+
 import DAO.FoodDAO;
 import Exceptions.*;
-import Model.Buyer;
 import Model.Food;
 import Utils.JwtUtil;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
