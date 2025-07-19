@@ -23,6 +23,7 @@ public class TransactionTDAO {
     }
 
     public void saveTransaction(TransactionT transactionT) {
+
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

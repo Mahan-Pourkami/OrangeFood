@@ -135,14 +135,24 @@ public class FoodDAO {
 
     public List<Food> getFoodsByRestaurantId(Long restaurantId) {
 
-        List<Food> result = new ArrayList<Food>();
-        List<Food> foods = getAllFoods();
-        for (Food food : foods) {
-            if(food.getRestaurant().equals(restaurantId)) {
-                result.add(food);
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            String hql = "FROM Food f WHERE f.restaurantId = :restaurantId";
+
+            List<Food> result = session.createQuery(hql, Food.class)
+                    .setParameter("restaurantId", restaurantId)
+                    .getResultList();
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
         }
-        return result;
     }
 
     public List<Food> getFoodsByMenu(Long restaurantId, String menu_title) {

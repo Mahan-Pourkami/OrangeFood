@@ -45,6 +45,10 @@ public class ListFoodsController {
 
    }
 
+   public static String get_menu_title() {
+       return menu_title;
+   }
+
    @FXML
    void initialize() throws IOException{
 
@@ -116,7 +120,7 @@ public class ListFoodsController {
        card.getChildren().addAll(image, textVBox, spacer,vbox3);
        card.setSpacing(10);
        card.setOnMouseClicked((MouseEvent event) -> {
-
+           ItemDetailsController.setItemId(food.getId());
            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
            Parent root = null;

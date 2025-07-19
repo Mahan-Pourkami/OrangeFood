@@ -100,16 +100,28 @@ public class RestaurantDAO {
 
     public Set<Restaurant> findbyfilters(String name) {
 
-        List<Restaurant> vendors = getAllRestaurants();
-        Set<Restaurant> filteredVendors = new HashSet<Restaurant>();
-        for (Restaurant vendor : vendors) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
-            if(vendor.getName().toLowerCase().contains(name.toLowerCase()) || vendor.getAddress().toLowerCase().contains(name.toLowerCase())) {
-                filteredVendors.add(vendor);
+            String hql = "SELECT DISTINCT r FROM Restaurant r " +
+                    "WHERE LOWER(r.name) LIKE LOWER(:searchTerm) " +
+                    "OR LOWER(r.address) LIKE LOWER(:searchTerm)";
+
+            Set<Restaurant> result = new HashSet<>(
+                    session.createQuery(hql, Restaurant.class)
+                            .setParameter("searchTerm", "%" + name + "%")
+                            .getResultList()
+            );
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
         }
-
-        return filteredVendors;
     }
 
 }
