@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -62,6 +63,16 @@ public class ProfileController{
 
     @FXML
     void initialize() throws IOException {
+
+        profview.setFitHeight(150);
+        profview.setFitWidth(150);
+        Rectangle clip = new Rectangle(
+                profview.getFitWidth(),
+                profview.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        profview.setClip(clip);
 
         URL get_prof = new URL(Methods.url+"auth/profile");
         HttpURLConnection connection = (HttpURLConnection) get_prof.openConnection();

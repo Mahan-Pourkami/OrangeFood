@@ -822,6 +822,10 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
+                if(basketDAO.is_in_the_order(food_id)){
+                    throw new ForbiddenroleException();
+                }
+
                 foodDAO.deleteFood(food_id);
                 response = generate_msg("Item deleted successfully");
                 http_code = 200 ;

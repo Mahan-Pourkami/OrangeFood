@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONArray;
@@ -67,6 +68,15 @@ public class EditfoodController {
     @FXML
     void initialize() throws IOException {
 
+        prof_view.setFitHeight(150);
+        prof_view.setFitWidth(150);
+        Rectangle clip = new Rectangle(
+                prof_view.getFitWidth(),
+                prof_view.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        prof_view.setClip(clip);
         URL get_item_url = new URL(Methods.url+"restaurants/"+res_id+"/item/" + item_id);
         HttpURLConnection connection = (HttpURLConnection) get_item_url.openConnection();
         connection.setRequestMethod("GET");

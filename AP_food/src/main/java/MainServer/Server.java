@@ -40,7 +40,7 @@ public class Server {
             server.createContext("/auth" , new AuthHandler(courierDAO,sellerDAO,buyerDAO,userDAO,restaurantDAO));
             server.createContext("/restaurants",new RestaurantsHandler(sellerDAO,restaurantDAO,foodDAO,couponDAO,basketDAO,transactionTDAO,buyerDAO,userDAO));
             server.createContext("/favorites" , new FavoriteHandler(buyerDAO,restaurantDAO));
-            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO,foodDAO,basketDAO));
+            server.createContext("/admin",new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO,foodDAO,basketDAO,transactionTDAO));
             server.createContext("/rating" , new RatingHandler(ratingDAO,foodDAO,userDAO));
             server.createContext("/wallet" , new WalletHandler(buyerDAO,transactionTDAO));
             server.createContext("/coupon" , new CouponHandler(couponDAO));

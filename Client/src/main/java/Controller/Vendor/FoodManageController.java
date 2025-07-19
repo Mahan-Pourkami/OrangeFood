@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -93,6 +94,15 @@ public class FoodManageController {
     @FXML
     void initialize() throws IOException, URISyntaxException {
 
+        prof_view.setFitHeight(150);
+        prof_view.setFitWidth(150);
+        Rectangle clip = new Rectangle(
+                prof_view.getFitWidth(),
+                prof_view.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        prof_view.setClip(clip);
         prof_view.setImage(default_img);
         image_path = new File(resourceUrl.toURI()).getAbsolutePath();
         System.out.println(image_path);
@@ -199,12 +209,13 @@ public class FoodManageController {
                     connection.setDoOutput(true);
 
                     if(connection.getResponseCode() >= 200 && connection.getResponseCode() < 300) {
-
                         food_table.getItems().remove(food);
                     }
 
                     else if(connection.getResponseCode() >= 401) {
-                        SceneManager.showErrorAlert("Failed" , "Unauthorized Request");
+
+                        JSONObject obj = Methods.getJsonResponse(connection);
+                        SceneManager.showErrorAlert("Failed" , obj.getString("error"));
 
                     }
 
@@ -279,7 +290,7 @@ public class FoodManageController {
     }
 
     @FXML
-    void control_save_food(MouseEvent event) throws IOException {
+    void control_save_food(MouseEvent event) throws IOException, URISyntaxException {
 
 
         URL save_food_url = new URL(Methods.url+"restaurants/"+res_id+"/item");
@@ -315,7 +326,7 @@ public class FoodManageController {
         JSONObject response = Methods.getJsonResponse(connection);
 
         if(http_code == 200) {
-            refresh(event);
+           refresh(event);
         }
         else if(http_code == 401) {
             SceneManager.showErrorAlert("Unauthorized", "Invalid Token");

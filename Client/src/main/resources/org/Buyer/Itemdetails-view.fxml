@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.ItemDetailsController">
+   <children>
+      <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#d6d6d631" height="697.0" layoutX="44.0" layoutY="129.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="387.0" />
+      <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="529.0" layoutY="28.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+         <image>
+            <Image url="@../../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="588.0" layoutY="28.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
+         <font>
+            <Font name="System Bold" size="34.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="food_image" fitHeight="259.0" fitWidth="265.0" layoutX="77.0" layoutY="161.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/images%20(3).jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="77.0" layoutY="437.0" prefHeight="77.0" prefWidth="209.0" text="Food Name">
+         <font>
+            <Font name="System Bold" size="31.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

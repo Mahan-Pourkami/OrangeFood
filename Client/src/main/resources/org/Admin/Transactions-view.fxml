@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Admin.TransactionController">
+   <stylesheets>
+      <URL value="@../../asset/style_sheets/input.css" />
+      <URL value="@../../asset/style_sheets/style.css" />
+   </stylesheets>
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="86.0" layoutX="-7.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1312.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.006700779777020216" green="0.15280011296272278" blue="0.28947368264198303" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.46052631735801697" green="0.13645224273204803" blue="0.13645224273204803" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+      <Line endX="1105.0" endY="-3.0" fill="WHITE" layoutX="194.0" layoutY="93.0" startX="-194.0" startY="-3.0" stroke="WHITE" strokeWidth="5.0" />
+      <Label layoutX="486.0" layoutY="27.0" text="System's Transactions">
+         <font>
+            <Font name="System Bold" size="31.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.4298780487804878">
+                     <color>
+                        <Color red="0.7129629850387573" green="0.8708333373069763" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.625">
+                     <color>
+                        <Color red="1.0" green="0.7200000286102295" blue="0.7200000286102295" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <TableView fx:id="trans_table" layoutX="297.0" layoutY="160.0" prefHeight="652.0" prefWidth="699.0">
+        <columns>
+            <TableColumn fx:id="id_col" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="order_col" prefWidth="139.0" text="Order ID" />
+            <TableColumn fx:id="state_col" prefWidth="132.0" text="Status" />
+            <TableColumn fx:id="phone_col" prefWidth="165.0" text="User Phone" />
+          <TableColumn fx:id="methode_col" prefWidth="187.0" text="Methode" />
+        </columns>
+      </TableView>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="31.0" layoutY="31.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</AnchorPane>

@@ -235,7 +235,7 @@ public class AddFoodMenuController {
 
         int http_code = connection.getResponseCode();
         if (http_code == 200) {
-            refresh(event);
+            initialize();
         }
         else {
             SceneManager.showErrorAlert("Error", response.getString("error"));
@@ -251,8 +251,9 @@ public class AddFoodMenuController {
         connection.setRequestProperty("Authorization", "Bearer "+token);
         int http_code = connection.getResponseCode();
         JSONObject response = Methods.getJsonResponse(connection);
+
         if (http_code == 200) {
-            refresh(event);
+            initialize();
         }
         else {
             SceneManager.showErrorAlert("Error", response.getString("error"));

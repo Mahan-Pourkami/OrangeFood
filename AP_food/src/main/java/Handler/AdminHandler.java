@@ -32,8 +32,9 @@ public class AdminHandler implements HttpHandler {
     RestaurantDAO restaurantDAO ;
     FoodDAO foodDAO ;
     BasketDAO basketDAO ;
+    TransactionTDAO transactiontDAO ;
 
-    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO,FoodDAO foodDAO,BasketDAO basketDAO) {
+    public AdminHandler(UserDAO userDAO,SellerDAO sellerDAO , CourierDAO courierDAO, CouponDAO couponDAO, RestaurantDAO restaurantDAO,FoodDAO foodDAO,BasketDAO basketDAO , TransactionTDAO transactionTDAO) {
         this.userDAO = userDAO;
         this.sellerDAO = sellerDAO;
         this.courierDAO = courierDAO;
@@ -41,6 +42,7 @@ public class AdminHandler implements HttpHandler {
         this.restaurantDAO = restaurantDAO;
         this.foodDAO = foodDAO;
         this.basketDAO = basketDAO;
+        this.transactiontDAO = transactionTDAO;
     }
 
 
@@ -463,14 +465,41 @@ public class AdminHandler implements HttpHandler {
             }
         }
 
+        else if (paths.length == 3 && paths[2].equals("transactions")){
+
+            try{
+                if (!JwtUtil.validateToken(token)) {
+                    throw new InvalidTokenexception();
+                }
+                if (!JwtUtil.extractRole(token).equals("admin")) {
+                    throw new ForbiddenroleException();
+                }
+
+                List<TransactionT> transactionTList = transactiontDAO.getAllTransactions();
+                JSONArray transactionsArray = new JSONArray();
+                for (TransactionT transactionT : transactionTList) {
+                    JSONObject transactionJson = new JSONObject();
+                    transactionJson.put("id", transactionT.getId());
+                    transactionJson.put("order_id", transactionT.getOrderId() == 0 ? "Charge Wallet" : transactionT.getOrderId().toString());
+                    transactionJson.put("Methode", transactionT.getMethod());
+                    transactionJson.put("User Phone", transactionT.getUserId());
+                    transactionJson.put("status", transactionT.getStatus());
+                    transactionsArray.put(transactionJson);
+                }
+                response = transactionsArray.toString();
+                http_code = 200;
+            }
+
+            catch (OrangeException e){
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            }
+
+        }
+
         Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", "application/json");
         exchange.sendResponseHeaders(http_code, response.getBytes().length);
-/*
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-*/
         return response;
     }
 

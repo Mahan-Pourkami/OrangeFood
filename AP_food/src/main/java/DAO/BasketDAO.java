@@ -221,6 +221,19 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
+    public boolean is_in_the_order (long item_id ) {
+
+        List<Basket> orders = getAllBasket();
+        for (Basket basket : orders) {
+
+            if(basket.getItems().containsKey(item_id) && !basket.getStateofCart().equals(StateofCart.acceptedbycourier) && !basket.getStateofCart().equals(StateofCart.rejected) && !basket.getStateofCart().equals(StateofCart.delivered) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public List<Basket> getBasketforvendor(Long vendorId) {
 
         List<Basket> baskets = getAllBasket();
