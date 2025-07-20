@@ -118,7 +118,7 @@ public class ItemDetailsController {
         HBox images_box = new HBox(20);
         images_box.setPadding(new Insets(10,10,10,10));
         HBox name_box = new HBox(2);
-        Label name = new Label("     USer :  " + rating.getUser_id()+ "          " + rating.getTime() + "    Rating :" + rating.getRating() + "   ");
+        Label name = new Label("  " + rating.getUser_id()+ "          " + rating.getTime() + "    Rating :" + rating.getRating() + "   ");
         Button edit = new Button("Edit");
         Button delete = new Button("Delete");
         name_box.setSpacing(5);

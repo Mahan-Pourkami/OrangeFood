@@ -75,7 +75,7 @@
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #574040;
+    -fx-background-color: #ffffff;
 }
 
 .table-row-cell:selected {
