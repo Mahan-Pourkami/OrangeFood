@@ -2,21 +2,16 @@ package Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
+import org.json.JSONObject;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Objects;
 
 public class IntroController {
 
@@ -40,7 +35,6 @@ public class IntroController {
             SceneManager.showErrorAlert("Browser Error", "Could not open GitHub profile");
         }
     }
-
     @FXML
     public void handle_support(MouseEvent mouseEvent) {
         try {
@@ -49,7 +43,6 @@ public class IntroController {
             SceneManager.showErrorAlert("Browser Error", "Could not open GitHub profile");
         }
     }
-
     @FXML
     public void handle_community(MouseEvent mouseEvent) {
         try {
@@ -58,7 +51,6 @@ public class IntroController {
             SceneManager.showErrorAlert("Browser Error", "Could not open LinkedIn profile");
         }
     }
-
     @FXML
     public void handle_continue_button(MouseEvent mouseEvent) {
         try {
@@ -67,18 +59,24 @@ public class IntroController {
                 redirectToLogin(mouseEvent);
                 return;
             }
-
-            URL profileUrl = new URL("http://localhost:8080/auth/profile");
+            URL profileUrl = new URL(Methods.url+"auth/profile");
             HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
-
             try {
 
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Authorization", "Bearer " + token);
-
+                JSONObject obj = Methods.getJsonResponse(connection);
                 int httpCode = connection.getResponseCode();
                 if (httpCode == HttpURLConnection.HTTP_OK) {
-                    redirectToHome(mouseEvent);
+                   if (obj.getString("role").equals("buyer")){
+                       redirectToHome(mouseEvent);
+                   }
+                   else if (obj.getString("role").equals("seller")){
+                       redirect_to_vendor(mouseEvent);
+                   }
+                   else if (obj.getString("role").equals("courier")){
+                       redirectToCourier(mouseEvent);
+                   }
                 } else {
                     redirectToLogin(mouseEvent);
                 }
@@ -92,23 +90,26 @@ public class IntroController {
     }
 
     private void redirectToHome(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
+        Methods.switch_page(loader,event);
+    }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+    private void redirect_to_vendor(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
+        Methods.switch_page(loader,event);
     }
 
     private void redirectToLogin(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+            Methods.switch_page(loader,event);
         } catch (IOException e) {
             SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
         }
+    }
+
+    private void redirectToCourier(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
+        Methods.switch_page(loader,event);
     }
 }

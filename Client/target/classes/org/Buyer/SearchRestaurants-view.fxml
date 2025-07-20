@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.SearchRestaurantController">
+   <children>
+      <TextField fx:id="search_field" layoutX="39.0" layoutY="122.0" prefHeight="47.0" prefWidth="286.0" promptText="Search Restaurants" styleClass="dark-button">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TextField>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutX="173.0" layoutY="-88.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ListView fx:id="res_list" layoutX="384.0" layoutY="-1.0" prefHeight="860.0" prefWidth="896.0" />
+      <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="48.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="53.0" layoutY="468.0" text="Orange Restaurants !" textFill="#d18f00">
+         <font>
+            <Font name="System Bold" size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="219.0" fitWidth="239.0" layoutY="648.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../../asset/images/pizza_2d.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="47.0" fitWidth="40.0" layoutX="19.0" layoutY="21.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <TextField fx:id="key_area" layoutX="39.0" layoutY="180.0" prefHeight="67.0" prefWidth="286.0" promptText="Keywords with -" styleClass="dark-button">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TextField>
+   </children>
+</Pane>

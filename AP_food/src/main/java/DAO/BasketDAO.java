@@ -4,14 +4,14 @@ import Model.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import java.awt.print.Book;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -146,10 +146,12 @@ public class BasketDAO implements AutoCloseable {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
-            List<Basket> baskets = session.createQuery(
-                    "SELECT DISTINCT b FROM Basket b LEFT JOIN FETCH b.items", Basket.class
-            ).getResultList();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Basket> cq = cb.createQuery(Basket.class);
+            Root<Basket> root = cq.from(Basket.class);
+            cq.select(root);
 
+            List<Basket> baskets = session.createQuery(cq).getResultList();
             transaction.commit();
             return baskets;
 
@@ -160,7 +162,6 @@ public class BasketDAO implements AutoCloseable {
             throw new DataAccessException("Failed to retrieve all baskets: " + e.getMessage(), e);
         }
     }
-
 
     public List<Object[]> getBasketIdAndPhone() {
         Transaction transaction = null;
@@ -221,9 +222,52 @@ public class BasketDAO implements AutoCloseable {
         }
     }
 
+    public boolean is_in_the_order(long item_id) {
 
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
+            String hql = "SELECT COUNT(b) > 0 FROM Basket b " +
+                    "WHERE :itemId IN (KEY(b.items)) " +
+                    "AND b.stateofCart NOT IN (:excludedStates)";
 
+            List<StateofCart> excludedStates = Arrays.asList(
+                    StateofCart.acceptedbycourier,
+                    StateofCart.rejected,
+                    StateofCart.received,
+                    StateofCart.delivered
+            );
+
+            Boolean result = session.createQuery(hql, Boolean.class)
+                    .setParameter("itemId", item_id)
+                    .setParameter("excludedStates", excludedStates)
+                    .getSingleResult();
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+
+    }
+
+    public List<Basket> getBasketforvendor(Long vendorId) {
+
+        List<Basket> baskets = getAllBasket();
+        List<Basket> result = new ArrayList<>();
+
+        for (Basket basket : baskets) {
+            if (basket.getRes_id() == vendorId && (basket.getStateofCart().equals(StateofCart.waiting) || basket.getStateofCart().equals(StateofCart.received) || basket.getStateofCart().equals(StateofCart.accepted))) {
+                result.add(basket);
+            }
+        }
+        return result;
+
+    }
 
 
     @Override

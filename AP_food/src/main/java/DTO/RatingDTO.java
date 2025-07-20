@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List ;
+import java.util.List;
 
 public class RatingDTO {
 
@@ -24,7 +24,7 @@ public class RatingDTO {
 
         private RatingDAO ratingDAO;
 
-        private long item_id ;
+        private long item_id;
 
         private int rating;
 
@@ -32,16 +32,16 @@ public class RatingDTO {
 
         private String author_phone;
 
-        private String author_name ;
+        private String author_name;
 
-        private List<String> imageBase64 ;
+        private List<String> imageBase64;
 
-        public Submit_Rating(JSONObject jsonObject, String author_phone , String author_name, RatingDAO ratingDAO , FoodDAO foodDAO) throws IOException {
+        public Submit_Rating(JSONObject jsonObject, String author_phone, String author_name, RatingDAO ratingDAO, FoodDAO foodDAO) throws IOException {
 
-            String []required = {"item_id","rating","comment"};
+            String[] required = {"item_id", "rating", "comment"};
 
-            for(String requiredItem : required) {
-                if(!jsonObject.has(requiredItem)) {
+            for (String requiredItem : required) {
+                if (!jsonObject.has(requiredItem)) {
                     throw new InvalidInputException(requiredItem);
                 }
             }
@@ -53,29 +53,28 @@ public class RatingDTO {
             this.author_phone = author_phone;
             this.author_name = author_name;
 
-            if(jsonObject.has("imageBase64")) {
+            if (jsonObject.has("imageBase64")) {
                 JSONArray jsonArray = jsonObject.getJSONArray("imageBase64");
                 this.imageBase64 = new ArrayList<>();
-                for(int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     this.imageBase64.add(jsonArray.getString(i));
                 }
 
-                for(String imageBase64Item : this.imageBase64) {
-                    if(!imageBase64Item.endsWith(".png") && !imageBase64Item.endsWith(".jpg") && !imageBase64Item.endsWith(".jpeg")) {
+                for (String imageBase64Item : this.imageBase64) {
+                    if (!imageBase64Item.endsWith(".png") && !imageBase64Item.endsWith(".jpg") && !imageBase64Item.endsWith(".jpeg")) {
                         throw new UnsupportedMediaException();
                     }
                 }
-            }
-            else {
+            } else {
                 this.imageBase64 = new ArrayList<>();
             }
 
-            if(foodDAO.getFood(item_id) == null) {
+            if (foodDAO.getFood(item_id) == null) {
 
                 throw new NosuchItemException();
             }
 
-            Rating rating = new Rating(this.author_phone,this.author_name,this.item_id,this.rating,this.comment,this.imageBase64);
+            Rating rating = new Rating(this.author_phone, this.author_name, this.item_id, this.rating, this.comment, this.imageBase64);
             ratingDAO.saveRating(rating);
         }
     }
@@ -84,14 +83,14 @@ public class RatingDTO {
 
         private FoodDAO foodDAO;
         private RatingDAO ratingDAO;
-        private String response ;
+        private String response;
 
-        public Get_Rating_for_item(long itemid ,FoodDAO foodDAO, RatingDAO ratingDAO) {
+        public Get_Rating_for_item(long itemid, FoodDAO foodDAO, RatingDAO ratingDAO) {
 
             this.foodDAO = foodDAO;
             this.ratingDAO = ratingDAO;
 
-            List <Rating> ratings = ratingDAO.getRatingsByitemId(itemid);
+            List<Rating> ratings = ratingDAO.getRatingsByitemId(itemid);
 
             double avg = ratingDAO.calculate_avg_rating(itemid);
 
@@ -99,27 +98,28 @@ public class RatingDTO {
             JSONArray jsonArray = new JSONArray();
             jsonObject.put("avg_rating", avg);
 
-            for(Rating rating : ratings) {
+            for (Rating rating : ratings) {
 
                 JSONObject temp = new JSONObject();
-                temp.put("id",rating.getItem_id());
-                temp.put("item_id",rating.getItem_id());
-                temp.put("rating",rating.getRating());
-                temp.put("comment",rating.getComment());
+                temp.put("id", rating.getItem_id());
+                temp.put("item_id", rating.getItem_id());
+                temp.put("rating", rating.getRating());
+                temp.put("comment", rating.getComment());
 
                 JSONArray array_temp = new JSONArray();
-                for (String photo : rating.getImageBase64() ) {
+                for (String photo : rating.getImageBase64()) {
                     array_temp.put(photo);
                 }
-                temp.put("imageBase64",array_temp);
-                temp.put("user_name",rating.getAuthor_name());
-                temp.put("created_at",rating.getDate_added());
+                temp.put("imageBase64", array_temp);
+                temp.put("user_id", Long.parseLong(rating.getAuthor_phone().substring(2)));
+                temp.put("created_at", rating.getDate_added());
                 jsonArray.put(temp);
             }
             jsonObject.put("comments", jsonArray);
 
             this.response = jsonObject.toString();
         }
+
         public String getResponse() {
             return response;
         }
@@ -129,13 +129,13 @@ public class RatingDTO {
     public static class Get_Rating_by_id {
 
         private RatingDAO ratingDAO;
-        private String response ;
+        private String response;
 
-        public Get_Rating_by_id(long comment_id ,RatingDAO ratingDAO) throws IOException {
+        public Get_Rating_by_id(long comment_id, RatingDAO ratingDAO) throws IOException {
 
             this.ratingDAO = ratingDAO;
             Rating rating = ratingDAO.getRating(comment_id);
-            if(rating == null) {
+            if (rating == null) {
                 throw new NosuchItemException();
             }
             JSONObject jsonObject = new JSONObject();
@@ -146,14 +146,15 @@ public class RatingDTO {
             jsonObject.put("rating", rating.getRating());
             jsonObject.put("comment", rating.getComment());
 
-            for (String photo : rating.getImageBase64() ) {
+            for (String photo : rating.getImageBase64()) {
                 jsonArray.put(photo);
             }
-            jsonObject.put("imageBase64",jsonArray);
-            jsonObject.put("user_name",rating.getAuthor_name());
-            jsonObject.put("created_at",rating.getDate_added());
+            jsonObject.put("imageBase64", jsonArray);
+            jsonObject.put("user_name", rating.getAuthor_name());
+            jsonObject.put("created_at", rating.getDate_added());
             this.response = jsonObject.toString();
         }
+
         public String getResponse() {
             return response;
         }
@@ -163,7 +164,7 @@ public class RatingDTO {
 
         private RatingDAO ratingDAO;
 
-        public Update_Rating_Req(JSONObject jsonObject ,RatingDAO ratingDAO , long comment_id) throws IOException {
+        public Update_Rating_Req(JSONObject jsonObject, RatingDAO ratingDAO, long comment_id) throws IOException {
 
             this.ratingDAO = ratingDAO;
             Rating rating = ratingDAO.getRating(comment_id);
@@ -171,9 +172,9 @@ public class RatingDTO {
             LocalDateTime now = LocalDateTime.now();
 
 
-            if(jsonObject.has("rating")){
+            if (jsonObject.has("rating")) {
 
-                if(jsonObject.getInt("rating")<0 || jsonObject.getInt("rating")>5) {
+                if (jsonObject.getInt("rating") < 0 || jsonObject.getInt("rating") > 5) {
                     throw new InvalidInputException("rating");
                 }
 
@@ -182,17 +183,17 @@ public class RatingDTO {
                 rating.setDate_added(now.format(formatter));
             }
 
-            if(jsonObject.has("comment")){
+            if (jsonObject.has("comment")) {
                 rating.setComment(jsonObject.getString("comment"));
             }
 
-            if(jsonObject.has("imageBase64")){
+            if (jsonObject.has("imageBase64")) {
                 JSONArray jsonArray = jsonObject.getJSONArray("imageBase64");
                 List<String> imageBase64 = new ArrayList<>();
-                for(int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++) {
 
-                   String imageBase64Item = jsonArray.getString(i);
-                    if(!imageBase64Item.endsWith(".png") && !imageBase64Item.endsWith(".jpg") && !imageBase64Item.endsWith(".jpeg")) {
+                    String imageBase64Item = jsonArray.getString(i);
+                    if (!imageBase64Item.endsWith(".png") && !imageBase64Item.endsWith(".jpg") && !imageBase64Item.endsWith(".jpeg")) {
                         throw new UnsupportedMediaException();
                     }
                     imageBase64.add(imageBase64Item);
@@ -207,14 +208,14 @@ public class RatingDTO {
 
         private RatingDAO ratingDAO;
 
-        private String response ;
+        private String response;
 
-        public Update_Rating_Response(long commentid ,RatingDAO ratingDAO) throws IOException {
+        public Update_Rating_Response(long commentid, RatingDAO ratingDAO) throws IOException {
 
             this.ratingDAO = ratingDAO;
 
             Rating rating = ratingDAO.getRating(commentid);
-            if(rating == null) {
+            if (rating == null) {
                 throw new NosuchItemException();
             }
 
@@ -225,16 +226,17 @@ public class RatingDTO {
             jsonObject.put("item_id", commentid);
             jsonObject.put("rating", rating.getRating());
 
-            for (String photo : rating.getImageBase64() ) {
+            for (String photo : rating.getImageBase64()) {
                 jsonArray.put(photo);
             }
-            jsonObject.put("imageBase64",jsonArray);
-            jsonObject.put("user_name",rating.getAuthor_name());
-            jsonObject.put("created_at",rating.getDate_added());
+            jsonObject.put("imageBase64", jsonArray);
+            jsonObject.put("user_name", rating.getAuthor_name());
+            jsonObject.put("created_at", rating.getDate_added());
 
             this.response = jsonObject.toString();
 
         }
+
         public String getResponse() {
             return response;
         }

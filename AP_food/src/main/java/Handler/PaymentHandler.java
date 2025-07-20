@@ -21,14 +21,16 @@ public class PaymentHandler implements HttpHandler {
     RestaurantDAO restaurantDAO;
     TransactionTDAO transactionTDAO;
     BuyerDAO buyerDAO;
+    CouponDAO couponDAO;
 
-    public PaymentHandler(BasketDAO basketDAO,UserDAO userDAO,FoodDAO foodDAO,RestaurantDAO restaurantDAO,TransactionTDAO transactionTDAO,BuyerDAO buyerDAO) {
+    public PaymentHandler(BasketDAO basketDAO, UserDAO userDAO, FoodDAO foodDAO, RestaurantDAO restaurantDAO, TransactionTDAO transactionTDAO, BuyerDAO buyerDAO, CouponDAO couponDAO) {
         this.basketDAO = basketDAO;
         this.userDAO = userDAO;
         this.foodDAO = foodDAO;
         this.restaurantDAO = restaurantDAO;
         this.transactionTDAO = transactionTDAO;
         this.buyerDAO = buyerDAO;
+        this.couponDAO = couponDAO;
     }
 
     @Override
@@ -36,13 +38,13 @@ public class PaymentHandler implements HttpHandler {
 
         String response = "";
         String methode = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
         int http_code = 200; // Default success code
 
-        try{
+        try {
             switch (methode) {
                 case "POST":
-                    response = handlePostRequest(exchange,paths);
+                    response = handlePostRequest(exchange, paths);
                     break;
 
                 default:
@@ -50,31 +52,27 @@ public class PaymentHandler implements HttpHandler {
                     response = generate_error("Method not supported");
                     break;
             }
-        }
-        catch(ArithmeticException e){
+        } catch (ArithmeticException e) {
             http_code = 403;
             response = generate_error("Not enough money");
-        }
-        catch(OrangeException e){
+        } catch (OrangeException e) {
             http_code = e.http_code;
             response = generate_error(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             http_code = 500; // Internal Server Error
             response = generate_error("An internal server error occurred.");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             send_Response(exchange, response, http_code);
         }
     }
 
-    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handlePostRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
 
         String token = JwtUtil.get_token_from_server(exchange);
-        String response ="";
+        String response = "";
 
-        if(paths.length == 3&&paths[2].equals("online")){
+        if (paths.length == 3 && paths[2].equals("online")) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -84,24 +82,23 @@ public class PaymentHandler implements HttpHandler {
 
             JSONObject jsonobject = getJsonObject(exchange);
             String user_id = JwtUtil.extractSubject(token);
-            if(invalidInputItems(jsonobject).isEmpty()){
+            if (invalidInputItems(jsonobject).isEmpty()) {
                 Long orderId = ((Number) jsonobject.get("order_id")).longValue();
 
                 //check if order exists
-                if(!basketDAO.existBasket(orderId)){
+                if (!basketDAO.existBasket(orderId)) {
                     throw new NosuchItemException();
                 }
                 Basket basket = basketDAO.getBasket(orderId);
-                if(!(basket.getStateofCart()==StateofCart.waiting)){
+                if (!(basket.getStateofCart() == StateofCart.waiting)) {
                     throw new NosuchItemException();
                 }
-                if(jsonobject.get("method").equals("wallet")){
+                if (jsonobject.get("method").equals("wallet")) {
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
-                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO));
+                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
                         buyerDAO.updateBuyer(buyer);
-                    }
-                    catch(ArithmeticException e){
+                    } catch (ArithmeticException e) {
                         throw new ArithmeticException();
                     }
                 }
@@ -109,7 +106,7 @@ public class PaymentHandler implements HttpHandler {
                 TransactionT transaction = new TransactionT(
                         orderId,
                         user_id,
-                        (String)jsonobject.get("method"),
+                        (String) jsonobject.get("method"),
                         "success"
                 );
 
@@ -117,14 +114,12 @@ public class PaymentHandler implements HttpHandler {
                 basket.setStateofCart(StateofCart.payed);
                 basketDAO.updateBasket(basket);
                 response = getTransactionJsonObject(transaction).toString();
-            }
-            else {
-                response = generate_error("Invalid "+invalidInputItems(jsonobject));
+            } else {
+                response = generate_error("Invalid " + invalidInputItems(jsonobject));
                 throw new OrangeException(response, 400);
             }
             return response;
-        }
-        else {
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
     }
@@ -148,7 +143,7 @@ public class PaymentHandler implements HttpHandler {
             if (!(method instanceof String)) {
                 return "method";
             }
-            if(!(method.equals("wallet")||method.equals("online"))){
+            if (!(method.equals("wallet") || method.equals("online"))) {
                 return "method";
             }
 
@@ -167,8 +162,7 @@ public class PaymentHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -185,7 +179,7 @@ public class PaymentHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
@@ -195,8 +189,8 @@ public class PaymentHandler implements HttpHandler {
         JSONObject basketJson = new JSONObject();
         basketJson.put("id", transactionT.getId());
         basketJson.put("order_id", transactionT.getOrderId());
-        basketJson.put("user_id",transactionT.getUserId()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("method",transactionT.getMethod());
+        basketJson.put("user_id", transactionT.getUserId()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("method", transactionT.getMethod());
         basketJson.put("status", transactionT.getStatus());
         return basketJson;
     }
@@ -207,7 +201,7 @@ public class PaymentHandler implements HttpHandler {
         exchange.sendResponseHeaders(http_code, responseLength);
 
         if (responseLength > 0) {
-            try(OutputStream os = exchange.getResponseBody()) {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
         } else {

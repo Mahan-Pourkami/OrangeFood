@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="admin-page" stylesheets="@../../asset/style_sheets/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Admin.ApprovalController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="86.0" layoutX="-7.0" layoutY="2.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1287.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.006700779777020216" green="0.15280011296272278" blue="0.28947368264198303" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.46052631735801697" green="0.13645224273204803" blue="0.13645224273204803" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+      <Line endX="1097.0" fill="WHITE" layoutX="184.0" layoutY="95.0" startX="-186.0" startY="-3.0" stroke="WHITE" strokeWidth="5.0" />
+      <ImageView fitHeight="59.0" fitWidth="56.0" layoutX="141.0" layoutY="25.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+         <image>
+            <Image url="@../../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="203.0" layoutY="45.0" text="Orange Food!">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.8276315927505493" green="0.8114035129547119" blue="0.9736841917037964" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="31.0" layoutY="31.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label layoutX="480.0" layoutY="33.0" text="Approval Requests">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.9768518805503845" blue="0.9768518805503845" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.375">
+                     <color>
+                        <Color red="0.6937134265899658" green="0.7915448546409607" blue="0.9605262875556946" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <TableView fx:id="app_table" layoutX="182.0" layoutY="204.0" prefHeight="563.0" prefWidth="917.0">
+        <columns>
+          <TableColumn fx:id="name_col" prefWidth="203.0" text="Name" />
+          <TableColumn fx:id="phone_col" minWidth="0.0" prefWidth="180.0" text="Phone" />
+            <TableColumn fx:id="role_col" prefWidth="118.0" text="Role" />
+            <TableColumn fx:id="id_col" prefWidth="137.0" text="ID" />
+            <TableColumn fx:id="action_col" prefWidth="278.0" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>

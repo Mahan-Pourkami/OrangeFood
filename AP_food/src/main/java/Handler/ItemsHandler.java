@@ -1,12 +1,10 @@
 package Handler;
 
-import DAO.BuyerDAO;
+
 import DAO.FoodDAO;
 import Exceptions.*;
-import Model.Buyer;
 import Model.Food;
 import Utils.JwtUtil;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
@@ -22,6 +20,7 @@ public class ItemsHandler implements HttpHandler {
     FoodDAO foodDAO;
 
     public ItemsHandler(FoodDAO foodDAO) {
+
         this.foodDAO = foodDAO;
     }
 
@@ -31,17 +30,17 @@ public class ItemsHandler implements HttpHandler {
 
         String response = "";
         String methode = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
         int http_code = 200; // Default success code
 
-        try{
+        try {
             switch (methode) {
                 case "GET":
-                    response = handleGetRequest(exchange,paths);
+                    response = handleGetRequest(exchange, paths);
                     break;
 
                 case "POST":
-                    response = handlePostRequest(exchange,paths);
+                    response = handlePostRequest(exchange, paths);
                     break;
 
                 default:
@@ -49,33 +48,30 @@ public class ItemsHandler implements HttpHandler {
                     response = generate_error("Method not supported");
                     break;
             }
-        }
-        catch(OrangeException e){
+        } catch (OrangeException e) {
             http_code = e.http_code;
             response = generate_error(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             http_code = 500; // Internal Server Error
             response = generate_error("An internal server error occurred.");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             send_Response(exchange, response, http_code);
         }
     }
 
-    private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
 
         String token = JwtUtil.get_token_from_server(exchange);
 
-        if(paths.length == 3){
+        if (paths.length == 3) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
             if (!JwtUtil.extractRole(token).equals("buyer")) {
                 throw new ForbiddenroleException();
             }
-            if (!paths[2].matches("\\d+")){
+            if (!paths[2].matches("\\d+")) {
                 throw new InvalidInputException("food id");
             }
 
@@ -83,7 +79,7 @@ public class ItemsHandler implements HttpHandler {
 
             Food food = foodDAO.getFood(foodId);
 
-            if(food == null){
+            if (food == null) {
                 throw new NosuchItemException();
             }
 
@@ -93,24 +89,23 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("name", food.getName());
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
-            foodJson.put("vendor_id", food.getRestaurant().getId());
+            foodJson.put("vendor_id", food.getRestaurant());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
             foodJson.put("keywords", food.getKeywords());
 
             return foodJson.toString();
-        }
-        else {
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
     }
 
-    private String handlePostRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handlePostRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
 
         String token = JwtUtil.get_token_from_server(exchange);
-        String response ="";
+        String response = "";
 
-        if(paths.length == 2){
+        if (paths.length == 2) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -119,7 +114,7 @@ public class ItemsHandler implements HttpHandler {
             }
             JSONObject jsonobject = getJsonObject(exchange);
 
-            if(invalidInputItems(jsonobject).isEmpty()){
+            if (invalidInputItems(jsonobject).isEmpty()) {
                 List<Food> foods = foodDAO.getAllFoods();
                 ArrayList<Food> foundFoods = new ArrayList<>();
                 JSONArray keywordsArray = jsonobject.getJSONArray("keywords");
@@ -144,14 +139,14 @@ public class ItemsHandler implements HttpHandler {
                             Object keywordObj = keywordsArray.get(i);
                             if (keywordObj instanceof String) {
                                 String keyword = ((String) keywordObj).toLowerCase();
-                                if (!foodKeywords.contains(keyword)) {
+                                if (!foodKeywords.contains(keyword) && !keyword.isEmpty()) {
                                     allKeywordsMatch = false;
                                     break;
                                 }
                             }
                         }
 
-                        if (allKeywordsMatch) {
+                        if (allKeywordsMatch && !food.getMenuTitle().isEmpty()) {
                             foundFoods.add(food);
                         }
                     }
@@ -165,24 +160,20 @@ public class ItemsHandler implements HttpHandler {
                     foodJson.put("name", food.getName());
                     foodJson.put("imageBase64", food.getPictureUrl());
                     foodJson.put("description", food.getDescription());
-                    foodJson.put("vendor_id", food.getRestaurant().getId());
+                    foodJson.put("vendor_id", food.getRestaurant());
                     foodJson.put("price", food.getPrice());
                     foodJson.put("supply", food.getSupply());
                     foodJson.put("keywords", food.getKeywords());
                     resultArray.put(foodJson);
                 }
                 response = resultArray.toString();
-            }
-
-
-            else {
-                response = generate_error("Invalid "+invalidInputItems(jsonobject));
+            } else {
+                response = generate_error("Invalid " + invalidInputItems(jsonobject));
                 throw new OrangeException(response, 400);
 
             }
 
-        }
-        else {
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
         return response;
@@ -234,8 +225,7 @@ public class ItemsHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -252,7 +242,7 @@ public class ItemsHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
@@ -264,7 +254,7 @@ public class ItemsHandler implements HttpHandler {
         exchange.sendResponseHeaders(http_code, responseLength);
 
         if (responseLength > 0) {
-            try(OutputStream os = exchange.getResponseBody()) {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
         } else {

@@ -18,6 +18,7 @@ import java.util.List;
 public class CourierDAO {
 
     private final SessionFactory sessionFactory;
+
     public CourierDAO() {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Courier.class)
@@ -28,13 +29,12 @@ public class CourierDAO {
     public void saveCourier(Courier courier) {
         Transaction transaction = null;
 
-        try(Session session = sessionFactory.openSession()) {
-        transaction = session.beginTransaction();
-        session.persist(courier);
-        transaction.commit();
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(courier);
+            transaction.commit();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -47,17 +47,15 @@ public class CourierDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-           Courier courier = session.get(Courier.class, phone);
+            Courier courier = session.get(Courier.class, phone);
             if (courier != null) {
                 return courier;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get courier",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get courier", e);
         }
     }
 
@@ -87,40 +85,34 @@ public class CourierDAO {
 
 
     public void updateCourier(Courier courier) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(courier);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to update courier",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to update courier", e);
         }
     }
 
     public void deleteCourier(String phone) {
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Courier courier = session.get(Courier.class, phone);
-            if(courier!=null) {
+            if (courier != null) {
                 session.remove(courier);
                 transaction.commit();
-            }
-            else {
+            } else {
                 throw new RuntimeException("Courier not found");
             }
-        }
-
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to delete seller",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to delete seller", e);
         }
     }
-
-
 
 
 }

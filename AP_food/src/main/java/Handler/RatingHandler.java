@@ -15,9 +15,9 @@ import java.io.*;
 
 public class RatingHandler implements HttpHandler {
 
-    RatingDAO ratingDAO ;
-    FoodDAO foodDAO ;
-    UserDAO userDAO ;
+    RatingDAO ratingDAO;
+    FoodDAO foodDAO;
+    UserDAO userDAO;
 
     public RatingHandler(RatingDAO ratingDAO, FoodDAO foodDAO, UserDAO userDAO) {
         this.ratingDAO = ratingDAO;
@@ -26,13 +26,13 @@ public class RatingHandler implements HttpHandler {
     }
 
     @Override
-    public void handle (HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
 
         String response = "";
         String method = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
 
-        try{
+        try {
             switch (method) {
                 case "GET":
                     System.out.println("GET request received");
@@ -41,43 +41,41 @@ public class RatingHandler implements HttpHandler {
 
                 case "POST":
                     System.out.println("POST request received");
-                    response = handlePostRequest(exchange,paths);
+                    response = handlePostRequest(exchange, paths);
                     break;
 
                 case "PUT":
                     System.out.println("PUT request received");
-                    response = handlePutRequest(exchange,paths);
+                    response = handlePutRequest(exchange, paths);
                     break;
 
                 case "DELETE":
                     System.out.println("DELETE request received");
-                    response = handleDeleteRequest(exchange,paths);
+                    response = handleDeleteRequest(exchange, paths);
                     break;
 
                 default:
                     break;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally{
+        } finally {
 
-            send_Response(exchange,response);
+            send_Response(exchange, response);
         }
     }
 
 
-    private String handlePostRequest(HttpExchange exchange , String []paths) throws IOException {
+    private String handlePostRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject jsonObject = getJsonObject(exchange);
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length == 2){
+        if (paths.length == 2) {
 
-            try{
+            try {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
@@ -91,9 +89,7 @@ public class RatingHandler implements HttpHandler {
                 RatingDTO.Submit_Rating sub_requestt = new RatingDTO.Submit_Rating(jsonObject, phone, name, ratingDAO, foodDAO);
                 http_code = 200;
                 response = generate_msg("Rating submitted");
-            }
-
-            catch (OrangeException e){
+            } catch (OrangeException e) {
 
                 response = generate_msg(e.getMessage());
                 http_code = e.http_code;
@@ -110,18 +106,18 @@ public class RatingHandler implements HttpHandler {
     }
 
 
-    private String handlePutRequest(HttpExchange exchange , String []paths) throws IOException {
+    private String handlePutRequest(HttpExchange exchange, String[] paths) throws IOException {
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject jsonObject = getJsonObject(exchange);
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length == 3){
+        if (paths.length == 3) {
 
             Long comment_id = Long.parseLong(paths[2]);
             Rating rating = ratingDAO.getRating(comment_id);
 
-            try{
+            try {
                 if (rating == null) {
                     throw new NosuchItemException();
                 }
@@ -143,13 +139,10 @@ public class RatingHandler implements HttpHandler {
                 RatingDTO.Update_Rating_Response update_res = new RatingDTO.Update_Rating_Response(comment_id, ratingDAO);
                 response = update_res.getResponse();
                 http_code = 200;
-            }
-            catch(IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid comment id");
                 http_code = 400;
-            }
-
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -165,15 +158,14 @@ public class RatingHandler implements HttpHandler {
     }
 
 
-
-    private String handleGetRequest(HttpExchange exchange , String []paths) throws IOException {
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
-        int http_code = 200 ;
-        if(paths.length == 4 && paths[2].equals("items")){
+        int http_code = 200;
+        if (paths.length == 4 && paths[2].equals("items")) {
 
-            try{
+            try {
                 Long item_id = Long.parseLong(paths[3]);
 
                 if (!JwtUtil.validateToken(token)) {
@@ -186,18 +178,15 @@ public class RatingHandler implements HttpHandler {
                 RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO);
                 response = get_req.getResponse();
                 http_code = 200;
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid item id");
                 http_code = 400;
-            }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
-        }
-        else if (paths.length == 3){
-            try{
+        } else if (paths.length == 3) {
+            try {
                 Long item_id = Long.parseLong(paths[2]);
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
@@ -209,14 +198,10 @@ public class RatingHandler implements HttpHandler {
                 RatingDTO.Get_Rating_by_id get_res = new RatingDTO.Get_Rating_by_id(item_id, ratingDAO);
                 response = get_res.getResponse();
                 http_code = 200;
-            }
-
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid item id");
                 http_code = 400;
-            }
-
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -230,15 +215,15 @@ public class RatingHandler implements HttpHandler {
         return response;
     }
 
-    private String handleDeleteRequest(HttpExchange exchange , String []paths) throws IOException {
+    private String handleDeleteRequest(HttpExchange exchange, String[] paths) throws IOException {
 
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
-        int http_code = 200 ;
+        int http_code = 200;
 
-        if(paths.length == 3){
+        if (paths.length == 3) {
 
-            try{
+            try {
                 Long comment_id = Long.parseLong(paths[2]);
                 Rating rating = ratingDAO.getRating(comment_id);
 
@@ -261,12 +246,10 @@ public class RatingHandler implements HttpHandler {
                 ratingDAO.deleteCRating(comment_id);
                 response = generate_msg("Comment deleted");
                 http_code = 200;
-            }
-             catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid item id");
                 http_code = 400;
-             }
-            catch (OrangeException e){
+            } catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 http_code = e.http_code;
             }
@@ -286,8 +269,7 @@ public class RatingHandler implements HttpHandler {
     public static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
 
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -298,13 +280,13 @@ public class RatingHandler implements HttpHandler {
     }
 
     public void send_Response(HttpExchange exchange, String response) throws IOException {
-        try(OutputStream os = exchange.getResponseBody()) {
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
         exchange.close();
     }
 
-    public String generate_msg(String msg){
+    public String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();

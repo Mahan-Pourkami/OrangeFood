@@ -18,23 +18,22 @@ public class CouponDAO {
 
     public CouponDAO() {
 
-            this.sessionFactory = new Configuration()
-                    .addAnnotatedClass(Coupon.class)
-                    .configure()
-                    .buildSessionFactory();
+        this.sessionFactory = new Configuration()
+                .addAnnotatedClass(Coupon.class)
+                .configure()
+                .buildSessionFactory();
     }
 
     public void saveCoupon(Coupon coupon) {
 
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(coupon);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to save coupon",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to save coupon", e);
         }
     }
 
@@ -45,27 +44,24 @@ public class CouponDAO {
             Coupon coupon = session.get(Coupon.class, id);
             if (coupon != null) {
                 return coupon;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to get coupon",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to get coupon", e);
         }
     }
 
     public void updateCoupon(Coupon coupon) {
-        Transaction transaction = null ;
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(coupon);
             transaction.commit();
-        }
-        catch (Exception e) {
-            if(transaction!=null)transaction.rollback();
-            throw new RuntimeException("failed to update coupon",e);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new RuntimeException("failed to update coupon", e);
         }
     }
 
@@ -73,7 +69,7 @@ public class CouponDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Coupon coupon= session.get(Coupon.class, id);
+            Coupon coupon = session.get(Coupon.class, id);
             if (coupon != null) {
                 session.remove(coupon);
                 transaction.commit();
@@ -84,7 +80,7 @@ public class CouponDAO {
     }
 
 
-    public List<Coupon> getAllCoupons(){
+    public List<Coupon> getAllCoupons() {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -119,13 +115,14 @@ public class CouponDAO {
 
     public void use_Coupon(long id) throws InvalidInputException {
         Coupon coupon = getCoupon(id);
-        if(coupon.getUser_counts()<=0){
+        if (coupon.getUser_counts() <= 0) {
             throw new InvalidInputException("Coupon");
         }
         coupon.setUser_counts(coupon.getUser_counts() - 1);
         updateCoupon(coupon);
 
     }
+
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();

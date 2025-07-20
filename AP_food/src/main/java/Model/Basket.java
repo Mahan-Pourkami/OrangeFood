@@ -31,7 +31,7 @@ public class Basket {
     @Column(name = "buyer_name", length = 100)
     private String buyerName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "basket_items",
             joinColumns = @JoinColumn(name = "basket_id")
@@ -202,11 +202,10 @@ public class Basket {
 
     }
 
-    public int getPayPrice(RestaurantDAO restaurantDAO,FoodDAO foodDAO){
+    public int getPayPrice(RestaurantDAO restaurantDAO,FoodDAO foodDAO , CouponDAO couponDAO){
         int payPrice = 0 ;
         int additionalFee = getAdditionalFee(restaurantDAO);
         int taxFee = getTaxFee(restaurantDAO);
-        CouponDAO couponDAO = new CouponDAO();
         payPrice = getRawPrice(foodDAO)+additionalFee+taxFee+COURIER_FEE;
         if(coupon_id!=null&&couponDAO.getCoupon(coupon_id)!=null) {
             Coupon cp = couponDAO.getCoupon(coupon_id);

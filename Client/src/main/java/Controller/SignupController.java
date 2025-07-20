@@ -74,7 +74,7 @@ public class SignupController {
     @FXML
     void handleSignupButton(MouseEvent event) throws IOException {
 
-        URL address = new URL("http://localhost:8080/auth/register");
+        URL address = new URL(Methods.url+"auth/register");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
 
         connection.setRequestMethod("POST");
@@ -129,35 +129,23 @@ public class SignupController {
                     writer.write(response.getString("token"));
                 }
 
-                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Home-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
+                Methods.switch_page(home,event);
             }
             else {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
         }
-
         else {
             errorlabel.setText(response.getString("error"));
         }
     }
-
-
     @FXML
     void handleloginlink(MouseEvent event) throws IOException {
 
         FXMLLoader newView = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/org/Login-view.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = newView.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(newView,event);
 
     }
 
@@ -165,10 +153,7 @@ public class SignupController {
     void handlehomebutton (MouseEvent event) throws IOException {
 
         FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = home.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(home,event);
     }
 
     @FXML
@@ -200,12 +185,11 @@ public class SignupController {
         }
     }
 
-
-
     @FXML
     void initialize() {
+
         profview.setImage(default_prof);
-          rolechooser.getItems().addAll("buyer", "seller", "courier");
+        rolechooser.getItems().addAll("buyer", "seller", "courier");
         rolechooser.getSelectionModel().selectFirst();
         profview.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
@@ -226,5 +210,4 @@ public class SignupController {
         });
 
     }
-
 }

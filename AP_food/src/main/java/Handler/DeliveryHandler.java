@@ -4,7 +4,6 @@ import DAO.*;
 import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DeliveryHandler implements HttpHandler {
 
@@ -25,7 +23,7 @@ public class DeliveryHandler implements HttpHandler {
     RestaurantDAO restaurantDAO;
     FoodDAO foodDAO;
 
-    public DeliveryHandler(UserDAO userDAO,CouponDAO couponDAO,BasketDAO basketDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
+    public DeliveryHandler(UserDAO userDAO, CouponDAO couponDAO, BasketDAO basketDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO) {
         this.userDAO = userDAO;
         this.couponDAO = couponDAO;
         this.basketDAO = basketDAO;
@@ -39,17 +37,21 @@ public class DeliveryHandler implements HttpHandler {
 
         String response = "";
         String methode = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
         int http_code = 200; // Default success code
 
-        try{
+        try {
             switch (methode) {
                 case "GET":
-                    response = handleGetRequest(exchange,paths);
+                    response = handleGetRequest(exchange, paths);
+                    break;
+
+                case "PUT":
+                    response = handlePutRequest(exchange, paths);
                     break;
 
                 case "PATCH":
-                    response = handlePatchRequest(exchange,paths);
+                    response = handlePatchRequest(exchange, paths);
                     break;
 
                 default:
@@ -57,32 +59,30 @@ public class DeliveryHandler implements HttpHandler {
                     response = generate_error("Method not supported");
                     break;
             }
-        }
-        catch(OrangeException e){
+        } catch (OrangeException e) {
             http_code = e.http_code;
             response = generate_error(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             http_code = 500; // Internal Server Error
             response = generate_error("An internal server error occurred.");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             send_Response(exchange, response, http_code);
         }
     }
 
-    private String handlePatchRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handlePutRequest(HttpExchange exchange, String[] paths) throws IOException {
+
         String token = JwtUtil.get_token_from_server(exchange);
         String response = "";
-        if(paths.length == 3){
+        if (paths.length == 3) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
             if (!JwtUtil.extractRole(token).equals("courier")) {
                 throw new ForbiddenroleException();
             }
-            if (!paths[2].matches("\\d+")){
+            if (!paths[2].matches("\\d+")) {
                 throw new InvalidInputException("item id");
             }
             JSONObject jsonobject = getJsonObject(exchange);
@@ -90,21 +90,20 @@ public class DeliveryHandler implements HttpHandler {
             Basket basket = basketDAO.getBasket(orderId);
             String statusString = jsonobject.get("status").toString();
 
-            if(invalidInput(jsonobject).isEmpty()){
-                if (statusString.equals("accepted") && basket.getStateofCart()!=StateofCart.served)
+            if (invalidInput(jsonobject).isEmpty()) {
+                if (statusString.equals("accepted") && basket.getStateofCart() != StateofCart.served)
                     throw new InvalidInputException("order_id");
 
-                if(statusString.equals("received") && basket.getStateofCart() != StateofCart.acceptedbycourier)
+                if (statusString.equals("received") && basket.getStateofCart() != StateofCart.acceptedbycourier)
                     throw new InvalidInputException("order_id");
 
-                if(statusString.equals("delivered") && basket.getStateofCart() != StateofCart.received)
+                if (statusString.equals("delivered") && basket.getStateofCart() != StateofCart.received)
                     throw new InvalidInputException("order_id");
                 StateofCart state;
-                if(statusString.equals("accepted")){
+                if (statusString.equals("accepted")) {
                     basket.setCourier_id(JwtUtil.extractSubject(token));
                     state = StateofCart.acceptedbycourier;
-                }
-                else {
+                } else {
                     state = StateofCart.valueOf(statusString);
                 }
                 basket.setStateofCart(state);
@@ -115,27 +114,80 @@ public class DeliveryHandler implements HttpHandler {
 
                 JSONObject responseJson = new JSONObject();
                 responseJson.put("message", statusString);
-                responseJson.put("order", getBasketJsonObject(basket,itemIdsArray));
+                responseJson.put("order", getBasketJsonObject(basket, itemIdsArray));
 
                 response = responseJson.toString();
-            }
-
-            else {
-                response = generate_error("Invalid "+invalidInput(jsonobject).toString());
+            } else {
+                response = generate_error("Invalid " + invalidInput(jsonobject).toString());
                 throw new OrangeException(response, 400);
 
             }
-        }
-        else {
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
         return response;
     }
 
-    private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handlePatchRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
         String token = JwtUtil.get_token_from_server(exchange);
         String response = "";
-        if(paths.length == 3 && paths[2].equals("available")){
+        if (paths.length == 3) {
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("courier")) {
+                throw new ForbiddenroleException();
+            }
+            if (!paths[2].matches("\\d+")) {
+                throw new InvalidInputException("item id");
+            }
+            JSONObject jsonobject = getJsonObject(exchange);
+            Long orderId = Long.valueOf(paths[2]);
+            Basket basket = basketDAO.getBasket(orderId);
+            String statusString = jsonobject.get("status").toString();
+
+            if (invalidInput(jsonobject).isEmpty()) {
+                if (statusString.equals("accepted") && basket.getStateofCart() != StateofCart.served)
+                    throw new InvalidInputException("order_id");
+
+                if (statusString.equals("received") && basket.getStateofCart() != StateofCart.acceptedbycourier)
+                    throw new InvalidInputException("order_id");
+
+                if (statusString.equals("delivered") && basket.getStateofCart() != StateofCart.received)
+                    throw new InvalidInputException("order_id");
+                StateofCart state;
+                if (statusString.equals("accepted")) {
+                    basket.setCourier_id(JwtUtil.extractSubject(token));
+                    state = StateofCart.acceptedbycourier;
+                } else {
+                    state = StateofCart.valueOf(statusString);
+                }
+                basket.setStateofCart(state);
+                basketDAO.updateBasket(basket);
+
+                Map<Long, Integer> items = basket.getItems();
+                JSONArray itemIdsArray = new JSONArray(items.keySet());
+
+                JSONObject responseJson = new JSONObject();
+                responseJson.put("message", statusString);
+                responseJson.put("order", getBasketJsonObject(basket, itemIdsArray));
+
+                response = responseJson.toString();
+            } else {
+                response = generate_error("Invalid " + invalidInput(jsonobject).toString());
+                throw new OrangeException(response, 400);
+
+            }
+        } else {
+            throw new OrangeException("endpoint not supported", 404);
+        }
+        return response;
+    }
+
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
+        String token = JwtUtil.get_token_from_server(exchange);
+        String response = "";
+        if (paths.length == 3 && paths[2].equals("available")) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -147,12 +199,10 @@ public class DeliveryHandler implements HttpHandler {
             for (Basket basket : servedBaskets) {
                 Map<Long, Integer> items = basket.getItems();
                 JSONArray itemIdsArray = new JSONArray(items.keySet());
-                servedBasketsJson.put(getBasketJsonObject(basket,itemIdsArray));
+                servedBasketsJson.put(getBasketJsonObject(basket, itemIdsArray));
             }
-            response =servedBasketsJson.toString();
-        }
-
-        else if (paths.length == 3 && paths[2].equals("history")){
+            response = servedBasketsJson.toString();
+        } else if (paths.length == 3 && paths[2].equals("history")) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -166,12 +216,30 @@ public class DeliveryHandler implements HttpHandler {
 
             List<Basket> baskets = basketDAO.getAllBasket();
             JSONArray basketsArray = new JSONArray();
+
             for (Basket basket : baskets) {
-                if(basket.getCourier_id().equals(JwtUtil.extractSubject(token))) {
+
+                if (basket.getCourier_id() == null || !basket.getCourier_id().equals(JwtUtil.extractSubject(token))) {
+                    continue;
+                }
+
+                if (basket.getCourier_id().equals(JwtUtil.extractSubject(token))) {
                     boolean matches = true;
 
                     if (search != null && !search.isEmpty()) {
-                        matches &= basket.getAddress().contains(search);
+                        boolean match_food = false;
+
+                        for (long food_id : basket.getItems().keySet()) {
+                            Food food = foodDAO.getFood(food_id);
+                            if (food == null) {
+                                break;
+                            }
+                            if (food.getName().contains(search)) {
+                                match_food = true;
+                                break;
+                            }
+                        }
+                        matches &= match_food;
                     }
 
                     if (vendor != null && !vendor.isEmpty()) {
@@ -190,17 +258,44 @@ public class DeliveryHandler implements HttpHandler {
                 }
             }
             return basketsArray.toString();
-        }
-        else {
+        } else if (paths.length == 3 && paths[2].equals("pending")) {
+
+            int http_code = 200;
+
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("courier")) {
+                throw new ForbiddenroleException();
+            }
+            List<Basket> servedBaskets = new ArrayList<>();
+
+            for (Basket basket : basketDAO.getAllBasket()) {
+
+                if (basket.getCourier_id() != null && basket.getCourier_id().equals(JwtUtil.extractSubject(token)) && ((basket.getStateofCart().equals(StateofCart.acceptedbycourier) || (basket.getStateofCart().equals(StateofCart.received))))) {
+                    servedBaskets.add(basket);
+                }
+            }
+
+            JSONArray servedBasketsJson = new JSONArray();
+            for (Basket basket : servedBaskets) {
+                JSONObject obj = getBasketJsonObject(basket);
+                servedBasketsJson.put(obj);
+            }
+
+            response = servedBasketsJson.toString();
+            return response;
+
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
         return response;
     }
 
     private String invalidInput(JSONObject jsonObject) throws OrangeException {
-        String result = "" ;
+        String result = "";
 
-        String [] fields = {"status"};
+        String[] fields = {"status"};
 
         for (String field : fields) {
             if (!jsonObject.has(field)) {
@@ -213,12 +308,11 @@ public class DeliveryHandler implements HttpHandler {
             if (!(statusObj instanceof String)) {
                 return "status";
             }
-            if(!isValidState(statusObj.toString())){
+            if (!isValidState(statusObj.toString())) {
                 return "status";
 
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             result = "type";
         }
         return result;
@@ -235,8 +329,7 @@ public class DeliveryHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -253,7 +346,7 @@ public class DeliveryHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
@@ -265,7 +358,7 @@ public class DeliveryHandler implements HttpHandler {
         exchange.sendResponseHeaders(http_code, responseLength);
 
         if (responseLength > 0) {
-            try(OutputStream os = exchange.getResponseBody()) {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
         } else {
@@ -277,40 +370,44 @@ public class DeliveryHandler implements HttpHandler {
         JSONObject basketJson = new JSONObject();
         basketJson.put("id", basket.getId());
         basketJson.put("delivery_address", basket.getAddress());
-        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("customer_id", basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id", basket.getRes_id());
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         JSONArray itemIdsArray = new JSONArray(basket.getItems().keySet());
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
-        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
-        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
-        basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
-        basketJson.put("courier_id",basket.getCourier_id());
-        basketJson.put("status",basket.getStateofCart());
-        basketJson.put("created_at",basket.getCreated_at());
-        basketJson.put("updated_at",basket.getUpadated_at());
+        basketJson.put("raw_price", basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
+        basketJson.put("buyer_name", basket.getBuyerName());
+        basketJson.put("buyer_phone", basket.getBuyerPhone());
+        basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee", basket.getCOURIER_FEE());
+        basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+        basketJson.put("courier_id", basket.getCourier_id());
+        basketJson.put("status", basket.getStateofCart());
+        basketJson.put("created_at", basket.getCreated_at());
+        basketJson.put("updated_at", basket.getUpadated_at());
         return basketJson;
     }
 
-    public JSONObject getBasketJsonObject(Basket basket,JSONArray itemIdsArray) {
+    public JSONObject getBasketJsonObject(Basket basket, JSONArray itemIdsArray) {
         JSONObject basketJson = new JSONObject();
         basketJson.put("id", basket.getId());
         basketJson.put("delivery_address", basket.getAddress());
-        basketJson.put("customer_id",basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("vendor_id",basket.getRes_id());
+        basketJson.put("customer_id", basket.getBuyerPhone()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("vendor_id", basket.getRes_id());
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price",basket.getRawPrice(foodDAO));
-        basketJson.put("tax_fee",basket.getTaxFee(restaurantDAO));
-        basketJson.put("additional_fee",basket.getAdditionalFee(restaurantDAO));
-        basketJson.put("courier_fee",basket.getCOURIER_FEE());
-        basketJson.put("pay_price",basket.getPayPrice(restaurantDAO,foodDAO));
-        basketJson.put("courier_id",basket.getCourier_id());
-        basketJson.put("status",basket.getStateofCart());
-        basketJson.put("created_at",basket.getCreated_at());
-        basketJson.put("updated_at",basket.getUpadated_at());
+        basketJson.put("buyer_name", basket.getBuyerName());
+        basketJson.put("buyer_phone", basket.getBuyerPhone());
+        basketJson.put("raw_price", basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee", basket.getCOURIER_FEE());
+        basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+        basketJson.put("courier_id", basket.getCourier_id());
+        basketJson.put("status", basket.getStateofCart());
+        basketJson.put("created_at", basket.getCreated_at());
+        basketJson.put("updated_at", basket.getUpadated_at());
         return basketJson;
     }
 

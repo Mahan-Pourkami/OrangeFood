@@ -14,6 +14,10 @@ public class Vendor {
 
     private String owner_phone;
 
+    private String logo ;
+
+    private String favorite ;
+
      public Vendor(String name, String address, String phone, Long id, String owner_name, String owner_phone) {
          this.name = name;
          this.address = address;
@@ -22,6 +26,21 @@ public class Vendor {
          this.owner_name = owner_name;
          this.owner_phone = owner_phone;
      }
+
+     public Vendor(String name , String address , long id , String logo) {
+         this.name = name;
+         this.address = address;
+         this.id = id;
+         this.setLogo(logo);
+     }
+
+    public Vendor(String name , String address , long id , String logo , String favorite) {
+        this.name = name;
+        this.address = address;
+        this.id = id;
+        this.setLogo(logo);
+        this.setFavorite(favorite);
+    }
 
     public String getName() {
         return name;
@@ -69,5 +88,21 @@ public class Vendor {
 
     public void setOwner_phone(String owner_phone) {
         this.owner_phone = owner_phone;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(String favorite) {
+        this.favorite = favorite;
     }
 }

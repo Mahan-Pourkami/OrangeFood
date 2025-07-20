@@ -27,13 +27,13 @@ public class TransactionsHandler implements HttpHandler {
 
         String response = "";
         String methode = exchange.getRequestMethod();
-        String []paths = exchange.getRequestURI().getPath().split("/");
+        String[] paths = exchange.getRequestURI().getPath().split("/");
         int http_code = 200; // Default success code
 
-        try{
+        try {
             switch (methode) {
                 case "GET":
-                    response = handleGetRequest(exchange,paths);
+                    response = handleGetRequest(exchange, paths);
                     break;
 
                 default:
@@ -41,27 +41,24 @@ public class TransactionsHandler implements HttpHandler {
                     response = generate_error("Method not supported");
                     break;
             }
-        }
-        catch(OrangeException e){
+        } catch (OrangeException e) {
             http_code = e.http_code;
             response = generate_error(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             http_code = 500; // Internal Server Error
             response = generate_error("An internal server error occurred.");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             send_Response(exchange, response, http_code);
         }
     }
 
-    private String handleGetRequest(HttpExchange exchange , String [] paths) throws IOException, OrangeException {
+    private String handleGetRequest(HttpExchange exchange, String[] paths) throws IOException, OrangeException {
 
         String token = JwtUtil.get_token_from_server(exchange);
-        String response ="";
+        String response = "";
 
-        if(paths.length == 2){
+        if (paths.length == 2) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
@@ -74,14 +71,13 @@ public class TransactionsHandler implements HttpHandler {
 
             List<TransactionT> transactionTList = transactionTDAO.getTransactionsByUserId(user_id);
             JSONArray transactionjsonArray = new JSONArray();
-            for(TransactionT transactionT : transactionTList){
+            for (TransactionT transactionT : transactionTList) {
                 JSONObject jsontransactiont = getTransactionJsonObject(transactionT);
                 transactionjsonArray.put(jsontransactiont);
             }
             response = transactionjsonArray.toString();
             return response;
-        }
-        else {
+        } else {
             throw new OrangeException("endpoint not supported", 404);
         }
     }
@@ -105,7 +101,7 @@ public class TransactionsHandler implements HttpHandler {
             if (!(method instanceof String)) {
                 return "method";
             }
-            if(!(method.equals("wallet")||method.equals("online"))){
+            if (!(method.equals("wallet") || method.equals("online"))) {
                 return "method";
             }
 
@@ -124,8 +120,7 @@ public class TransactionsHandler implements HttpHandler {
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody)))
-        {
+             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -142,7 +137,7 @@ public class TransactionsHandler implements HttpHandler {
         return errorJson.toString();
     }
 
-    private String generate_msg(String msg){
+    private String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);
         return msgJson.toString();
@@ -152,8 +147,8 @@ public class TransactionsHandler implements HttpHandler {
         JSONObject basketJson = new JSONObject();
         basketJson.put("id", transactionT.getId());
         basketJson.put("order_id", transactionT.getOrderId());
-        basketJson.put("user_id",transactionT.getUserId()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
-        basketJson.put("method",transactionT.getMethod());
+        basketJson.put("user_id", transactionT.getUserId()); //تو yaml نوشته باید int باشه ولی فعلا string میفرستیم
+        basketJson.put("method", transactionT.getMethod());
         basketJson.put("status", transactionT.getStatus());
         return basketJson;
     }
@@ -164,7 +159,7 @@ public class TransactionsHandler implements HttpHandler {
         exchange.sendResponseHeaders(http_code, responseLength);
 
         if (responseLength > 0) {
-            try(OutputStream os = exchange.getResponseBody()) {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
         } else {
