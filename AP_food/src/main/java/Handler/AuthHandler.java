@@ -177,7 +177,7 @@ public class AuthHandler implements HttpHandler {
                             jsonobject.getString("role"),
                             jsonobject.getString("address"),
                             jsonobject.getString("email"),
-                            jsonobject.getString("profileImageBase64"),
+                            jsonobject.has("profileImageBase64") ?jsonobject.getString("profileImageBase64") : null,
                             bankobject.getString("bank_name"),
                             bankobject.getString("account_number"),
                             userDAO, sellerDAO, buyerDAO, courierDAO);

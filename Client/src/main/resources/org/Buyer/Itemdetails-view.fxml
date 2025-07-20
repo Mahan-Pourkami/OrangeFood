@@ -56,7 +56,12 @@
                <stops>
                   <Stop>
                      <color>
-                        <Color opacity="0.22740457952022552" />
+                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.23000000417232513" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.23000000417232513" />
                      </color>
                   </Stop>
                   <Stop offset="1.0">
@@ -72,12 +77,22 @@
                <stops>
                   <Stop>
                      <color>
-                        <Color red="0.9473684430122375" green="0.9473684430122375" blue="0.9473684430122375" />
+                        <Color red="0.9210526347160339" green="0.7315829992294312" blue="0.554337203502655" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="0.9210526347160339" green="0.7315829992294312" blue="0.554337203502655" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.4542682926829268">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.23000000417232513" />
                      </color>
                   </Stop>
                   <Stop offset="1.0">
                      <color>
-                        <Color red="1.0" green="0.9138888716697693" blue="0.7129629850387573" />
+                        <Color red="0.9868420958518982" green="0.9868420958518982" blue="0.9868420958518982" />
                      </color>
                   </Stop>
                </stops>
@@ -121,12 +136,12 @@
             <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="cat_label" layoutX="68.0" layoutY="635.0" prefHeight="35.0" prefWidth="278.0" text="34yhhq" textFill="#51648c7f">
+      <Label fx:id="cat_label" layoutX="68.0" layoutY="635.0" prefHeight="35.0" prefWidth="278.0" textFill="#51648c7f">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <ListView layoutX="447.0" layoutY="215.0" prefHeight="585.0" prefWidth="783.0" />
+      <ListView fx:id="comments_list" layoutX="447.0" layoutY="215.0" prefHeight="585.0" prefWidth="783.0" />
       <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="525.0" layoutY="37.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
             <Image url="@../../asset/images/logo.png" />
@@ -137,10 +152,31 @@
             <Font name="System Bold" size="34.0" />
          </font>
       </Label>
-      <Button layoutX="48.0" layoutY="709.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="387.0" styleClass="view-button" text="Rate this Item">
+      <Button layoutX="44.0" layoutY="722.0" mnemonicParsing="false" onMousePressed="#post_contorl" prefHeight="77.0" prefWidth="387.0" styleClass="dark-button" text="Rate this Item">
          <font>
-            <Font size="18.0" />
+            <Font name="System Bold" size="28.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.779629647731781" blue="0.2222222238779068" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.34451219512195125">
+                     <color>
+                        <Color red="0.8999999761581421" green="0.22821427881717682" blue="0.22499999403953552" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8999999761581421" green="0.6653571724891663" blue="0.22499999403953552" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Button>
 
       <Label layoutX="473.0" layoutY="142.0" prefHeight="51.0" prefWidth="335.0" text="Comments and Rating" textFill="#ff0061">
@@ -148,7 +184,7 @@
             <Font name="System Bold" size="23.0" />
          </font>
       </Label>
-      <ProgressBar layoutX="1005.0" layoutY="159.0" prefHeight="18.0" prefWidth="190.0" progress="0.0">
+      <ProgressBar fx:id="rating_avg" layoutX="1005.0" layoutY="159.0" prefHeight="18.0" prefWidth="190.0" progress="0.0">
          <styleClass>
             <String fx:value="card-container" />
             <String fx:value="table-row-cell" />
@@ -162,6 +198,11 @@
       <ImageView fitHeight="92.0" fitWidth="89.0" layoutX="1190.0" layoutY="16.0" opacity="0.21" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/hambergur.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="77.0" layoutY="722.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/star.png" />
          </image>
       </ImageView>
    </children>

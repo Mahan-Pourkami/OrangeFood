@@ -198,7 +198,4 @@ public class EditfoodController {
         EditfoodController.res_id = res_id;
         EditfoodController.item_id = item_id;
     }
-
-
-
 }

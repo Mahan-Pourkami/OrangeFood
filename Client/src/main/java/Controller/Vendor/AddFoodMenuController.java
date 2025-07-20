@@ -244,12 +244,15 @@ public class AddFoodMenuController {
 
     @FXML
     void handleDelete(ActionEvent event, Food food) throws IOException {
+
         URL delete_req_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id()+"/menu/"+menu_title+"/"+food.getId());
         HttpURLConnection connection = (HttpURLConnection) delete_req_url.openConnection();
         connection.setRequestMethod("DELETE");
         String token = Methods.Get_saved_token();
         connection.setRequestProperty("Authorization", "Bearer "+token);
+
         int http_code = connection.getResponseCode();
+
         JSONObject response = Methods.getJsonResponse(connection);
 
         if (http_code == 200) {

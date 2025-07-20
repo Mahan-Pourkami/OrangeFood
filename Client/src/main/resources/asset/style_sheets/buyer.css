@@ -75,7 +75,7 @@
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #fafafa;
+    -fx-background-color: #574040;
 }
 
 .table-row-cell:selected {
@@ -205,35 +205,54 @@
     -fx-background-radius: 10px;
 }
 
-.cart-button {
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-background-color: #ff7000; /* Green */
+.progress-bar {
+    -fx-accent: red; /* Default color */
+}
+
+.progress-bar.low {
+    -fx-accent: red;
+}
+
+.progress-bar.medium {
+    -fx-accent: orange;
+}
+
+.progress-bar.high {
+    -fx-accent: green;
+}
+
+.send-button {
+    -fx-background-color: #1d6dda; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+}
+.send-button:hover {
+
     -fx-text-fill: white;
     -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
+}
+
+.edit-button {
+    -fx-background-color: #bfb834; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
 }
-.cart-button:hover {
+.edit-button:hover {
 
-    -fx-font-family: "B Nazanin";
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-background-color: #ffffff;
+    -fx-text-fill: white;
     -fx-background-radius: 10px;
-    -fx-text-fill: #ff871b;
     -fx-padding: 5 10 5 10;
-    -fx-border-color: orange;
-    -fx-border-radius: 10px;
 }
 
-.cart-button:pressed {
+.edit-button:pressed {
 
     -fx-translate-y: 1px;
-    -fx-translate-x: 1px;
-    -fx-border-color: orange;
     -fx-background-radius: 10px;
+    -fx-translate-x: 1px;
 
 }
-

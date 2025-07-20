@@ -12,12 +12,18 @@ import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+
+
 
 public class RatingHandler implements HttpHandler {
 
     RatingDAO ratingDAO;
     FoodDAO foodDAO;
     UserDAO userDAO;
+
+    private static final int  MAX_IN_MEMORY_SIZE = 1024 * 1024;
+    private static final int CHUNK_SIZE = 8192;
 
     public RatingHandler(RatingDAO ratingDAO, FoodDAO foodDAO, UserDAO userDAO) {
         this.ratingDAO = ratingDAO;
@@ -59,9 +65,6 @@ public class RatingHandler implements HttpHandler {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
-            send_Response(exchange, response);
         }
     }
 
@@ -96,12 +99,7 @@ public class RatingHandler implements HttpHandler {
             }
         }
 
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(http_code, response.length());
-
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        send_Response(exchange,http_code,response);
         return response;
     }
 
@@ -148,12 +146,7 @@ public class RatingHandler implements HttpHandler {
             }
         }
 
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(http_code, response.length());
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-
+        send_Response(exchange,http_code,response);
         return response;
     }
 
@@ -175,9 +168,10 @@ public class RatingHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO);
+                RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO,userDAO, JwtUtil.extractSubject(token));
                 response = get_req.getResponse();
                 http_code = 200;
+
             } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid item id");
                 http_code = 400;
@@ -206,11 +200,7 @@ public class RatingHandler implements HttpHandler {
                 http_code = e.http_code;
             }
         }
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(http_code, response.length());
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        send_Response(exchange,http_code,response);
 
         return response;
     }
@@ -254,13 +244,7 @@ public class RatingHandler implements HttpHandler {
                 http_code = e.http_code;
             }
         }
-
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(http_code, response.length());
-
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        send_Response(exchange,http_code,response);
 
         return response;
     }
@@ -279,13 +263,29 @@ public class RatingHandler implements HttpHandler {
         }
     }
 
-    public void send_Response(HttpExchange exchange, String response) throws IOException {
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-        exchange.close();
-    }
+    public void send_Response(HttpExchange exchange,int http_code,String response) throws IOException {
 
+        byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+
+        if (responseBytes.length <= MAX_IN_MEMORY_SIZE) {
+            exchange.sendResponseHeaders(http_code, responseBytes.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
+            }
+        }
+        else {
+            exchange.sendResponseHeaders(http_code, 0);
+            try (OutputStream os = exchange.getResponseBody()) {
+                int offset = 0;
+                while (offset < responseBytes.length) {
+                    int length = Math.min(CHUNK_SIZE, responseBytes.length - offset);
+                    os.write(responseBytes, offset, length);
+                    offset += length;
+                }
+            }
+        }
+    }
     public String generate_msg(String msg) {
         JSONObject msgJson = new JSONObject();
         msgJson.put("message", msg);

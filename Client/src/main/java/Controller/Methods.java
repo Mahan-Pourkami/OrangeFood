@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -54,6 +55,7 @@ public class Methods {
                 )
         )) {
 
+
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -77,6 +79,13 @@ public class Methods {
         Parent root = page.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
+    }
+
+    public static void send_data(HttpURLConnection connection , String request) throws IOException {
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = request.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
     }
 
 
