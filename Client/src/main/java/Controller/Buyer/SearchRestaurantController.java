@@ -6,9 +6,6 @@ import Model.Vendor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -18,7 +15,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,8 +61,6 @@ public class SearchRestaurantController {
                 }
             }
         });
-
-
 
         URL get_restaurants = new URL(Methods.url+"vendors");
         HttpURLConnection connection = (HttpURLConnection) get_restaurants.openConnection();
@@ -176,16 +170,11 @@ public class SearchRestaurantController {
 
             ViewMenuController.setRes_id(vendor.getId());
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Menu-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = null;
             try {
-                root = users.load();
+                Methods.switch_page(users,event);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-
         });
 
         return cell;
@@ -199,8 +188,6 @@ public class SearchRestaurantController {
         return cells;
     }
 
-
-
     @FXML
     void refresh(MouseEvent event) throws IOException {
         initialize();
@@ -208,12 +195,8 @@ public class SearchRestaurantController {
 
     @FXML
     void control_back(MouseEvent event) throws IOException {
-
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
 
     }
 

@@ -9,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,7 +24,6 @@ public class CourierHomeController {
                 redirectToLogin(event);
                 return;
             }
-
             URL logouturl = new URL(Methods.url+"auth/logout");
             HttpURLConnection connection = (HttpURLConnection) logouturl.openConnection();
             connection.setRequestMethod("POST");
@@ -40,7 +38,6 @@ public class CourierHomeController {
             SceneManager.showErrorAlert("Connection failed" , "Cannot connect to server");
             redirectToLogin(event);
         }
-
     }
     @FXML
     void handleprofilebutton (MouseEvent event) throws IOException {
@@ -50,38 +47,21 @@ public class CourierHomeController {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
-
     }
-
     private void redirectToLogin(MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(loader,event);
     }
-
     @FXML
     void handleAvailable (MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/AvailableDeliv-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(loader,event);
     }
-
     @FXML
     void handlePending (MouseEvent event) throws IOException {
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/PendingOrder-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(loader,event);
     }
-
-
 }

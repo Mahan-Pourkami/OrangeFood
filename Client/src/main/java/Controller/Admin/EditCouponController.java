@@ -72,26 +72,10 @@ public class EditCouponController {
 
     }
 
-
-    @FXML
-    void handle_save() throws IOException {
-        URL edit_url = new URL("http://localhost:8080/admin/coupons/"+couponID);
-        HttpURLConnection connection = (HttpURLConnection) edit_url.openConnection();
-        connection.setRequestMethod("PUT");
-        connection.setRequestProperty("Content-Type", "application/json");
-        String token = Methods.Get_saved_token();
-        connection.setRequestProperty("Authorization", "Bearer " + token);
-        connection.setDoOutput(true);
-
-    }
-
     @FXML
     private void control_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
     @FXML
@@ -150,7 +134,6 @@ public class EditCouponController {
         }
 
         int http_code = connection.getResponseCode();
-
         JSONObject response = Methods.getJsonResponse(connection);
         if(http_code >= 200 && http_code < 300) {
             control_back(event);
@@ -162,17 +145,11 @@ public class EditCouponController {
             error_label.setText(response.getString("error"));
         }
     }
-
-
     @FXML
     private void login_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
-
     public static void SetCouponID(long couponID) {
      EditCouponController.couponID = couponID;
     }

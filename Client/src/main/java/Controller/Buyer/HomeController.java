@@ -4,12 +4,7 @@ import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,10 +16,7 @@ public class HomeController {
     void handlehomebutton (MouseEvent event) throws IOException {
 
         FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = home.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(home,event);
     }
 
     @FXML
@@ -41,7 +33,6 @@ public class HomeController {
             HttpURLConnection connection = (HttpURLConnection) logouturl.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Authorization", "Bearer " + token);
-
             if(connection.getResponseCode() != HttpURLConnection.HTTP_OK){
                 SceneManager.showErrorAlert("Unauthorized" , "Invalid Token");
             }
@@ -58,61 +49,36 @@ public class HomeController {
     void handleprofilebutton (MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Profile-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(loader,event);
     }
 
     private void redirectToLogin(MouseEvent event) throws IOException {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-
-
+            Methods.switch_page(loader,event);
     }
 
     @FXML
     void handlecharge(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Wallet-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(users,event);
     }
 
     @FXML
     void handleSearchVendor(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/SearchRestaurants-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(users,event);
     }
-
     @FXML
     void handleFavorites (MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Favorite-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
-
     @FXML
     void handleSearchItem (MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ItemSearch-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 }

@@ -1,5 +1,6 @@
 package Controller.Buyer;
 
+import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +19,7 @@ public class ItemSearchController {
     void control_back(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
 
     }
 

@@ -2,9 +2,6 @@ package Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -158,23 +154,14 @@ public class ProfileController {
         try {
             if (role.equals("buyer")) {
                 FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = users.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(users,event);
             } else if (role.equals("seller")) {
 
                 FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = users.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(users,event);
             } else if (role.equals("courier")) {
                 FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = users.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(users,event);
             }
         } catch (Exception e) {
             redirectToLogin(event);
@@ -226,20 +213,13 @@ public class ProfileController {
     private void refresh(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Profile-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
-
 
     private void redirectToLogin(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+            Methods.switch_page(loader,event);
         } catch (IOException e) {
             SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
         }

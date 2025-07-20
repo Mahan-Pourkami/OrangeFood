@@ -7,17 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -64,11 +59,10 @@ public class AllusersController {
     private void loadUserData() throws IOException {
 
         String token = Methods.Get_saved_token();
-        URL getusers = new URL("http://localhost:8080/admin/users");
+        URL getusers = new URL(Methods.url+"admin/users");
         HttpURLConnection connection = (HttpURLConnection) getusers.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + token);
-
         ArrayList<User> users_list = new ArrayList<>();
         if (connection.getResponseCode() == 200) {
             JSONArray jsonarray = Methods.getJsonArrayResponse(connection);
@@ -83,21 +77,16 @@ public class AllusersController {
                 );
                 users_list.add(user);
             }
-
             users.addAll(users_list);
         }
         else {
-                SceneManager.showErrorAlert("Task failed" , "Cannot fetch users data");
+            SceneManager.showErrorAlert("Task failed" , "Cannot fetch users data");
         }
     }
-
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        FXMLLoader admin_view = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
+        Methods.switch_page(admin_view,event);
     }
 }

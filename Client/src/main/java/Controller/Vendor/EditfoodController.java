@@ -4,9 +4,6 @@ import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -94,7 +91,6 @@ public class EditfoodController {
             sup_field.setText(String.valueOf(obj.getInt("supply")));
             image_path = obj.getString("imageBase64");
 
-
            try {
                Image image = new Image(image_path);
                 prof_view.setImage(image);
@@ -111,24 +107,16 @@ public class EditfoodController {
                 text.append(array.getString(i)).append(" ");
             }
             key_box.setText(text.toString());
-
         }
         else if (http_code == 401) {
             SceneManager.showErrorAlert("Unauthorized" , "Invalid token");
         }
-
     }
-
 
     @FXML
     void control_back(MouseEvent event) throws IOException {
-
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(users,event);
     }
 
     @FXML
@@ -148,7 +136,6 @@ public class EditfoodController {
 
         if (selectedFile != null) {
             try {
-
                 image_path = selectedFile.getAbsolutePath();
                 System.out.println(image_path);
 
@@ -193,7 +180,6 @@ public class EditfoodController {
         }
 
         JSONObject response = Methods.getJsonResponse(connection);
-
         int http_code = connection.getResponseCode();
         if (http_code == 200) {
             control_back(event);

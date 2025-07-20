@@ -8,9 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -18,7 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -60,9 +56,7 @@ public class ApprovalController {
         setupactionbutton();
         load_data();
     }
-
-
-    void setupColumns (){
+    void setupColumns() {
 
         name_col.setCellValueFactory(new PropertyValueFactory<>("name"));
         phone_col.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -70,55 +64,44 @@ public class ApprovalController {
         id_col.setCellValueFactory(new PropertyValueFactory<>("id"));
     }
 
-    void load_data() throws IOException{
+    void load_data() throws IOException {
 
-        URL request = new URL("http://localhost:8080/admin/approvals");
+        URL request = new URL(Methods.url + "admin/approvals");
         HttpURLConnection connection = (HttpURLConnection) request.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
         connection.setRequestProperty("Authorization", "Bearer " + token);
-
         int httpCode = connection.getResponseCode();
 
-        if(httpCode == 200){
+        if (httpCode == 200) {
 
-            JSONArray array =Methods.getJsonArrayResponse(connection);
+            JSONArray array = Methods.getJsonArrayResponse(connection);
             List<Approvals> approvalsList = new ArrayList<>();
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 String name = obj.getString("full_name");
                 String phone = obj.getString("phone");
                 String role = obj.getString("role");
                 String id = obj.getString("id");
                 approvalsList.add(new Approvals(name, phone, role, id));
-
             }
-
             app_table.getItems().clear();
             app_table.getItems().addAll(approvalsList);
-        }
 
-        else {
-            SceneManager.showErrorAlert("Error","Can't fetch data");
-        }
-
+        } else SceneManager.showErrorAlert("Error", "Can't fetch data");
     }
-
 
     private void setupactionbutton() {
 
         action_col.setCellFactory(new Callback<>() {
-
             @Override
             public TableCell<Approvals, Void> call(final TableColumn<Approvals, Void> param) {
                 return new TableCell<>() {
                     private final Button acceptBtn = new Button("Accept");
                     private final Button rejectBtn = new Button("Reject");
                     private final HBox pane = new HBox(5, acceptBtn, rejectBtn);
-
                     {
-
                         acceptBtn.getStyleClass().add("edit-button");
                         rejectBtn.getStyleClass().add("delete-button");
                         pane.setAlignment(Pos.CENTER);
@@ -133,7 +116,7 @@ public class ApprovalController {
                         });
 
                         rejectBtn.setOnAction(event -> {
-                           Approvals approvals = getTableView().getItems().get(getIndex());
+                            Approvals approvals = getTableView().getItems().get(getIndex());
                             try {
                                 handleReject(approvals);
                             } catch (IOException e) {
@@ -141,6 +124,7 @@ public class ApprovalController {
                             }
                         });
                     }
+
                     @Override
                     protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
@@ -149,47 +133,14 @@ public class ApprovalController {
                         } else {
                             setGraphic(pane);
                         }
-                    }
-                };
+                    }};
             }
         });
     }
+    private void handleAccept(Approvals approvals) throws IOException {
 
-    private void handleAccept(Approvals approvals)  throws IOException {
-
-       String id = approvals.getId();
-
-       URL request = new URL("http://localhost:8080/admin/users/" + id + "/status");
-       HttpURLConnection connection = (HttpURLConnection) request.openConnection();
-        connection.setRequestMethod("PUT");
-       connection.setRequestProperty("Content-Type", "application/json");
-       String token = Methods.Get_saved_token();
-       connection.setRequestProperty("Authorization", "Bearer " + token);
-       connection.setDoOutput(true);
-
-       JSONObject obj = new JSONObject();
-       obj.put("status", "approved");
-
-        try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = obj.toString().getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
-
-        int httpCode = connection.getResponseCode();
-        if(httpCode == 200){
-            app_table.getItems().remove(approvals);
-        }
-        else if(httpCode == 401) {
-            SceneManager.showErrorAlert("Error","Unauthorized");
-        }
-        else {
-            SceneManager.showErrorAlert("Error","Can't update data");
-        }
-    }
-
-    private void handleReject(Approvals approvals) throws IOException {
         String id = approvals.getId();
-        URL request = new URL("http://localhost:8080/admin/users/" + id + "/status");
+        URL request = new URL(Methods.url+"admin/users/" + id + "/status");
         HttpURLConnection connection = (HttpURLConnection) request.openConnection();
         connection.setRequestMethod("PUT");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -198,40 +149,51 @@ public class ApprovalController {
         connection.setDoOutput(true);
 
         JSONObject obj = new JSONObject();
-        obj.put("status", "rejected");
+        obj.put("status", "approved");
 
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = obj.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
         }
-
         int httpCode = connection.getResponseCode();
-        if(httpCode == 200){
+        if (httpCode == 200) {
             app_table.getItems().remove(approvals);
-        }
-        else if(httpCode == 401) {
-            SceneManager.showErrorAlert("Error","Unauthorized");
-        }
-        else {
-            SceneManager.showErrorAlert("Error","Can't update data");
+        } else {
+            SceneManager.showErrorAlert("Error", "Can't update data");
         }
     }
 
+    private void handleReject(Approvals approvals) throws IOException {
+
+        String id = approvals.getId();
+        URL request = new URL("http://localhost:8080/admin/users/" + id + "/status");
+        HttpURLConnection connection = (HttpURLConnection) request.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Content-Type", "application/json");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer " + token);
+        connection.setDoOutput(true);
+        JSONObject obj = new JSONObject();
+        obj.put("status", "rejected");
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = obj.toString().getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        int httpCode = connection.getResponseCode();
+        if (httpCode == 200) {
+            app_table.getItems().remove(approvals);
+        }  else {
+            SceneManager.showErrorAlert("Error", "Can't update data");
+        }
+    }
     @FXML
     private void control_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
-
     @FXML
     private void login_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 }

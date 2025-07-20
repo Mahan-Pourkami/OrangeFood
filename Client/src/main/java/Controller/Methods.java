@@ -1,5 +1,13 @@
 package Controller;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -54,6 +62,23 @@ public class Methods {
             return new JSONArray(response.toString());
         }
     }
+
+   public static void switch_page(FXMLLoader page , MouseEvent event) throws IOException {
+
+       Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+       Parent root = page.load();
+       Scene scene = new Scene(root);
+       SceneManager.fadeScene(stage, scene);
+   }
+
+    public static void switch_page(FXMLLoader page , ActionEvent event) throws IOException {
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = page.load();
+        Scene scene = new Scene(root);
+        SceneManager.fadeScene(stage, scene);
+    }
+
 
 
   public static  String Get_saved_token () throws IOException {

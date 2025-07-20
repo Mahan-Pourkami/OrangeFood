@@ -122,9 +122,7 @@ public class FoodManageController {
         initialize_columns();
         load_data();
         setupActionColumn();
-
     }
-
     @FXML
     void initialize_columns() {
 
@@ -239,8 +237,6 @@ public class FoodManageController {
 
     }
 
-
-
     @FXML
     void load_data() throws IOException {
 
@@ -283,15 +279,11 @@ public class FoodManageController {
     void control_back(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
     @FXML
     void control_save_food(MouseEvent event) throws IOException, URISyntaxException {
-
 
         URL save_food_url = new URL(Methods.url+"restaurants/"+res_id+"/item");
         HttpURLConnection connection = (HttpURLConnection) save_food_url.openConnection();
@@ -319,9 +311,7 @@ public class FoodManageController {
             os.write(input, 0, input.length);
         }
 
-
         int http_code = connection.getResponseCode();
-
 
         JSONObject response = Methods.getJsonResponse(connection);
 
@@ -340,10 +330,7 @@ public class FoodManageController {
     void refresh(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
     @FXML

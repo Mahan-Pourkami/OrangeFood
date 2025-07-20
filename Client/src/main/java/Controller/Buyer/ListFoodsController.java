@@ -6,10 +6,6 @@ import Model.Food;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -122,15 +118,11 @@ public class ListFoodsController {
        card.setOnMouseClicked((MouseEvent event) -> {
            ItemDetailsController.setItemId(food.getId());
            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
-           Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-           Parent root = null;
            try {
-               root = users.load();
+               Methods.switch_page(users,event);
            } catch (IOException e) {
                throw new RuntimeException(e);
            }
-           Scene scene = new Scene(root);
-           SceneManager.fadeScene(stage, scene);
        });
 
        return card;
@@ -147,9 +139,6 @@ public class ListFoodsController {
    @FXML
    void control_back(MouseEvent event) throws IOException {
        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Menu-view.fxml"));
-       Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-       Parent root = users.load();
-       Scene scene = new Scene(root);
-       SceneManager.fadeScene(stage, scene);
+       Methods.switch_page(users,event);
    }
 }

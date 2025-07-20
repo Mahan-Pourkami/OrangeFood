@@ -7,14 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -182,14 +178,10 @@ public class CouponController {
     }
 
     private void handleEditCoupon(Coupon coupon, ActionEvent event) throws IOException {
-
         long id = coupon.getId();
         EditCouponController.SetCouponID(id);
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/EditCoupon-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
 
     }
 
@@ -215,19 +207,13 @@ public class CouponController {
 
                         coupon_table.getItems().remove(coupon);
                     }
-
                     else if(connection.getResponseCode() >= 401) {
                         SceneManager.showErrorAlert("Failed" , "Unauthorized Request");
-
                     }
-
                 }
                  catch (IOException e) {
                     e.printStackTrace();
-                }
-            }
-        });
-    }
+                }}});}
 
     @FXML
     private void handle_submit(MouseEvent event) throws IOException {
@@ -252,14 +238,12 @@ public class CouponController {
         catch(IllegalArgumentException e){
             error_label.setText("Invalid Input");
         }
-
         String token = Methods.Get_saved_token();
-        URL submiturl = new URL("http://localhost:8080/admin/coupons");
+        URL submiturl = new URL(Methods.url+"admin/coupons");
         HttpURLConnection connection = (HttpURLConnection) submiturl.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Authorization", "Bearer " + token);
-
         JSONObject obj = new JSONObject();
         obj.put("coupon_code", code);
         obj.put("type", type);
@@ -268,27 +252,22 @@ public class CouponController {
         obj.put("end_date", end_time);
         obj.put("user_count", count);
         obj.put("min_price", min_price);
-
         connection.setDoOutput(true);
-
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = obj.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
         }
-
         catch (NumberFormatException e){
             error_label.setText("Please enter a number value for value and user count and min price ");
         }
-
         catch (Exception e) {
             SceneManager.showErrorAlert("Connection failed" , "Cannot connect to server");
         }
-
         int http_code = connection.getResponseCode();
 
         JSONObject response = Methods.getJsonResponse(connection);
         if(http_code >= 200 && http_code < 300) {
-            refresh(event);
+           initialize();
         }
         else if(http_code == 401 ) {
             login_back(event);
@@ -296,36 +275,19 @@ public class CouponController {
         else {
             error_label.setText(response.getString("error"));
         }
-
     }
-
 
     @FXML
     private void control_back(MouseEvent event) throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
     @FXML
     private void login_back(MouseEvent event) throws IOException {
-
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
-    @FXML
-    private void refresh(MouseEvent event) throws IOException {
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-    }
 }

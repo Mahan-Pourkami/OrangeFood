@@ -6,9 +6,6 @@ import Model.Vendor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -19,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,21 +30,16 @@ public class FavoriteController {
     @FXML
     ListView<HBox> res_list;
 
-
     @FXML
     void initialize() throws IOException {
 
         URL get_restaurants = new URL(Methods.url+"favorites");
         HttpURLConnection connection = (HttpURLConnection) get_restaurants.openConnection();
-
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
-
         connection.setRequestProperty("Authorization", "Bearer "+token);
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
-
-
         int http_code = connection.getResponseCode();
 
         if (http_code == 200) {
@@ -71,8 +62,6 @@ public class FavoriteController {
             System.out.println("done");
         }
     }
-
-
     private HBox create_cell (Vendor vendor) {
 
         HBox cell = new HBox(10);
@@ -97,10 +86,8 @@ public class FavoriteController {
         clip.setArcHeight(20);
         image.setClip(clip);
         image.setPreserveRatio(true);
-
         Button delete = new Button("Delete from Favorites");
         delete.getStyleClass().add("delete-button");
-
         delete.setOnMouseClicked((MouseEvent event) -> {
 
             try {
@@ -121,34 +108,23 @@ public class FavoriteController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         });
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         cell.getChildren().addAll(image,vbox,spacer,delete);
-
-
         cell.setOnMouseClicked(event -> {
 
             ViewMenuController.setRes_id(vendor.getId());
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Menu-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = null;
+            FXMLLoader menu_view = new FXMLLoader(getClass().getResource("/org/Buyer/Menu-view.fxml"));
             try {
-                root = users.load();
+                Methods.switch_page(menu_view,event);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-
         });
-
         return cell;
     }
-
     private List<HBox> convert_to_card(List<Vendor> vendors) {
         List<HBox> cells = new ArrayList<>();
         for (Vendor vendor : vendors) {
@@ -156,19 +132,9 @@ public class FavoriteController {
         }
         return cells;
     }
-
     @FXML
     void control_back(MouseEvent event) throws IOException {
-
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        FXMLLoader hom_view = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
+        Methods.switch_page(hom_view,event);
     }
-
-
-
-
 }

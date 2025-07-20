@@ -4,22 +4,17 @@ import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 
 public class ItemDetailsController {
 
@@ -44,10 +39,6 @@ public class ItemDetailsController {
 
     private static long item_id = 0;
 
-
-
-
-    
     @FXML
     void initialize() throws IOException {
 
@@ -61,17 +52,14 @@ public class ItemDetailsController {
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         food_image.setClip(clip);
-
         URL get_item = new URL(Methods.url+"items/"+item_id);
         HttpURLConnection connection = (HttpURLConnection) get_item.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
         connection.setRequestProperty("Authorization", "Bearer "+token);
-
         JSONObject obj = Methods.getJsonResponse(connection);
 
        if(connection.getResponseCode() == 200) {
-
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
@@ -82,27 +70,18 @@ public class ItemDetailsController {
                 keyword += "-" + keys.getString(i);
             }
             key_label.setText(keyword);
-
         }
        else {
            SceneManager.showErrorAlert("Error", obj.getString("error"));
        }
     }
-
-
     @FXML
     void control_back(MouseEvent event)throws IOException {
 
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(users,event);
     }
-
     static void setItemId(long item_id) {
-
         ItemDetailsController.item_id = item_id;
     }
 }

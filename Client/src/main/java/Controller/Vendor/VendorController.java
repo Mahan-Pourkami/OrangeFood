@@ -4,15 +4,10 @@ import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,7 +24,6 @@ public class VendorController {
     @FXML
     ImageView plus_image;
 
-
     @FXML
     void initialize() throws IOException {
 
@@ -40,11 +34,7 @@ public class VendorController {
             add_button.setVisible(false);
             plus_image.setVisible(false);
         }
-
     }
-
-
-
     @FXML
     void handlelogoutbutton (MouseEvent event) throws IOException {
 
@@ -54,7 +44,6 @@ public class VendorController {
                 redirectToLogin(event);
                 return;
             }
-
             URL logouturl = new URL(Methods.url+"auth/logout");
             HttpURLConnection connection = (HttpURLConnection) logouturl.openConnection();
             connection.setRequestMethod("POST");
@@ -72,55 +61,35 @@ public class VendorController {
 
     }
 
-
-
     @FXML
     void handleprofilebutton (MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Profile-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(loader,event);
 
     }
 
     @FXML
     void handle_item_button (MouseEvent event) throws IOException {
 
-
         if(Methods.get_restaurant_id() == null){
             SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
             return;
         }
-
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = users.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
+            Methods.switch_page(users,event);
 
     }
 
     private void redirectToLogin(MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(loader,event);
     }
-
-
     @FXML
     void handle_add_restaurant_button (MouseEvent event) throws IOException {
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/AddRestaurant-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(loader,event);
     }
 
     @FXML
@@ -132,11 +101,7 @@ public class VendorController {
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/MenuManage-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        Methods.switch_page(loader,event);
     }
 
     @FXML
@@ -147,11 +112,7 @@ public class VendorController {
             return;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/UpdateRestaurant-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(loader,event);
 
     }
-
 }

@@ -1,18 +1,13 @@
 package Controller.Admin;
 
 import Controller.Methods;
-import Controller.SceneManager;
 import Model.Transaction;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -45,13 +40,11 @@ public class TransactionController {
 
     @FXML
     void setupColumns(){
-
         id_col.setCellValueFactory(new PropertyValueFactory<>("id"));
         order_col.setCellValueFactory(new PropertyValueFactory<>("order_id"));
         state_col.setCellValueFactory(new PropertyValueFactory<>("status"));
         phone_col.setCellValueFactory(new PropertyValueFactory<>("user_phone"));
         methode_col.setCellValueFactory(new PropertyValueFactory<>("methode"));
-
     }
 
     @FXML
@@ -77,13 +70,9 @@ public class TransactionController {
             trans_table.getItems().addAll(transactions);
         }
     }
-
     @FXML
     void control_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 }

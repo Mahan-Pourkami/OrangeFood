@@ -34,9 +34,6 @@ public class WalletController {
     @FXML
     Button pay_button;
 
-
-
-
     @FXML
     void initialize() throws IOException {
 
@@ -45,7 +42,6 @@ public class WalletController {
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
         connection.setRequestProperty("Authorization", "Bearer " + token);
-
         int http_code = connection.getResponseCode();
 
         JSONObject obj = Methods.getJsonResponse(connection);
@@ -54,11 +50,9 @@ public class WalletController {
 
             quantity_label.setText(String.valueOf(obj.getInt("quantity"))+" $");
             acc_field.setText(obj.getString("account_number"));
-
         }
         else  SceneManager.showErrorAlert("Unauthorized", "Invalid token");
     }
-
 
     @FXML
     void handle_paybutton(MouseEvent event) throws IOException {
@@ -68,21 +62,16 @@ public class WalletController {
             HttpURLConnection connection = (HttpURLConnection) charge_url.openConnection();
             connection.setRequestMethod("POST");
             String token = Methods.Get_saved_token();
-
-
             connection.setRequestProperty("Authorization", "Bearer " + token);
 
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
             JSONObject obj = new JSONObject();
             obj.put("amount", Integer.parseInt(amount_field.getText()));
-
-
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = obj.toString().getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
-
             int http_code = connection.getResponseCode();
 
             if(http_code == 200) {
@@ -98,27 +87,19 @@ public class WalletController {
             SceneManager.showErrorAlert("Invalid Input", "Invalid amount");
         }
     }
-
-
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = users.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-    }
-
-    @FXML
-    void redirectToLogin(MouseEvent event) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = loader.load();
+        Parent root = users.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
-
+    }
+    @FXML
+    void redirectToLogin(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
+        Methods.switch_page(loader,event);
 
     }
 

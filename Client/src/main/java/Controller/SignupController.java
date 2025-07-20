@@ -130,34 +130,22 @@ public class SignupController {
                 }
 
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
             else {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
         }
-
         else {
             errorlabel.setText(response.getString("error"));
         }
     }
-
-
     @FXML
     void handleloginlink(MouseEvent event) throws IOException {
 
         FXMLLoader newView = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/org/Login-view.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = newView.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(newView,event);
 
     }
 
@@ -165,10 +153,7 @@ public class SignupController {
     void handlehomebutton (MouseEvent event) throws IOException {
 
         FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = home.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(home,event);
     }
 
     @FXML
@@ -200,8 +185,6 @@ public class SignupController {
         }
     }
 
-
-
     @FXML
     void initialize() {
 
@@ -227,5 +210,4 @@ public class SignupController {
         });
 
     }
-
 }

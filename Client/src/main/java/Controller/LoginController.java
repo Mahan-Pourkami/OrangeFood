@@ -45,7 +45,6 @@ public class LoginController {
     @FXML
     void handlelogin(MouseEvent event) throws IOException {
 
-
         System.out.println(phonefield.getText());
         URL address = new URL(Methods.url+"auth/login");
         HttpURLConnection connection = (HttpURLConnection) address.openConnection();
@@ -60,12 +59,10 @@ public class LoginController {
 
         connection.setDoOutput(true);
 
-
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = request.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
         }
-
         catch (Exception e) {
             SceneManager.showErrorAlert("Connection failed" , "Cannot connect to server");
         }
@@ -73,15 +70,12 @@ public class LoginController {
         JSONObject response = Methods.getJsonResponse(connection);
         int httpCode = connection.getResponseCode();
         if(httpCode == 200) {
-
             System.out.println("Login successful");
-
             File tokenFile = new File("src/main/resources/token.txt");
             try (FileWriter writer = new FileWriter(tokenFile)) {
                 writer.write(response.getString("token"));
             }
             error_lable.setVisible(false);
-
             String role = response.getString("role");
 
             if(role.equals("admin")) {
@@ -92,38 +86,23 @@ public class LoginController {
                 int vendors_count = response.getInt("vendors_counts");
                 AdminController.setvalues(buyer_count, seller_count, courier_count, vendors_count);
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
 
             }
             else if(role.equals("buyer")) {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Buyer/Home-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
 
             else if(role.equals("seller")) {
-
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Vendor/Vendor-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
 
             else if(role.equals("courier")) {
                 FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Courier/Courier-view.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Parent root = home.load();
-                Scene scene = new Scene(root);
-                SceneManager.fadeScene(stage, scene);
+                Methods.switch_page(home,event);
             }
-
-
         }
         else {
             error_lable.setVisible(true);
@@ -137,20 +116,14 @@ public class LoginController {
     void handlehomebutton (MouseEvent event) throws IOException {
 
         FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = home.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(home,event);
     }
 
     @FXML
     void handlesignup_button (MouseEvent event) throws IOException {
 
         FXMLLoader signup = new FXMLLoader(getClass().getResource("/org/Signup-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = signup.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(signup,event);
     }
 
 

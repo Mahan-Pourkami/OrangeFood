@@ -103,81 +103,50 @@ public class AdminController {
         AdminController.courier_number = courier_count;
         AdminController.vendors_number = vendors_number;
 
-
     }
 
-    private void redirectToLogin(MouseEvent event) {
-        try {
+    private void redirectToLogin(MouseEvent event) throws IOException {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Login-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            SceneManager.fadeScene(stage, scene);
-        } catch (IOException e) {
-            SceneManager.showErrorAlert("Navigation Error", "Could not load login screen");
-        }
+            Methods.switch_page(loader,event);
     }
 
     @FXML
     void handlehomebutton (MouseEvent event) throws IOException {
 
         FXMLLoader home = new FXMLLoader(getClass().getResource("/org/Intro-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = home.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(home,event);
     }
 
     @FXML
     void handleGetAllusers(MouseEvent event) throws IOException {
-
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Alluser-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = users.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(users,event);
     }
 
     @FXML
     private void handle_approve(MouseEvent event) throws IOException {
         FXMLLoader approve = new FXMLLoader(getClass().getResource("/org/Admin/Approval-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = approve.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(approve,event);
     }
 
 
     @FXML
     void handleGetAllvendors(MouseEvent event) throws IOException {
         FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Allvendors-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = vendors.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        Methods.switch_page(vendors,event);
     }
 
     @FXML
     void handleGetAllcoupons(MouseEvent event) throws IOException {
-        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = vendors.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
-
+        FXMLLoader coupons = new FXMLLoader(getClass().getResource("/org/Admin/Coupon-view.fxml"));
+        Methods.switch_page(coupons,event);
     }
 
     @FXML
     void handleGetTransactions(MouseEvent event) throws IOException {
 
-        FXMLLoader vendors = new FXMLLoader(getClass().getResource("/org/Admin/Transactions-view.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = vendors.load();
-        Scene scene = new Scene(root);
-        SceneManager.fadeScene(stage, scene);
+        FXMLLoader transactions_view = new FXMLLoader(getClass().getResource("/org/Admin/Transactions-view.fxml"));
+        Methods.switch_page(transactions_view,event);
 
     }
-
-
-
 }
