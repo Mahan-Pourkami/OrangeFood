@@ -19,11 +19,8 @@ import javafx.scene.shape.Rectangle;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +46,9 @@ public class ItemDetailsController {
     Label cat_label;
 
     @FXML
+    Label warn_label;
+
+    @FXML
     ProgressBar rating_avg;
 
     @FXML
@@ -65,6 +65,7 @@ public class ItemDetailsController {
         comments_list.setPadding(new Insets(10, 10, 10, 10));
         comments_list.getItems().clear();
         comments_list.getItems().addAll(comment_boxes);
+        if(!comments_list.getItems().isEmpty()) warn_label.setVisible(false);
         cat_label.setText("Category :" + ListFoodsController.get_menu_title());
         food_image.setFitHeight(250);
         food_image.setFitWidth(250);
@@ -121,6 +122,23 @@ public class ItemDetailsController {
         Label name = new Label("  " + rating.getUser_id()+ "          " + rating.getTime() + "    Rating :" + rating.getRating() + "   ");
         Button edit = new Button("Edit");
         Button delete = new Button("Delete");
+        delete.setOnAction(e -> {
+            try {
+                handle_delete_review(rating);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        edit.setOnMousePressed(event -> {
+            EditReviewController.setRating_id(rating.getComment_id());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/EditReview-view.fxml"));
+            try {
+                Methods.switch_page(loader,event);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         name_box.setSpacing(5);
         edit.getStyleClass().add("edit-button");
         delete.getStyleClass().add("delete-button");
@@ -162,6 +180,9 @@ public class ItemDetailsController {
             images.add(image);
         }
         images_box.getChildren().setAll(images);
+        if(images_box.getChildren().isEmpty()){
+            images_box.setVisible(false);
+        }
         images_box.getStyleClass().add("dark-button");
         HBox  comment_box = new HBox(5);
         comment_box.setPadding(new Insets(10,10,10,10));
@@ -171,6 +192,10 @@ public class ItemDetailsController {
         comment_label.setStyle("-fx-text-fill: gray ; -fx-font-size: 16px ; -fx-font-weight: bold ;");
         comment_box.getChildren().add(comment_label);
         card.getChildren().addAll(name_box,images_box,comment_box);
+        if(images_box.getChildren().isEmpty()){
+           card.getChildren().remove(images_box);
+
+        }
         return card;
     }
 
@@ -223,6 +248,23 @@ public class ItemDetailsController {
 
 
         return ratings;
+    }
+
+    @FXML
+    void handle_delete_review(Rating rating) throws IOException {
+
+        URL delete_url = new URL(Methods.url+"rating/"+rating.getComment_id());
+        HttpURLConnection connection = (HttpURLConnection) delete_url.openConnection();
+        connection.setRequestMethod("DELETE");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+token);
+        if(connection.getResponseCode() == 200) {
+            initialize();
+        }
+        else{
+            JSONObject obj = Methods.getJsonResponse(connection);
+            SceneManager.showErrorAlert("Error", obj.getString("error"));
+        }
     }
 
     static void setItemId(long item_id) {

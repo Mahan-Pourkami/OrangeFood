@@ -205,12 +205,10 @@ public class FoodDAO {
         updateFood(food);
     }
 
-
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
         }
     }
-
 
 }

@@ -186,6 +186,9 @@ public class Basket {
     public int getRawPrice(FoodDAO foodDAO){
         int rawPrice=0;
         for(Map.Entry<Long,Integer> item : items.entrySet()){
+            if(foodDAO.getFood(item.getKey())==null){
+                continue;
+            }
             rawPrice += foodDAO.getFood(item.getKey()).getPrice()*item.getValue();
         }
         return rawPrice;

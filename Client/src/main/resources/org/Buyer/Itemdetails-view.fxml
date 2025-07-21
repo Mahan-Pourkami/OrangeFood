@@ -205,5 +205,10 @@
             <Image url="@../../asset/images/star.png" />
          </image>
       </ImageView>
+      <Label fx:id="warn_label" layoutX="700.0" layoutY="412.0" prefHeight="103.0" prefWidth="278.0" text="No Comment for this item" textFill="#cdb8b8">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
