@@ -81,7 +81,13 @@ public class Basket {
 
 
     public void addItem(long id, int quantity) {
-        items.put(id, quantity);
+
+        if(items.containsKey(id)) {
+            items.put(id, items.get(id) + quantity);
+        }
+        else {
+            items.put(id, quantity);
+        }
     }
     public void removeItem(Long id) {
         items.remove(id);

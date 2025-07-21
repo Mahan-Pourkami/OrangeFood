@@ -6,10 +6,7 @@ import Model.Rating;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -183,6 +180,7 @@ public class ItemDetailsController {
         if(images_box.getChildren().isEmpty()){
             images_box.setVisible(false);
         }
+
         images_box.getStyleClass().add("dark-button");
         HBox  comment_box = new HBox(5);
         comment_box.setPadding(new Insets(10,10,10,10));
@@ -265,6 +263,27 @@ public class ItemDetailsController {
             JSONObject obj = Methods.getJsonResponse(connection);
             SceneManager.showErrorAlert("Error", obj.getString("error"));
         }
+    }
+
+    @FXML
+    void add_to_cart(MouseEvent event) throws IOException {
+
+        URL add_url = new URL(Methods.url+"orders/cart/"+item_id);
+        HttpURLConnection connection = (HttpURLConnection) add_url.openConnection();
+        connection.setRequestMethod("PUT");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+token);
+
+        JSONObject obj = Methods.getJsonResponse(connection);
+
+        if(connection.getResponseCode() == 200) {
+            SceneManager.showAlert("info" , "item added to your cart successfully" , Alert.AlertType.INFORMATION);
+        }
+        else{
+            SceneManager.showErrorAlert("Error", obj.getString("error"));
+        }
+
+
     }
 
     static void setItemId(long item_id) {

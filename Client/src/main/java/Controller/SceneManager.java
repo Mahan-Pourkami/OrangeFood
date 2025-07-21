@@ -33,7 +33,7 @@ public class SceneManager {
         });
     }
 
-    private static void showAlert(String title, String message, Alert.AlertType type) {
+    public static void showAlert(String title, String message, Alert.AlertType type) {
 
         Alert alert = new Alert(type);
         alert.setTitle(title);

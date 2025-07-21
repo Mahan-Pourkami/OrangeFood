@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.List;
+
 public class Order {
 
     private long id ;
@@ -16,6 +18,10 @@ public class Order {
 
     private String status ;
 
+    private List<String> images ;
+
+    private int price;
+
 
     public Order(long id, long res_id, String buyer_name, String buyer_phone, String address, String created_at, String status) {
         this.setId(id);
@@ -25,6 +31,17 @@ public class Order {
         this.setAddress(address);
         this.setCreated_at(created_at);
         this.setStatus(status);
+    }
+
+    public Order(long id , long res_id, String buyer_phone, String address,String status, String created_at,List<String> images , int price) {
+        this.setId(id);
+        this.setRes_id(res_id);
+        this.setBuyer_phone(buyer_phone);
+        this.setAddress(address);
+        this.setCreated_at(created_at);
+        this.setStatus(status);
+        this.setImages(images);
+        this.setPrice(price);
     }
 
     public long getId() {
@@ -82,5 +99,21 @@ public class Order {
 
     public void setBuyer_phone(String buyer_phone) {
         this.buyer_phone = buyer_phone;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

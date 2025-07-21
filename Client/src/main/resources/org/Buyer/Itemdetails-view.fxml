@@ -116,7 +116,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button layoutX="66.0" layoutY="577.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="152.0" styleClass="view-button" stylesheets="@../../asset/style_sheets/buyer.css" text="Add to Cart">
+      <Button layoutX="66.0" layoutY="577.0" mnemonicParsing="false" onMousePressed="#add_to_cart" prefHeight="35.0" prefWidth="152.0" styleClass="view-button" stylesheets="@../../asset/style_sheets/buyer.css" text="Add to Cart">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>

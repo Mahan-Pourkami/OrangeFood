@@ -26,6 +26,13 @@ public class Food {
 
     }
 
+    public Food(long id , String name, int price, int quantity) {
+        this.setId(id);
+        this.setName(name);
+        this.setPrice(price);
+        this.setQuantity(quantity);
+    }
+
     public Food(long res_id, String name, String description, int price ) {
 
         this.setId(res_id);
