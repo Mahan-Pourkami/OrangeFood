@@ -116,9 +116,8 @@ public class ItemsHandler implements HttpHandler {
                 ArrayList<Food> foundFoods = new ArrayList<>();
                 JSONArray keywordsArray = jsonobject.getJSONArray("keywords");
 
-                //اگر قسمتی از نام و قیمتی کمتر از قیمت مضخص و تمام کی ورد های مشخص شده را به طور کامل (نه فقط قسمتی) بدون توجه به upper or lower case داشته باشد
-                //اگر چیزی پیدا نشود لیست خالی
                 for (Food food : foods) {
+                    if(food.getMenuTitle().isEmpty()) continue;
                     if (food.getName().toLowerCase().contains(jsonobject.getString("search").toLowerCase()) &&
                             (food.getPrice() <= jsonobject.getInt("price") || jsonobject.getInt("price") == 0)) {
 
