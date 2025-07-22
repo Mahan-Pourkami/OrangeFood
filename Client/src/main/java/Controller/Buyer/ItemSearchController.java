@@ -130,8 +130,13 @@ public class ItemSearchController {
     private HBox generate_card(Food food) {
         HBox card = new HBox(10);
         card.setPadding(new Insets(18));
-
-        ImageView image = new ImageView(food.getLogo());
+        ImageView image;
+        try{
+            image = new ImageView(food.getLogo());
+        }
+        catch(Exception e){
+            image = new ImageView(getClass().getResource("asset/images/vendoricon.png").toExternalForm());
+        }
         image.setFitHeight(150);
         image.setFitWidth(150);
         Rectangle clip = new Rectangle(

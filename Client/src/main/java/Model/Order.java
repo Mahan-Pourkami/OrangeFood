@@ -20,6 +20,8 @@ public class Order {
 
     private String vendor_name ;
 
+    private String courier_id ;
+
     private List<String> images ;
 
     private int price;
@@ -45,6 +47,17 @@ public class Order {
         this.setImages(images);
         this.setPrice(price);
         this.setVendor_name(vendor_name);
+    }
+
+    public Order(long id , String buyer_phone, long res_id , String address,String status, String created_at , String courier_id) {
+        this.setId(id);
+        this.setRes_id(res_id);
+        this.setBuyer_phone(buyer_phone);
+        this.setAddress(address);
+        this.setCreated_at(created_at);
+        this.setStatus(status);
+        this.setCourier_id(courier_id);
+
     }
 
     public long getId() {
@@ -126,5 +139,13 @@ public class Order {
 
     public void setVendor_name(String vendor_name) {
         this.vendor_name = vendor_name;
+    }
+
+    public String getCourier_id() {
+        return courier_id;
+    }
+
+    public void setCourier_id(String courier_id) {
+        this.courier_id = courier_id;
     }
 }

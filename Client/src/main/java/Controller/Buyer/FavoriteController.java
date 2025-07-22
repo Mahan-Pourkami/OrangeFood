@@ -72,6 +72,7 @@ public class FavoriteController {
         try {
             image = new ImageView(vendor.getLogo());
         }
+
         catch (Exception e) {
             image = new ImageView(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
         }

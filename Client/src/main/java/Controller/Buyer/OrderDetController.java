@@ -212,7 +212,12 @@ public class OrderDetController {
             add_label.setText(obj.getString("delivery_address"));
             tax_label.setText(String.valueOf(obj.getInt("tax_fee")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
-            logo_view.setImage(new Image(obj.getString("restaurant_prof")));
+            try{
+                logo_view.setImage(new Image(obj.getString("restaurant_prof")));
+            }
+            catch(Exception e){
+                logo_view.setImage(new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
+            }
             logo_view.setFitWidth(150);
             logo_view.setFitHeight(150);
             Rectangle clip = new Rectangle(

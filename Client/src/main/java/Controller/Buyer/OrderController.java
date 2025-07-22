@@ -111,7 +111,13 @@ public class OrderController {
         List<ImageView> urls = new ArrayList<>();
 
         for(String image_url : order.getImages()) {
-            Image image = new Image(image_url);
+            Image image ;
+            try {
+                image = new Image(image_url);
+            }
+            catch(Exception e) {
+                image = new Image(getClass().getResourceAsStream("asset/images/vendoricon.png"));
+            }
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(100);
             imageView.setFitWidth(100);
