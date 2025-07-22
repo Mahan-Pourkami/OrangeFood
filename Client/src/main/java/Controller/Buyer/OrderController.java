@@ -36,6 +36,9 @@ public class OrderController {
     @FXML
     TextField vendor_field ;
 
+    @FXML
+    ImageView no_order ;
+
 
     List<Order> orderlist = new ArrayList<>();
 
@@ -46,6 +49,9 @@ public class OrderController {
         List<VBox> cards = convert_to_vbox(orderlist);
         order_list.getItems().clear();
         order_list.getItems().addAll(cards);
+        if(!order_list.getItems().isEmpty()) {
+            no_order.setVisible(false);
+        }
 
     }
 

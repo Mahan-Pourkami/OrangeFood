@@ -379,19 +379,26 @@ public class AuthHandler implements HttpHandler {
 
     private static String invalid_input_reg(JSONObject jsonObject) {
 
-        String[] fields = {"full_name", "phone", "email", "password", "role", "address", "profileImageBase64"};
+        String[] fields = {"full_name", "phone", "email", "password", "role", "address"};
         for (String field : fields) {
             if (!jsonObject.has(field)) {
                 return field;
             }
 
-            if (jsonObject.getString("role").equals("buyer")
-                    && jsonObject.getString("role").equals("seller")
-                    && jsonObject.getString("role").equals("courier")) {
 
-                return "role";
-            }
+
+
         }
+        if (jsonObject.getString("role").equals("buyer")
+                && jsonObject.getString("role").equals("seller")
+                && jsonObject.getString("role").equals("courier")) {
+
+            return "role";
+        }
+        if(jsonObject.getString("address").isEmpty()) {
+            return "address";
+        }
+
         if (!Validator.validateEmail(jsonObject.getString("email")) && !jsonObject.getString("email").isEmpty()) {
             return "email";
         }
