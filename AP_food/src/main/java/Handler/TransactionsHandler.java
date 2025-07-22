@@ -66,7 +66,6 @@ public class TransactionsHandler implements HttpHandler {
                 throw new ForbiddenroleException();
             }
 
-            JSONObject jsonobject = getJsonObject(exchange);
             String user_id = JwtUtil.extractSubject(token);
 
             List<TransactionT> transactionTList = transactionTDAO.getTransactionsByUserId(user_id);

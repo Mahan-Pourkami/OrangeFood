@@ -123,7 +123,34 @@ public class OrderHandler implements HttpHandler {
                 throw new OrangeException(response, 400);
 
             }
-        } else {
+        }
+        if(paths.length == 3 && paths[2].equals("setcoupon")) { //{"oreder_id" : 0 , "coupon_code" : "", "price" : 0}
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("buyer")) {
+                throw new ForbiddenroleException();
+            }
+
+            JSONObject jsonrequest = getJsonObject(exchange);
+            Basket basket = basketDAO.getBasket(jsonrequest.getLong("order_id"));
+            String coupon_code = jsonrequest.getString("coupon_code");
+            Coupon coupon = couponDAO.findCouponByCode(coupon_code);
+            if (coupon == null) {
+                    throw new OrangeException("invalid code", 404);
+            }
+            if(!coupon.is_valid(jsonrequest.getInt("price"))){
+                throw new OrangeException("invalid code", 404);
+            }
+            if(basket.getStateofCart()!=StateofCart.waiting){
+                throw new OrangeException("invalid basket", 404);
+
+            }
+            basket.setCoupon_id(coupon.getId());
+            response = Integer.toString(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+
+        }
+        else {
             throw new OrangeException("endpoint not supported", 404);
         }
         return response;

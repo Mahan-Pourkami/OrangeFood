@@ -145,8 +145,12 @@ public class ItemsHandler implements HttpHandler {
                                 }
                             }
                         }
-
+                        /*
                         if (allKeywordsMatch && !food.getMenuTitle().isEmpty()) {
+                            foundFoods.add(food);
+                        }
+                        */
+                        if (allKeywordsMatch) {
                             foundFoods.add(food);
                         }
                     }
