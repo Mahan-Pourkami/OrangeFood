@@ -128,7 +128,12 @@ public class PostRatingController {
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         imageView.setClip(clip);
-        imageView.setImage(selected_img);
+        try{
+            imageView.setImage(selected_img);
+        }
+        catch(Exception e) {
+            imageView.setImage(new Image(getClass().getResourceAsStream("/assets/images/delete.png")));
+        }
         hbox.getChildren().add(imageView);
         return hbox;
     }

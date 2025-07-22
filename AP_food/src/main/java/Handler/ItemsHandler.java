@@ -68,9 +68,6 @@ public class ItemsHandler implements HttpHandler {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
             }
-            if (!JwtUtil.extractRole(token).equals("buyer")) {
-                throw new ForbiddenroleException();
-            }
             if (!paths[2].matches("\\d+")) {
                 throw new InvalidInputException("food id");
             }

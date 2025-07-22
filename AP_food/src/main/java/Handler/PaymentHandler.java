@@ -85,14 +85,18 @@ public class PaymentHandler implements HttpHandler {
             if (invalidInputItems(jsonobject).isEmpty()) {
                 Long orderId = ((Number) jsonobject.get("order_id")).longValue();
 
-                //check if order exists
                 if (!basketDAO.existBasket(orderId)) {
                     throw new NosuchItemException();
                 }
                 Basket basket = basketDAO.getBasket(orderId);
-                if (!(basket.getStateofCart() == StateofCart.waiting)) {
+                if (basket==null || !(basket.getStateofCart() == StateofCart.waiting)) {
                     throw new NosuchItemException();
                 }
+
+                if(!basket.getBuyerPhone().equals(user_id)) {
+                    throw  new ForbiddenroleException();
+                }
+
                 if (jsonobject.get("method").equals("wallet")) {
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
