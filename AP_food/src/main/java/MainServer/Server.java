@@ -31,6 +31,7 @@ public class Server {
 
 
             HttpServer server = HttpServer.create(new InetSocketAddress(8082), 0);
+//            HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8082), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 

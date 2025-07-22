@@ -144,10 +144,14 @@ public class OrderHandler implements HttpHandler {
             }
             if(basket.getStateofCart()!=StateofCart.waiting){
                 throw new OrangeException("invalid basket", 404);
+            }
+            if(basket.getCoupon_id() == coupon.getId()){
+                throw new OrangeException("code used", 404);
 
             }
             basket.setCoupon_id(coupon.getId());
-            response = Integer.toString(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+            basketDAO.updateBasket(basket);
+            response = generate_msg(Integer.toString(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO)));
 
         }
         else {

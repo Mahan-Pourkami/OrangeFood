@@ -82,6 +82,8 @@ public class OrderDetController {
     @FXML
     ImageView logo_view;
 
+    @FXML
+    Label couponStatus;
 
     List<Food> items = new ArrayList<>();
 
@@ -234,6 +236,39 @@ public class OrderDetController {
             item_table.getItems().addAll(items);
         }
         else SceneManager.showErrorAlert("Error" , obj.getString("error"));
+    }
 
+    @FXML
+    void handleCoupon (MouseEvent event) throws IOException{
+        JSONObject json = new JSONObject();
+        json.put("order_id", order_id);
+        json.put("coupon_code", coupon_field.getText());
+        json.put("price",Integer.parseInt(raw_label.getText()));
+        URL setcoupon = new URL(Methods.url+"orders/setcoupon");
+        HttpURLConnection connection = (HttpURLConnection) setcoupon.openConnection();
+        connection.setRequestMethod("POST");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+ token);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+        try (var os = connection.getOutputStream()) {
+            byte[] input = json.toString().getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        JSONObject response = Methods.getJsonResponse(connection);
+        System.out.println(response.toString());
+        if(connection.getResponseCode() == 200){
+            couponStatus.setText(response.getString("message"));
+            couponStatus.setStyle("-fx-text-fill: green;");
+
+        }
+        else{
+            couponStatus.setText(response.getString("error"));
+            couponStatus.setStyle("-fx-text-fill: red;");
+
+
+        }
+        couponStatus.setVisible(true);
+        initialize();
     }
 }

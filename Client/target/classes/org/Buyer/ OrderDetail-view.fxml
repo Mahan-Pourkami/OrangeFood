@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.OrderDetController">
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.OrderDetController">
    <children>
       <TableView fx:id="item_table" layoutX="802.0" layoutY="168.0" prefHeight="648.0" prefWidth="447.0">
         <columns>
@@ -93,7 +86,7 @@
       </Label>
       <TextField fx:id="coupon_field" layoutX="277.0" layoutY="570.0" prefHeight="35.0" prefWidth="206.0" promptText="Coupon code" styleClass="dark-button" />
       <Button fx:id="pay_button" layoutX="331.0" layoutY="638.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="117.0" styleClass="view-button" text="Pay " />
-      <Button fx:id="coupon_button" layoutX="507.0" layoutY="578.0" mnemonicParsing="false" styleClass="edit-button" text="Apply code" />
+      <Button fx:id="coupon_button" layoutX="507.0" layoutY="578.0" mnemonicParsing="false" onMousePressed="#handleCoupon" styleClass="edit-button" text="Apply code" />
       <Label layoutX="79.0" layoutY="297.0" text="Updated At :">
          <font>
             <Font name="System Bold" size="17.0" />
@@ -165,5 +158,9 @@
          </font>
       </Label>
       <ImageView fx:id="logo_view" fitHeight="189.0" fitWidth="173.0" layoutX="554.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="couponStatus" alignment="CENTER" layoutX="604.0" layoutY="583.0" prefHeight="17.0" prefWidth="65.0" text="Label" textFill="#ff5959" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
    </children>
 </Pane>
