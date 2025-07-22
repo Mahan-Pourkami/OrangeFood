@@ -87,4 +87,9 @@ public class HomeController {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ItemSearch-view.fxml"));
         Methods.switch_page(users,event);
     }
+    @FXML
+    void handleTransaction (MouseEvent event) throws IOException {
+        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Transactions-view.fxml"));
+        Methods.switch_page(users,event);
+    }
 }
