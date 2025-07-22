@@ -85,7 +85,7 @@
          </font>
       </Label>
       <TextField fx:id="coupon_field" layoutX="277.0" layoutY="570.0" prefHeight="35.0" prefWidth="206.0" promptText="Coupon code" styleClass="dark-button" />
-      <Button fx:id="pay_button" layoutX="331.0" layoutY="638.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="117.0" styleClass="view-button" text="Pay " />
+      <Button fx:id="pay_button" layoutX="331.0" layoutY="638.0" mnemonicParsing="false" onMousePressed="#handlePay" prefHeight="35.0" prefWidth="117.0" styleClass="view-button" text="Pay " />
       <Button fx:id="coupon_button" layoutX="507.0" layoutY="578.0" mnemonicParsing="false" onMousePressed="#handleCoupon" styleClass="edit-button" text="Apply code" />
       <Label layoutX="79.0" layoutY="297.0" text="Updated At :">
          <font>
@@ -158,7 +158,7 @@
          </font>
       </Label>
       <ImageView fx:id="logo_view" fitHeight="189.0" fitWidth="173.0" layoutX="554.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="couponStatus" alignment="CENTER" layoutX="604.0" layoutY="583.0" prefHeight="17.0" prefWidth="65.0" text="Label" textFill="#ff5959" visible="false">
+      <Label fx:id="couponStatus" alignment="CENTER" layoutX="604.0" layoutY="580.0" prefHeight="25.0" prefWidth="100.0" text="Label" textFill="#ff5959" visible="false">
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Label>

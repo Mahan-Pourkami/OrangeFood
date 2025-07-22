@@ -204,6 +204,12 @@ public class OrderDetController {
         connection.setRequestProperty("Authorization", "Bearer "+token);
         JSONObject obj = Methods.getJsonResponse(connection);
 
+        URL get_order_info = new URL(Methods.url + "orders/"+ OrderDetController.getOrder_id());
+        HttpURLConnection connection2 = (HttpURLConnection) get_order_info.openConnection();
+        connection2.setRequestMethod("GET");
+        connection2.setRequestProperty("Authorization", "Bearer " + token);
+        JSONObject response =  Methods.getJsonResponse(connection2);
+
         if(connection.getResponseCode() == 200){
 
             id_label.setText(String.valueOf(obj.getLong("id")));
@@ -211,10 +217,12 @@ public class OrderDetController {
             update_label.setText(obj.getString("updated_at"));
             raw_label.setText(String.valueOf(obj.getInt("pay_price")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
+            addfee_label.setText(String.valueOf(obj.getInt("additional_fee")));
             add_label.setText(obj.getString("delivery_address"));
             tax_label.setText(String.valueOf(obj.getInt("tax_fee")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
             logo_view.setImage(new Image(obj.getString("restaurant_prof")));
+
             logo_view.setFitWidth(150);
             logo_view.setFitHeight(150);
             Rectangle clip = new Rectangle(
@@ -234,6 +242,9 @@ public class OrderDetController {
 
             item_table.getItems().clear();
             item_table.getItems().addAll(items);
+            if(!response.get("status").equals("waiting")){
+                pay_button.setVisible(false);
+            }
         }
         else SceneManager.showErrorAlert("Error" , obj.getString("error"));
     }
@@ -270,5 +281,19 @@ public class OrderDetController {
         }
         couponStatus.setVisible(true);
         initialize();
+    }
+
+    @FXML
+    void handlePay (MouseEvent event) throws IOException{
+        URL get_order_info = new URL(Methods.url + "orders/"+ OrderDetController.getOrder_id());
+        HttpURLConnection connection = (HttpURLConnection) get_order_info.openConnection();
+        connection.setRequestMethod("GET");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer " + token);
+        JSONObject response =  Methods.getJsonResponse(connection);
+        if(response.get("status").equals("waiting")) {
+            FXMLLoader pay = new FXMLLoader(getClass().getResource("/org/Buyer/Payment-view.fxml"));
+            Methods.switch_page(pay, event);
+        }
     }
 }
