@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -12,10 +14,9 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="courier-pane" stylesheets="@../../asset/style_sheets/courier.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Courier.DeliveryHistoryController">
    <children>
-      <TableView fx:id="order_table" layoutX="114.0" layoutY="176.0" prefHeight="654.0" prefWidth="1072.0" stylesheets="@../../asset/style_sheets/style.css">
+      <TableView fx:id="order_table" layoutX="295.0" layoutY="145.0" prefHeight="653.0" prefWidth="936.0" stylesheets="@../../asset/style_sheets/style.css">
          <columns>
             <TableColumn fx:id="id_col" prefWidth="85.0" text="Order ID" />
             <TableColumn fx:id="buyer_name_col" prefWidth="112.0" text="Buyer Name" />
@@ -27,7 +28,7 @@
             <TableColumn fx:id="act_col" minWidth="0.0" prefWidth="0.0" />
          </columns>
       </TableView>
-      <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="67.0" layoutY="57.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="38.0" fitWidth="32.0" layoutX="27.0" layoutY="23.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/backicon.png" />
          </image>
@@ -35,7 +36,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="533.0" layoutY="77.0" prefHeight="49.0" prefWidth="234.0" text="Orders History">
+      <Label layoutX="523.0" layoutY="39.0" prefHeight="49.0" prefWidth="234.0" text="Orders History">
          <font>
             <Font name="System Bold" size="32.0" />
          </font>
@@ -60,6 +61,39 @@
                </stops>
             </LinearGradient>
          </textFill>
+      </Label>
+      <TextField layoutX="86.0" layoutY="179.0" promptText="Search Items" styleClass="adminfield">
+         <stylesheets>
+            <URL value="@../../asset/style_sheets/style.css" />
+            <URL value="@../../asset/style_sheets/input.css" />
+         </stylesheets>
+      </TextField>
+      <Label layoutX="27.0" layoutY="182.0" text="Search" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TextField layoutX="86.0" layoutY="244.0" promptText="Vendor name" styleClass="adminfield">
+         <stylesheets>
+            <URL value="@../../asset/style_sheets/style.css" />
+            <URL value="@../../asset/style_sheets/input.css" />
+         </stylesheets>
+      </TextField>
+      <Label layoutX="27.0" layoutY="247.0" text="Vendor" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TextField layoutX="86.0" layoutY="313.0" promptText="user's name" styleClass="adminfield">
+         <stylesheets>
+            <URL value="@../../asset/style_sheets/style.css" />
+            <URL value="@../../asset/style_sheets/input.css" />
+         </stylesheets>
+      </TextField>
+      <Label layoutX="27.0" layoutY="316.0" text="User" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
       </Label>
    </children>
 </Pane>

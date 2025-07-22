@@ -46,6 +46,12 @@ public class HomeController {
     }
 
     @FXML
+    void handleOrderbutton (MouseEvent event) throws IOException {
+        FXMLLoader order = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
+        Methods.switch_page(order,event);
+    }
+
+    @FXML
     void handleprofilebutton (MouseEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Profile-view.fxml"));

@@ -1028,6 +1028,18 @@ public class RestaurantsHandler implements HttpHandler {
         basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
         basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee", basket.getCOURIER_FEE());
+        JSONArray foods = new JSONArray();
+        for (int i = 0; i < itemIdsArray.length(); i++) {
+            Food food = foodDAO.getFood(itemIdsArray.getLong(i));
+            if(food == null) continue;
+            JSONObject foodJson = new JSONObject();
+            foodJson.put("id", food.getId());
+            foodJson.put("name", food.getName());
+            foodJson.put("price", food.getPrice());
+            foodJson.put("imageBase64",food.getPictureUrl());
+            foods.put(foodJson);
+        }
+        basketJson.put("items", foods);
         basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
         basketJson.put("courier_id", basket.getCourier_id());
         basketJson.put("status", basket.getStateofCart());

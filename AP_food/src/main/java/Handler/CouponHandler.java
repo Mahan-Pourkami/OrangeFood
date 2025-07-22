@@ -9,6 +9,8 @@ import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CouponHandler implements HttpHandler {
 
@@ -46,9 +48,9 @@ public class CouponHandler implements HttpHandler {
         String response = "";
         String token = JwtUtil.get_token_from_server(exchange);
         JSONObject jsonObject = getJsonObject(exchange);
-        int httpCode = 200;
+        int httpCode = 404;
 
-        if (paths.length == 3) {
+        if (paths.length == 2) {
 
             try {
                 if (!JwtUtil.validateToken(token)) {
@@ -58,9 +60,11 @@ public class CouponHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                //"coupon_code="
+                Map<String , String> query = parseQueryParams(exchange.getRequestURI().getQuery());
+                String couponCode = query.getOrDefault("coupon_code", "");
 
-                String couponCode = paths[2].substring("coupon_code=".length());
+                if(couponCode.isEmpty()) throw new InvalidInputException("coupon_code");
+
                 Coupon coupon = couponDAO.findCouponByCode(couponCode);
 
                 if (coupon == null) {
@@ -81,9 +85,11 @@ public class CouponHandler implements HttpHandler {
                 responsejson.put("end_date", coupon.getEnd_time());
                 response = responsejson.toString();
                 httpCode = 200;
+
             } catch (IllegalArgumentException e) {
                 response = generate_error("Invalid coupon_code");
-            } catch (OrangeException e) {
+            }
+            catch (OrangeException e) {
                 response = generate_error(e.getMessage());
                 httpCode = e.http_code;
             }
@@ -131,6 +137,21 @@ public class CouponHandler implements HttpHandler {
             os.write(response.getBytes());
         }
         exchange.close();
+    }
+
+
+    private Map<String, String> parseQueryParams(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query != null && !query.isEmpty()) {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                String[] kv = pair.split("=", 2); // only split on first '='
+                String key = kv[0];
+                String value = kv.length > 1 ? kv[1] : "";
+                params.put(key, value);
+            }
+        }
+        return params;
     }
 
 }

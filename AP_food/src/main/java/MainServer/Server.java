@@ -2,7 +2,6 @@ package MainServer;
 
 import DAO.*;
 import Handler.*;
-import Model.Courier;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -43,7 +42,7 @@ public class Server {
             server.createContext("/admin", new AdminHandler(userDAO, sellerDAO, courierDAO, couponDAO, restaurantDAO, foodDAO, basketDAO, transactionTDAO));
             server.createContext("/rating", new RatingHandler(ratingDAO, foodDAO, userDAO));
             server.createContext("/wallet", new WalletHandler(buyerDAO, transactionTDAO));
-            server.createContext("/coupon", new CouponHandler(couponDAO));
+            server.createContext("/coupons", new CouponHandler(couponDAO));
             server.createContext("/vendors", new VendorHandler(restaurantDAO, foodDAO, buyerDAO));
             server.createContext("/items", new ItemsHandler(foodDAO));
             server.createContext("/orders", new OrderHandler(userDAO, couponDAO, basketDAO, restaurantDAO, foodDAO));

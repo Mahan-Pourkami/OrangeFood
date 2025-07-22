@@ -1,0 +1,239 @@
+package Controller.Buyer;
+
+import Controller.Methods;
+import Controller.SceneManager;
+import Model.Food;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OrderDetController {
+
+
+    private static long order_id = 0 ;
+
+    private static String status = "";
+
+
+    @FXML
+    TableView<Food> item_table;
+
+    @FXML
+    TableColumn<Food, String> name_col;
+
+    @FXML
+    TableColumn<Food, Integer> price_col;
+
+    @FXML
+    TableColumn<Food, Integer> quan_col;
+
+    @FXML
+    TableColumn<Food, Void> act_col;
+
+    @FXML
+    TextField coupon_field;
+
+    @FXML
+    Button coupon_button;
+
+    @FXML
+    Button pay_button;
+
+    @FXML
+    Label id_label;
+
+    @FXML
+    Label add_label;
+
+    @FXML
+    Label create_label;
+
+    @FXML
+    Label update_label;
+
+    @FXML
+    Label raw_label;
+
+    @FXML
+    Label  courier_label;
+
+    @FXML
+    Label addfee_label;
+
+    @FXML
+    Label tax_label;
+
+    @FXML
+    ImageView logo_view;
+
+
+    List<Food> items = new ArrayList<>();
+
+    public static String getStatus() {
+        return status;
+    }
+
+    public static void setStatus(String status) {
+        OrderDetController.status = status;
+    }
+
+
+    @FXML
+    void setcolumns (){
+        name_col.setCellValueFactory(new PropertyValueFactory<>("name"));
+        price_col.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quan_col.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+    }
+
+    private void setupActionColumn() {
+
+        if(OrderDetController.status.equals("waiting")){
+            act_col.setCellFactory(new Callback<>() {
+
+
+                @Override
+                public TableCell<Food, Void> call(final TableColumn<Food, Void> param) {
+
+                    return new TableCell<>() {
+                        private final Button deleteBtn = new Button("Delete");
+                        private final HBox pane = new HBox(5, deleteBtn);
+
+                        {
+                            deleteBtn.getStyleClass().add("delete-button");
+                            pane.setAlignment(Pos.CENTER);
+
+                            deleteBtn.setOnMousePressed(event -> {
+                                Food coupon = getTableView().getItems().get(getIndex());
+                                try {
+                                    handleDeleteFood(coupon, event);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+
+                        @Override
+                        protected void updateItem(Void item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                setGraphic(pane);
+                            }
+                        }
+                    };
+                }
+            });
+        }
+        else {
+            coupon_button.setVisible(false);
+            pay_button.setVisible(false);
+            coupon_field.setVisible(false);
+        }
+    }
+
+
+    @FXML
+    void handleDeleteFood(Food food , MouseEvent event) throws IOException {
+
+        URL delete_url = new URL(Methods.url+"orders/cart/"+food.getId());
+        HttpURLConnection connection = (HttpURLConnection) delete_url.openConnection();
+        connection.setRequestMethod("DELETE");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+token);
+
+        int http_code = connection.getResponseCode();
+        if(http_code == 200){
+            item_table.getItems().remove(food);
+            if(item_table.getItems().isEmpty()){
+                control_back(event);
+                return;
+            }
+            initialize();
+        }
+        else {
+            JSONObject response = Methods.getJsonResponse(connection);
+            SceneManager.showErrorAlert("Error" , response.getString("error"));
+        }
+
+    }
+    @FXML
+    void control_back(MouseEvent event) throws IOException {
+
+        FXMLLoader back = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
+        Methods.switch_page(back,event);
+
+    }
+
+    public static long getOrder_id() {
+        return order_id;
+    }
+
+    public static void setOrder_id(long order_id) {
+        OrderDetController.order_id = order_id;
+    }
+
+    @FXML
+    void initialize() throws IOException {
+
+        items.clear();
+        setcolumns();
+        setupActionColumn();
+        URL get_order = new URL(Methods.url+"orders/"+order_id);
+        HttpURLConnection connection = (HttpURLConnection) get_order.openConnection();
+        connection.setRequestMethod("GET");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer "+token);
+        JSONObject obj = Methods.getJsonResponse(connection);
+
+        if(connection.getResponseCode() == 200){
+
+            id_label.setText(String.valueOf(obj.getLong("id")));
+            create_label.setText(obj.getString("created_at"));
+            update_label.setText(obj.getString("updated_at"));
+            raw_label.setText(String.valueOf(obj.getInt("pay_price")));
+            courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
+            add_label.setText(obj.getString("delivery_address"));
+            tax_label.setText(String.valueOf(obj.getInt("tax_fee")));
+            courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
+            logo_view.setImage(new Image(obj.getString("restaurant_prof")));
+            logo_view.setFitWidth(150);
+            logo_view.setFitHeight(150);
+            Rectangle clip = new Rectangle(
+                    logo_view.getFitWidth(),
+                    logo_view.getFitHeight()
+            );
+            clip.setArcWidth(20);
+            clip.setArcHeight(20);
+            logo_view.setClip(clip);
+
+
+            JSONArray arr = obj.getJSONArray("items");
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject item = arr.getJSONObject(i);
+                items.add(new Food(item.getLong("id"), item.getString("name"), item.getInt("price"), item.getInt("quantity")));
+            }
+
+            item_table.getItems().clear();
+            item_table.getItems().addAll(items);
+        }
+        else SceneManager.showErrorAlert("Error" , obj.getString("error"));
+
+    }
+}

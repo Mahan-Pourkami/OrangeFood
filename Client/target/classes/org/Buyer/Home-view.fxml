@@ -41,7 +41,7 @@
             <Image url="@../../asset/images/star.png" />
          </image>
       </ImageView>
-      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="dark-button" text="                       Orders">
+      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" onMousePressed="#handleOrderbutton" prefHeight="174.0" prefWidth="293.0" styleClass="dark-button" text="                       Orders">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

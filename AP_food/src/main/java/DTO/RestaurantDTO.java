@@ -41,7 +41,7 @@ public class RestaurantDTO {
             this.address = json.getString("address");
             this.phone = json.getString("phone");
 
-            if (json.getString("logoBase64") == null || json.getString("logoBase64").isEmpty()) {
+            if (json.getString("logoBase64") != null && !json.getString("logoBase64").isEmpty()) {
                 this.logoBase64 = json.getString("logoBase64");
             }
 
