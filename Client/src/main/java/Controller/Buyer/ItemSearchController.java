@@ -84,8 +84,6 @@ public class ItemSearchController {
         json.put("keywords", keywordsArray);
         json.put("price", price);
 
-        System.out.println("Sending JSON: " + json);
-
         HttpURLConnection connection = (HttpURLConnection) get_foods_url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");

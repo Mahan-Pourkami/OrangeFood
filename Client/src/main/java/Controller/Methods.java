@@ -65,6 +65,27 @@ public class Methods {
         }
     }
 
+    public static String getStringResponse(HttpURLConnection connection) throws IOException {
+
+        boolean isSuccess = (connection.getResponseCode() >= 200 && connection.getResponseCode() < 300);
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        isSuccess ? connection.getInputStream() : connection.getErrorStream(),
+                        "utf-8"
+                )
+        )) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line.trim());
+            }
+
+            return response.toString();
+        }
+    }
+
    public static void switch_page(FXMLLoader page , MouseEvent event) throws IOException {
 
        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
