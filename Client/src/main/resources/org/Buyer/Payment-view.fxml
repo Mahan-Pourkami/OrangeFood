@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.PaymentController">
+    <children>
+        <Label alignment="CENTER" layoutX="441.0" layoutY="32.0" prefHeight="140.0" prefWidth="330.0" text="Payment" textFill="#ffa467">
+            <font>
+                <Font name="System Bold" size="45.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="59.0" fitWidth="56.0" layoutX="135.0" layoutY="40.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+            <image>
+                <Image url="@../../asset/images/logo.png" />
+            </image>
+        </ImageView>
+        <Label layoutX="206.0" layoutY="55.0" text="Orange Food!" textFill="#f8a81dba">
+            <font>
+                <Font name="System Bold" size="17.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="41.0" layoutY="41.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../../asset/images/backicon.png" />
+            </image>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </ImageView>
+        <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#d2d5d757" height="271.0" layoutX="41.0" layoutY="182.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="511.0" />
+        <Button layoutX="199.0" layoutY="380.0" mnemonicParsing="false" onMousePressed="#handleonline" prefHeight="34.0" prefWidth="172.0" styleClass="dark-button" text="Pay online">
+            <font>
+                <Font name="System Bold" size="21.0" />
+            </font>
+        </Button>
+        <TextField fx:id="card" layoutX="206.0" layoutY="247.0" prefHeight="44.0" prefWidth="330.0" promptText="XXXX-XXXX-XXXX-XXXX" styleClass="dark-button">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </TextField>
+        <Label layoutX="63.0" layoutY="257.0" text="Account Number">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="cvv" layoutX="152.0" layoutY="309.0" prefHeight="44.0" prefWidth="109.0" styleClass="dark-button" />
+        <Label layoutX="74.0" layoutY="318.0" text="CVV2">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="exp" layoutX="358.0" layoutY="309.0" prefHeight="44.0" prefWidth="109.0" styleClass="dark-button" />
+        <Label layoutX="297.0" layoutY="318.0" text="Exp">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label alignment="CENTER" layoutX="413.0" layoutY="553.0" prefHeight="76.0" prefWidth="160.0" text="Amount">
+            <font>
+                <Font name="System Bold" size="38.0" />
+            </font>
+        </Label>
+        <Label fx:id="basketprice" alignment="CENTER" layoutX="617.0" layoutY="558.0" prefHeight="30.0" prefWidth="83.0" text="0" textFill="#00ad0c">
+            <font>
+                <Font name="System Bold" size="45.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="233.0" fitWidth="256.0" layoutX="1066.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../../asset/images/pizza_2d.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="233.0" fitWidth="256.0" layoutX="-6.0" layoutY="648.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+            <image>
+                <Image url="@../../asset/images/pizza_2d.png" />
+            </image>
+        </ImageView>
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#d2d5d757" height="271.0" layoutX="658.0" layoutY="182.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="511.0" />
+      <Label layoutX="755.0" layoutY="253.0" prefHeight="34.0" prefWidth="128.0" text="wallet cash">
+         <font>
+            <Font name="System Bold" size="23.0" />
+         </font>
+      </Label>
+      <Label fx:id="walletcash" layoutX="1017.0" layoutY="254.0" text="0" textFill="#00ad0c">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Button layoutX="816.0" layoutY="380.0" mnemonicParsing="false" onMousePressed="#handlewallet" prefHeight="50.0" prefWidth="196.0" styleClass="dark-button" text="Pay with wallet">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Button>
+      <Label fx:id="walleterror" alignment="CENTER" layoutX="855.0" layoutY="315.0" prefHeight="50.0" prefWidth="120.0" text="Label" textFill="#bc0000" visible="false">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+    </children>
+</Pane>
