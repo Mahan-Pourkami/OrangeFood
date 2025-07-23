@@ -173,7 +173,7 @@ public class FoodDAO {
 
 
     public Food findFoodByName(String name, long restaurantId) {
-        List<Food> foods = getAllFoods();
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
 
         for (Food food : foods) {
             if (food.getName().equals(name) && food.getRestaurantId().equals(restaurantId)) {
@@ -184,7 +184,7 @@ public class FoodDAO {
     }
 
     public void delet_from_menu(String menu_title, long restaurantId) {
-        List<Food> foods = getAllFoods();
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
         for (Food food : foods) {
             if (food.getMenuTitle() != null && food.getMenuTitle().contains(menu_title) && food.getRestaurantId().equals(restaurantId)) {
                 food.removeMenuTitle(menu_title);

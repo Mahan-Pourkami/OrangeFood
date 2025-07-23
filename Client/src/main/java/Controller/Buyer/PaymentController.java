@@ -1,6 +1,7 @@
 package Controller.Buyer;
 
 import Controller.Methods;
+import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PaymentController {
@@ -26,6 +28,7 @@ public class PaymentController {
 
     @FXML
     void initialize() throws IOException {
+
         URL get_order_info = new URL(Methods.url + "orders/"+ OrderDetController.getOrder_id());
         HttpURLConnection connection = (HttpURLConnection) get_order_info.openConnection();
         connection.setRequestMethod("GET");
@@ -43,7 +46,7 @@ public class PaymentController {
 
         cvv.setText("");
         exp.setText("");
-        card.setText("");
+        showcard_number();
     }
 
     @FXML
@@ -65,7 +68,7 @@ public class PaymentController {
             }
             int http_code = connection.getResponseCode();
             if (http_code == 200) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/ OrderDetail-view.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
                 Methods.switch_page(loader, event);
             } else {
                 initialize();
@@ -91,8 +94,8 @@ public class PaymentController {
         }
         int http_code = connection.getResponseCode();
         if (http_code == 200) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Buyer/ OrderDetail-view.fxml"));
-            Methods.switch_page(loader,event);
+            FXMLLoader order = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
+            Methods.switch_page(order,event);
         }
         else{
             JSONObject response =  Methods.getJsonResponse(connection);
@@ -107,6 +110,23 @@ public class PaymentController {
         FXMLLoader back = new FXMLLoader(getClass().getResource("/org/Buyer/ OrderDetail-view.fxml"));
         Methods.switch_page(back,event);
 
+    }
+
+    void showcard_number() throws IOException {
+        URL get_info_url = new URL(Methods.url + "wallet/quantity");
+        HttpURLConnection connection = (HttpURLConnection) get_info_url.openConnection();
+        connection.setRequestMethod("GET");
+        String token = Methods.Get_saved_token();
+        connection.setRequestProperty("Authorization", "Bearer " + token);
+        int http_code = connection.getResponseCode();
+
+        JSONObject obj = Methods.getJsonResponse(connection);
+
+        if (http_code == 200) {
+
+            card.setText(obj.getString("account_number"));
+        }
+        else  SceneManager.showErrorAlert("Unauthorized", "Invalid token");
     }
 
 }

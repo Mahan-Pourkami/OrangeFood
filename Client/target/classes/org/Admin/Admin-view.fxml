@@ -151,7 +151,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Rectangle>
-      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="487.0" layoutY="507.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#203c57" height="322.0" layoutX="487.0" layoutY="507.0" onMousePressed="#handleorders" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0" styleClass="wobbly-image" width="331.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

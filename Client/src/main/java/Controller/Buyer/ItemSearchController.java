@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Food;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -127,8 +128,13 @@ public class ItemSearchController {
     private HBox generate_card(Food food) {
         HBox card = new HBox(10);
         card.setPadding(new Insets(18));
-
-        ImageView image = new ImageView(food.getLogo());
+        ImageView image;
+        try{
+            image = new ImageView(food.getLogo());
+        }
+        catch(Exception e){
+            image = new ImageView(getClass().getResource("asset/images/vendoricon.png").toExternalForm());
+        }
         image.setFitHeight(150);
         image.setFitWidth(150);
         Rectangle clip = new Rectangle(
@@ -162,7 +168,7 @@ public class ItemSearchController {
         card.getChildren().addAll(image, textVBox, spacer,vbox3);
         card.setSpacing(10);
         card.setOnMouseClicked((MouseEvent event) -> {
-            ItemDetailsController.setItemId(food.getId());
+            ItemDetailsController.setItemId(food.getId(), Role.buyer);
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
             try {
                 Methods.switch_page(users,event);

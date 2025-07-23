@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.TransactionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="860.0" prefWidth="1280.0" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.TransactionController">
    <styleClass>
       <String fx:value="pane" />
       <String fx:value="bg" />
@@ -17,29 +22,28 @@
    <children>
       <Pane layoutX="-1.0" layoutY="-11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1304.0">
          <children>
-            <Line endX="1165.3333740234375" endY="-7.62939453125E-6" layoutX="118.0" layoutY="125.0" startX="-115.0" strokeWidth="5.0">
-               <fill>
+            <Label layoutX="412.0" layoutY="51.0" text="Transactions History">
+               <font>
+                  <Font name="System Bold" size="48.0" />
+               </font>
+               <textFill>
                   <LinearGradient endX="1.0" endY="1.0">
                      <stops>
                         <Stop>
                            <color>
-                              <Color />
+                              <Color red="1.0" green="0.6598765254020691" blue="0.29629629850387573" />
                            </color>
                         </Stop>
                         <Stop offset="1.0">
                            <color>
-                              <Color red="1.0" green="0.8455246686935425" blue="0.5586419701576233" />
+                              <Color red="0.07894736528396606" green="0.05452607199549675" blue="0.0018274853937327862" />
                            </color>
                         </Stop>
                      </stops>
                   </LinearGradient>
-               </fill></Line>
-            <Label layoutX="564.0" layoutY="46.0" text="Transactions">
-               <font>
-                  <Font size="38.0" />
-               </font>
+               </textFill>
             </Label>
-            <TableView fx:id="TranactionTable" layoutX="493.0" layoutY="176.0" prefHeight="627.0" prefWidth="720.0">
+            <TableView fx:id="TranactionTable" layoutX="379.0" layoutY="188.0" prefHeight="627.0" prefWidth="859.0">
               <columns>
                 <TableColumn fx:id="Idcolumn" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="OrderIdColumn" prefWidth="75.0" text="OrderID" />
@@ -50,11 +54,6 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <ImageView fx:id="backButton" fitHeight="277.0" fitWidth="337.0" layoutX="80.0" layoutY="500.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../asset/images/transactionPage.jpg" />
-               </image>
-            </ImageView>
             <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="35.0" layoutY="51.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../asset/images/backicon.png" />
@@ -63,6 +62,16 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <ImageView fitHeight="162.0" fitWidth="187.0" layoutX="80.0" layoutY="304.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+               <image>
+                  <Image url="@../../asset/images/logo.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="43.0" layoutY="489.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
+               <font>
+                  <Font name="System Bold" size="34.0" />
+               </font>
+            </Label>
          </children></Pane>
    </children>
 </AnchorPane>

@@ -43,6 +43,22 @@ public class RestaurantDAO {
         }
     }
 
+    public void deleteRestaurant(long restaurantid) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Restaurant restaurant = session.get(Restaurant.class, restaurantid);
+            if(restaurant != null) {
+                session.remove(restaurant);
+                transaction.commit();
+            }
+            else{
+                throw new RuntimeException("Restaurant not found");
+            }
+        }
+
+    }
+
     public void updateRestaurant(Restaurant restaurant) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

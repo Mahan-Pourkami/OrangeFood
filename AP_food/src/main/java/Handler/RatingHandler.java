@@ -164,9 +164,6 @@ public class RatingHandler implements HttpHandler {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
-                if (!JwtUtil.extractRole(token).equals("buyer")) {
-                    throw new ForbiddenroleException();
-                }
 
                 RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO,userDAO, JwtUtil.extractSubject(token));
                 response = get_req.getResponse();
@@ -185,9 +182,7 @@ public class RatingHandler implements HttpHandler {
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
                 }
-                if (!JwtUtil.extractRole(token).equals("buyer")) {
-                    throw new ForbiddenroleException();
-                }
+
 
                 RatingDTO.Get_Rating_by_id get_res = new RatingDTO.Get_Rating_by_id(item_id, ratingDAO);
                 response = get_res.getResponse();

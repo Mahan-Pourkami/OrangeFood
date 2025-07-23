@@ -116,7 +116,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button layoutX="66.0" layoutY="577.0" mnemonicParsing="false" onMousePressed="#add_to_cart" prefHeight="35.0" prefWidth="152.0" styleClass="view-button" stylesheets="@../../asset/style_sheets/buyer.css" text="Add to Cart">
+      <Button fx:id="cart_button" layoutX="66.0" layoutY="577.0" mnemonicParsing="false" onMousePressed="#add_to_cart" prefHeight="35.0" prefWidth="152.0" styleClass="view-button" stylesheets="@../../asset/style_sheets/buyer.css" text="Add to Cart">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -152,7 +152,7 @@
             <Font name="System Bold" size="34.0" />
          </font>
       </Label>
-      <Button layoutX="44.0" layoutY="722.0" mnemonicParsing="false" onMousePressed="#post_contorl" prefHeight="77.0" prefWidth="387.0" styleClass="dark-button" text="Rate this Item">
+      <Button fx:id="rate_button" layoutX="44.0" layoutY="722.0" mnemonicParsing="false" onMousePressed="#post_contorl" prefHeight="77.0" prefWidth="387.0" styleClass="dark-button" text="Rate this Item">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
@@ -200,7 +200,7 @@
             <Image url="@../../asset/images/hambergur.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="77.0" layoutY="722.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="star" fitHeight="51.0" fitWidth="51.0" layoutX="77.0" layoutY="722.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/star.png" />
          </image>

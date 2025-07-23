@@ -4,15 +4,10 @@ import Controller.Methods;
 import Controller.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -147,6 +142,11 @@ public class AdminController {
 
         FXMLLoader transactions_view = new FXMLLoader(getClass().getResource("/org/Admin/Transactions-view.fxml"));
         Methods.switch_page(transactions_view,event);
+    }
 
+    @FXML
+    void handleorders(MouseEvent event) throws IOException {
+        FXMLLoader orders = new FXMLLoader(getClass().getResource("/org/Admin/AdminOrder-view.fxml"));
+        Methods.switch_page(orders,event);
     }
 }

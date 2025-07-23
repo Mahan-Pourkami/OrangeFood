@@ -99,7 +99,12 @@ public class PostRatingController {
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
-            food_image.setImage(new Image(obj.getString("imageBase64")));
+            try{
+                food_image.setImage(new Image(obj.getString("imageBase64")));
+            }
+            catch(Exception e){
+                food_image.setImage(new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
+            }
             JSONArray keys = obj.getJSONArray("keywords");
             String keyword = "";
             for (int i = 0; i < keys.length(); i++) {
@@ -128,7 +133,12 @@ public class PostRatingController {
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         imageView.setClip(clip);
-        imageView.setImage(selected_img);
+        try{
+            imageView.setImage(selected_img);
+        }
+        catch(Exception e) {
+            imageView.setImage(new Image(getClass().getResourceAsStream("/assets/images/delete.png")));
+        }
         hbox.getChildren().add(imageView);
         return hbox;
     }

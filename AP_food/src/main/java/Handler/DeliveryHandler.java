@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class DeliveryHandler implements HttpHandler {
                     state = StateofCart.valueOf(statusString);
                 }
                 basket.setStateofCart(state);
+                basket.setUpadated_at(LocalDateTime.now().toString());
                 basketDAO.updateBasket(basket);
 
                 Map<Long, Integer> items = basket.getItems();
@@ -115,7 +117,6 @@ public class DeliveryHandler implements HttpHandler {
                 JSONObject responseJson = new JSONObject();
                 responseJson.put("message", statusString);
                 responseJson.put("order", getBasketJsonObject(basket, itemIdsArray));
-
                 response = responseJson.toString();
             } else {
                 response = generate_error("Invalid " + invalidInput(jsonobject).toString());

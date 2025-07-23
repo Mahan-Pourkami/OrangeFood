@@ -1,8 +1,10 @@
 package Controller.Vendor;
 
+import Controller.Buyer.ItemDetailsController;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Food;
+import Model.Role;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -146,12 +148,15 @@ public class FoodManageController {
                 return new TableCell<>() {
                     private final Button editBtn = new Button("Edit");
                     private final Button deleteBtn = new Button("Delete");
-                    private final HBox pane = new HBox(5, editBtn, deleteBtn);
+                    private final Button viewBtn = new Button("View");
+                    private final HBox pane = new HBox(5, editBtn, deleteBtn , viewBtn);
 
                     {
 
                         editBtn.getStyleClass().add("view-button");
                         deleteBtn.getStyleClass().add("delete-button");
+                        viewBtn.getStyleClass().add("edit-button");
+
                         pane.setAlignment(Pos.CENTER);
 
                         editBtn.setOnAction(event -> {
@@ -161,6 +166,19 @@ public class FoodManageController {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                        });
+
+                        viewBtn.setOnAction(event -> {
+
+                            Food food = getTableView().getItems().get(getIndex());
+                            ItemDetailsController.setItemId(food.getId(), Role.seller);
+                            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ItemDetails-view.fxml"));
+                            try {
+                                Methods.switch_page(users,event);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
                         });
 
                         deleteBtn.setOnAction(event -> {
@@ -236,6 +254,16 @@ public class FoodManageController {
         SceneManager.fadeScene(stage, scene);
 
     }
+
+    @FXML
+    void handleremove(MouseEvent event) {
+
+        prof_view.setImage(default_img);
+        URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
+        image_path = resourceUrl.getPath();
+
+    }
+
 
     @FXML
     void load_data() throws IOException {
