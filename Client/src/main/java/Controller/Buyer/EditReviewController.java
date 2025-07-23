@@ -84,7 +84,13 @@ public class EditReviewController {
 
     HBox load_images(String filename) {
 
-        Image selected_img = new Image(filename);
+        Image selected_img;
+        try{
+             selected_img = new Image(filename);
+        }
+        catch (Exception e){
+            selected_img = new Image(getClass().getResourceAsStream("/asset/images/delete.png"));
+        }
         HBox hbox = new HBox(10);
         hbox.setPadding(new Insets(5,10,5,10));
         ImageView imageView = new ImageView();
@@ -97,7 +103,12 @@ public class EditReviewController {
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         imageView.setClip(clip);
-        imageView.setImage(selected_img);
+        try{
+            imageView.setImage(selected_img);
+        }
+        catch(Exception e){
+            imageView.setImage(new Image(getClass().getResourceAsStream("/asset/images/delete.png")));
+        }
         hbox.getChildren().add(imageView);
         return hbox;
     }
@@ -248,7 +259,12 @@ public class EditReviewController {
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
-            food_image.setImage(new Image(obj.getString("imageBase64")));
+           try {
+                food_image.setImage(new Image(obj.getString("imageBase64")));
+            }
+           catch(Exception e) {
+               food_image.setImage(new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
+           }
             JSONArray keys = obj.getJSONArray("keywords");
             String keyword = "";
             for (int i = 0; i < keys.length(); i++) {

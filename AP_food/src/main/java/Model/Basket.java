@@ -224,7 +224,7 @@ public class Basket {
                     payPrice = getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE - (int) cp.getValue();
                 }
                 if (couponType == Coupontype.percent) {
-                    payPrice = (getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE) * ((100 - (int) cp.getValue()) / 100);
+                    payPrice = (int) ((getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE) * ((100 - (int)cp.getValue()) / 100.0));
                 }
             }
         }

@@ -117,7 +117,13 @@ public class SearchRestaurantController {
         cell.setPadding(new Insets(18));
         cell.setSpacing(10);
         VBox vbox = new VBox(10);
-        ImageView image = new ImageView(vendor.getLogo());
+        ImageView image ;
+        try {
+             image = new ImageView(vendor.getLogo());
+        }
+       catch (Exception e) {
+           image = new ImageView(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
+       }
         Label label = new Label(vendor.getName());
         Label address = new Label(vendor.getAddress());
         address.setStyle("-fx-text-fill: #a88787; -fx-font-weight: bold ; -fx-font-size: 16px;");

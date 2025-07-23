@@ -396,9 +396,17 @@ public class AdminHandler implements HttpHandler {
                         matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().contains(vendor);
                     }
 
-                    if (courier != null && !courier.isEmpty()) {
-                        matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
-                    }
+
+                        if (courier != null && !courier.isEmpty()) {
+                            if (basket.getCourier_id() != null) {
+                                matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                            }
+                            else {
+                                matches&=false;
+                            }
+                        }
+
+
 
                     if (customer != null && !customer.isEmpty()) {
                         matches &= basket.getBuyerName().contains(customer);
@@ -627,6 +635,7 @@ public class AdminHandler implements HttpHandler {
         basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
         basketJson.put("courier_fee", basket.getCOURIER_FEE());
         basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+        basketJson.put("vendor_name", restaurantDAO.get_restaurant(basket.getRes_id()).getName());
         basketJson.put("courier_id", basket.getCourier_id());
         basketJson.put("status", basket.getStateofCart());
         basketJson.put("created_at", basket.getCreated_at());

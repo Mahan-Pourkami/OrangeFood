@@ -68,10 +68,10 @@
           <TableColumn fx:id="name_col" prefWidth="75.0" text="Name" />
           <TableColumn fx:id="price_col" prefWidth="75.0" text="price" />
             <TableColumn fx:id="sup_col" prefWidth="75.0" text="supply" />
-            <TableColumn fx:id="des_col" prefWidth="261.0" text="Description" />
-            <TableColumn fx:id="id_col" prefWidth="91.0" text="ID" />
-            <TableColumn fx:id="res_col" prefWidth="132.0" text="Res ID" />
-            <TableColumn fx:id="action_col" prefWidth="141.0" />
+            <TableColumn fx:id="des_col" prefWidth="207.0" text="Description" />
+            <TableColumn fx:id="id_col" prefWidth="101.0" text="ID" />
+            <TableColumn fx:id="res_col" prefWidth="63.0" text="Res ID" />
+            <TableColumn fx:id="action_col" prefWidth="254.0" />
         </columns>
       </TableView>
       <Label layoutX="542.0" layoutY="36.0" text="Manage Items" textFill="#ff9012">
@@ -92,5 +92,10 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <ImageView fitHeight="27.0" fitWidth="36.0" layoutX="65.0" layoutY="650.0" onMousePressed="#handleremove" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/delete.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -62,6 +63,13 @@ public class AddRestaurantController {
     void initialize() throws URISyntaxException {
 
         prof_view.setImage(default_logo);
+        Rectangle clip = new Rectangle(
+                prof_view.getFitWidth(),
+                prof_view.getFitHeight()
+        );
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        prof_view.setClip(clip);
         prof = new File(resourceUrl.toURI()).getAbsolutePath();
         System.out.println(prof);
     }

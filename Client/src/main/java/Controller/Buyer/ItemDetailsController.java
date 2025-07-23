@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Rating;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -51,7 +52,26 @@ public class ItemDetailsController {
     @FXML
     ListView<VBox> comments_list ;
 
+    @FXML
+    Button cart_button;
+
+    @FXML
+    Button rate_button;
+
+    @FXML
+    ImageView star ;
+
     private static long item_id = 0;
+
+    private static Role role;
+
+    public static Role getRole() {
+        return role;
+    }
+
+    public static void setRole(Role role) {
+        ItemDetailsController.role = role;
+    }
 
     @FXML
     void initialize() throws IOException {
@@ -62,6 +82,13 @@ public class ItemDetailsController {
         comments_list.setPadding(new Insets(10, 10, 10, 10));
         comments_list.getItems().clear();
         comments_list.getItems().addAll(comment_boxes);
+
+        if(role.equals(Role.seller)){
+            cart_button.setVisible(false);
+            rate_button.setVisible(false);
+            star.setVisible(false);
+        }
+
         if(!comments_list.getItems().isEmpty()) warn_label.setVisible(false);
         cat_label.setText("Category :" + ListFoodsController.get_menu_title());
         food_image.setFitHeight(250);
@@ -84,7 +111,12 @@ public class ItemDetailsController {
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
-            food_image.setImage(new Image(obj.getString("imageBase64")));
+           try{
+               food_image.setImage(new Image(obj.getString("imageBase64")));
+           }
+           catch(Exception e){
+               food_image.setImage(new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png")));
+           }
             JSONArray keys = obj.getJSONArray("keywords");
             String keyword = "";
             for (int i = 0; i < keys.length(); i++) {
@@ -99,8 +131,14 @@ public class ItemDetailsController {
     @FXML
     void control_back(MouseEvent event)throws IOException {
 
-        FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
-        Methods.switch_page(users,event);
+        if(Role.buyer.equals(role)) {
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
+            Methods.switch_page(users, event);
+        }
+        else {
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
+            Methods.switch_page(users, event);
+        }
     }
 
     @FXML
@@ -162,7 +200,14 @@ public class ItemDetailsController {
         List<ImageView> images = new ArrayList<>();
         for(String img_url : rating.getImages()) {
 
-            Image img = new Image(img_url);
+            Image img;
+           try {
+                 img = new Image(img_url);
+            }
+
+           catch(Exception e){
+                img = new Image(getClass().getResourceAsStream("/asset/images/delete.png"));
+           }
             ImageView image = new ImageView(img);
             image.setFitHeight(100);
             image.setFitWidth(100);
@@ -286,9 +331,11 @@ public class ItemDetailsController {
 
     }
 
-    static void setItemId(long item_id) {
+    public static void setItemId(long item_id , Role role) {
+
         ItemDetailsController.item_id = item_id;
+        ItemDetailsController.role = role;
     }
-    static long getItemId() {return ItemDetailsController.item_id;}
+    public static long getItemId() {return ItemDetailsController.item_id;}
 
 }

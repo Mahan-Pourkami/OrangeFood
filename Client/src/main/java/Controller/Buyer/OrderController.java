@@ -78,7 +78,8 @@ public class OrderController {
                         obj.getString("status"),
                         obj.getString("created_at"),
                         new ArrayList<>(),
-                        obj.getInt("pay_price"));
+                        obj.getInt("pay_price"),
+                        obj.getString("vendor_name"));
 
                 JSONArray items = obj.getJSONArray("items");
                 List<String> images_links = new ArrayList<>();
@@ -104,11 +105,19 @@ public class OrderController {
         VBox order_info_box = new VBox(10);
         Label order_status = new Label("Order Status : " + order.getStatus());
         Label price_label = new Label("Price : " + order.getPrice());
+        Label vendor_name = new Label(order.getVendor_name());
+        vendor_name.setStyle("-fx-font-weight: bold ; -fx-font-size: 16px;");
         Label date = new Label(order.getCreated_at());
         List<ImageView> urls = new ArrayList<>();
 
         for(String image_url : order.getImages()) {
-            Image image = new Image(image_url);
+            Image image ;
+            try {
+                image = new Image(image_url);
+            }
+            catch(Exception e) {
+                image = new Image(getClass().getResourceAsStream("asset/images/vendoricon.png"));
+            }
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(100);
             imageView.setFitWidth(100);
@@ -124,13 +133,15 @@ public class OrderController {
 
         HBox images_box = new HBox(20);
         images_box.setPadding(new Insets(10,10,10,10));
-        order_info_box.getChildren().addAll(order_status,price_label);
+        order_info_box.getChildren().addAll(order_status,price_label,vendor_name);
         images_box.setSpacing(30);
         images_box.getChildren().add(order_info_box);
         images_box.getChildren().addAll(urls);
         order_label.setStyle("-fx-font-weight: bold ; -fx-font-size: 18px;");
         date.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
-        order_status.setStyle("-fx-text-fill:green; -fx-font-size: 14px;");
+
+        if(!order.getStatus().equals("waiting"))order_status.setStyle("-fx-text-fill:green; -fx-font-size: 14px;");
+        else order_status.setStyle("-fx-text-fill:rgba(255,0,0,0.94); -fx-font-size: 14px; -fx-font-weight: bold;");
         HBox text_box = new HBox(20);
         text_box.setPadding(new Insets(10,10,10,10));
         text_box.getChildren().addAll(order_label , date);
