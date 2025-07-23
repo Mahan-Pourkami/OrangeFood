@@ -147,7 +147,6 @@ public class OrderHandler implements HttpHandler {
             }
             if(basket.getCoupon_id() == coupon.getId()){
                 throw new OrangeException("code used", 404);
-
             }
             basket.setCoupon_id(coupon.getId());
             basketDAO.updateBasket(basket);

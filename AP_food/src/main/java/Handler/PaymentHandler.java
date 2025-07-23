@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 //فرض میکنیم همه پرداخت های موفق اند
@@ -102,6 +104,9 @@ public class PaymentHandler implements HttpHandler {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
                         buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
                         buyerDAO.updateBuyer(buyer);
+                        if(buyer.getchargevalue()-basket.getPayPrice(restaurantDAO,foodDAO,couponDAO)<-100) {
+                            throw new ArithmeticException();
+                        }
                     } catch (ArithmeticException e) {
                         throw new ArithmeticException();
                     }
@@ -116,6 +121,7 @@ public class PaymentHandler implements HttpHandler {
 
                 transactionTDAO.saveTransaction(transaction);
                 basket.setStateofCart(StateofCart.payed);
+                basket.setUpadated_at(LocalDateTime.now().toString());
                 basketDAO.updateBasket(basket);
                 response = getTransactionJsonObject(transaction).toString();
             } else {
