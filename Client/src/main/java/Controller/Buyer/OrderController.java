@@ -43,13 +43,17 @@ public class OrderController {
 
     List<Order> orderlist = new ArrayList<>();
 
+
     @FXML
     void initialize() throws IOException {
 
         get_orders();
+        orderlist.sort((o1, o2) -> getPriority(o1.getStatus()) - getPriority(o2.getStatus()));
         List<VBox> cards = convert_to_vbox(orderlist);
+
         order_list.getItems().clear();
         order_list.getItems().addAll(cards);
+
         if(!order_list.getItems().isEmpty()) {
             no_order.setVisible(false);
         }
@@ -179,6 +183,17 @@ public class OrderController {
     void apply_filter(MouseEvent event) throws IOException {
         initialize();
     }
+
+    private int getPriority(String status) {
+        return switch (status) {
+            case "waiting" -> 1;
+            case "payed" -> 2;
+            case "served" -> 3;
+            case "rejected" -> 4;
+            default -> 5;
+        };
+    }
+
 
 
 
