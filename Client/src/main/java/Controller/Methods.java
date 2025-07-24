@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 public class Methods {
 
 
-    public final static String url = "http://localhost:8080/";
+    public final static String url = "http://localhost:8081/";
 
     public static JSONObject getJsonResponse(HttpURLConnection connection) throws IOException {
 

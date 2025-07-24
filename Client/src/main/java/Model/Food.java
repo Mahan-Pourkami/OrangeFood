@@ -50,6 +50,14 @@ public class Food {
         this.setLogo(logo);
     }
 
+    public Food(long id, String name, int quantity, int price, String logo) {
+        this.id = id;
+        this.name = name;
+        this.price=price;
+        this.quantity=quantity;
+        this.setLogo(logo);
+    }
+
     public long getId() {
         return id;
     }
