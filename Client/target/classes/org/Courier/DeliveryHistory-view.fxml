@@ -2,6 +2,7 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -62,7 +63,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <TextField layoutX="86.0" layoutY="179.0" promptText="Search Items" styleClass="adminfield">
+      <TextField fx:id="search_field" layoutX="86.0" layoutY="179.0" promptText="Search Items" styleClass="adminfield">
          <stylesheets>
             <URL value="@../../asset/style_sheets/style.css" />
             <URL value="@../../asset/style_sheets/input.css" />
@@ -73,7 +74,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="86.0" layoutY="244.0" promptText="Vendor name" styleClass="adminfield">
+      <TextField fx:id="vendor_field" layoutX="86.0" layoutY="244.0" promptText="Vendor name" styleClass="adminfield">
          <stylesheets>
             <URL value="@../../asset/style_sheets/style.css" />
             <URL value="@../../asset/style_sheets/input.css" />
@@ -84,7 +85,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="86.0" layoutY="313.0" promptText="user's name" styleClass="adminfield">
+      <TextField fx:id="user_field" layoutX="86.0" layoutY="313.0" promptText="user's name" styleClass="adminfield">
          <stylesheets>
             <URL value="@../../asset/style_sheets/style.css" />
             <URL value="@../../asset/style_sheets/input.css" />
@@ -95,5 +96,6 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
+      <Button layoutX="92.0" layoutY="380.0" mnemonicParsing="false" onMousePressed="#apply_filter" prefHeight="25.0" prefWidth="110.0" styleClass="dark-button" text="Apply filters" />
    </children>
 </Pane>

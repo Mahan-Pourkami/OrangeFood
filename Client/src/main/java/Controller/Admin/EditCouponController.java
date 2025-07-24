@@ -55,7 +55,7 @@ public class EditCouponController {
     @FXML
     void initialize() throws IOException {
 
-        URL get_url = new URL("http://localhost:8080/admin/coupons/"+couponID);
+        URL get_url = new URL(Methods.url+"admin/coupons/"+couponID);
         HttpURLConnection connection = (HttpURLConnection) get_url.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
