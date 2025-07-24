@@ -70,7 +70,7 @@ public class AdminController {
     void handle_logout(MouseEvent event) throws IOException {
 
        try {
-            URL logout_link = new URL("http://localhost:8081/auth/logout");
+            URL logout_link = new URL(Methods.url+"auth/logout");
             HttpURLConnection connection = (HttpURLConnection) logout_link.openConnection();
 
             String token = Methods.Get_saved_token();

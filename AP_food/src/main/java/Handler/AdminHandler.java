@@ -384,7 +384,7 @@ public class AdminHandler implements HttpHandler {
                             if (food == null) {
                                 break;
                             }
-                            if (food.getName().contains(search)) {
+                            if (food.getName().toLowerCase().contains(search.toLowerCase())) {
                                 match_food = true;
                                 break;
                             }
@@ -393,20 +393,18 @@ public class AdminHandler implements HttpHandler {
                     }
 
                     if (vendor != null && !vendor.isEmpty()) {
-                        matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().contains(vendor);
+                        matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().toLowerCase().contains(vendor.toLowerCase());
                     }
 
 
                         if (courier != null && !courier.isEmpty()) {
                             if (basket.getCourier_id() != null) {
-                                matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                                matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().toLowerCase().contains(courier.toLowerCase());
                             }
                             else {
                                 matches&=false;
                             }
                         }
-
-
 
                     if (customer != null && !customer.isEmpty()) {
                         matches &= basket.getBuyerName().contains(customer);

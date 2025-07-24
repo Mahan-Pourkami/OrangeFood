@@ -97,7 +97,9 @@ public class PendingController {
                         receiveBtn.getStyleClass().add("view-button");
                         pane.setAlignment(Pos.CENTER);
                         deliverBtn.getStyleClass().add("view-button");
+
                         receiveBtn.setOnAction(event -> {
+
                             Order order = getTableView().getItems().get(getIndex());
                             if(order.getStatus().equals("acceptedbycourier")) {
                                 try {
@@ -110,6 +112,7 @@ public class PendingController {
                                 SceneManager.showErrorAlert("Notice" , "You 've received this order before");
                             }
                         });
+
                         deliverBtn.setOnAction(event -> {
                             Order order = getTableView().getItems().get(getIndex());
                             if(order.getStatus().equals("received")) {

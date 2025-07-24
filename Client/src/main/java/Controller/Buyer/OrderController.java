@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Order;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -42,13 +43,17 @@ public class OrderController {
 
     List<Order> orderlist = new ArrayList<>();
 
+
     @FXML
     void initialize() throws IOException {
 
         get_orders();
+        orderlist.sort((o1, o2) -> getPriority(o1.getStatus()) - getPriority(o2.getStatus()));
         List<VBox> cards = convert_to_vbox(orderlist);
+
         order_list.getItems().clear();
         order_list.getItems().addAll(cards);
+
         if(!order_list.getItems().isEmpty()) {
             no_order.setVisible(false);
         }
@@ -148,7 +153,7 @@ public class OrderController {
         vbox.getChildren().addAll(images_box, text_box);
         vbox.setOnMousePressed( event -> {
             OrderDetController.setStatus(order.getStatus());
-            OrderDetController.setOrder_id(order.getId());
+            OrderDetController.setOrder_id(order.getId(), Role.buyer);
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ OrderDetail-view.fxml"));
             try {
                 Methods.switch_page(users,event);
@@ -178,6 +183,17 @@ public class OrderController {
     void apply_filter(MouseEvent event) throws IOException {
         initialize();
     }
+
+    private int getPriority(String status) {
+        return switch (status) {
+            case "waiting" -> 1;
+            case "payed" -> 2;
+            case "served" -> 3;
+            case "rejected" -> 4;
+            default -> 5;
+        };
+    }
+
 
 
 
