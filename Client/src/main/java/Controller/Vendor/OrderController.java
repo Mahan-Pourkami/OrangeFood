@@ -1,6 +1,5 @@
 package Controller.Vendor;
 
-
 import Controller.Buyer.OrderDetController;
 import Controller.Methods;
 import Controller.SceneManager;
