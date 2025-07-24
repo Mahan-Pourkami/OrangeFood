@@ -290,7 +290,7 @@ public class OrderHandler implements HttpHandler {
             }
             response = basketsArray.toString();
         }
-        if(paths.length == 4 && paths[2].equals("orderitems")) {
+        else if(paths.length == 4 && paths[2].equals("orderitems")) {
             Long order_id = Long.valueOf(paths[3]);
             if(!basketDAO.existBasket(order_id)) {
                 throw new NosuchItemException("Basket does not exist");

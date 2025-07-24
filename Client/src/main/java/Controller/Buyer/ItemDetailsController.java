@@ -4,9 +4,13 @@ import Controller.Methods;
 import Controller.SceneManager;
 import Model.Rating;
 import Model.Role;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -129,14 +134,13 @@ public class ItemDetailsController {
        }
     }
     @FXML
-    void control_back(MouseEvent event)throws IOException {
+    void control_back(MouseEvent event) throws IOException {
 
-        if(Role.buyer.equals(role)) {
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
+        if (Role.buyer.equals(role)) {
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
             Methods.switch_page(users, event);
-        }
-        else {
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
+        } else {
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
             Methods.switch_page(users, event);
         }
     }
@@ -183,20 +187,24 @@ public class ItemDetailsController {
             delete.setVisible(false);
         }
 
-        Image prof = new Image(rating.getProf());
-        ImageView profile_view = new ImageView(prof);
-        profile_view.setFitHeight(40);
-        profile_view.setFitWidth(40);
-        Rectangle clip = new Rectangle(
-                profile_view.getFitWidth(),
-                profile_view.getFitHeight()
-        );
-        clip.setArcWidth(20);
-        clip.setArcHeight(20);
-        profile_view.setClip(clip);
-
+        if(!rating.getProf().isEmpty()) {
+            Image prof = new Image(rating.getProf());
+            ImageView profile_view = new ImageView(prof);
+            profile_view.setFitHeight(40);
+            profile_view.setFitWidth(40);
+            Rectangle clip = new Rectangle(
+                    profile_view.getFitWidth(),
+                    profile_view.getFitHeight()
+            );
+            clip.setArcWidth(20);
+            clip.setArcHeight(20);
+            profile_view.setClip(clip);
+            name_box.getChildren().addAll(profile_view,name ,edit , delete);
+        }
+        else{
+            name_box.getChildren().addAll(name ,edit , delete);
+        }
         name.setStyle("-fx-font-weight: bold; -fx-text-fill: #05304e;");
-        name_box.getChildren().addAll(profile_view,name ,edit , delete);
         List<ImageView> images = new ArrayList<>();
         for(String img_url : rating.getImages()) {
 

@@ -152,7 +152,7 @@ public class CouponController {
 
     private void load_data() throws IOException {
 
-        URL get_coupons_url = new URL("http://localhost:8080/admin/coupons");
+        URL get_coupons_url = new URL("http://localhost:8081/admin/coupons");
         HttpURLConnection connection = (HttpURLConnection) get_coupons_url.openConnection() ;
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();

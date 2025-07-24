@@ -684,7 +684,8 @@ public class RestaurantsHandler implements HttpHandler {
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(500, response.getBytes().length);
             }
-        } else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
+        }
+        else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
 
 
             try {
@@ -745,7 +746,8 @@ public class RestaurantsHandler implements HttpHandler {
 
             }
 
-        } else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
+        }
+        else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
             try {
                 Long res_id = Long.parseLong(paths[2]);
                 String token = JwtUtil.get_token_from_server(exchange);
