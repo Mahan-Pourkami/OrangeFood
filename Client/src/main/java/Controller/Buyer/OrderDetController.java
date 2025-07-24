@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Food;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -95,6 +96,15 @@ public class OrderDetController {
         OrderDetController.status = status;
     }
 
+    private static Role role ;
+
+    public static Role getRole() {
+        return role;
+    }
+
+    public static void setRole(Role role) {
+        OrderDetController.role = role;
+    }
 
     @FXML
     void setcolumns (){
@@ -178,8 +188,14 @@ public class OrderDetController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
-        FXMLLoader back = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
-        Methods.switch_page(back,event);
+        if(role.equals(Role.buyer)){
+            FXMLLoader back = new FXMLLoader(getClass().getResource("/org/Buyer/BuyerOrder-view.fxml"));
+            Methods.switch_page(back, event);
+        }
+        else if(role.equals(Role.seller)){
+            FXMLLoader back = new FXMLLoader(getClass().getResource("/org/Vendor/RestaurantOrder-view.fxml"));
+            Methods.switch_page(back, event);
+        }
 
     }
 
@@ -187,8 +203,10 @@ public class OrderDetController {
         return order_id;
     }
 
-    public static void setOrder_id(long order_id) {
+    public static void setOrder_id(long order_id , Role role) {
+
         OrderDetController.order_id = order_id;
+        OrderDetController.role = role;
     }
 
     @FXML

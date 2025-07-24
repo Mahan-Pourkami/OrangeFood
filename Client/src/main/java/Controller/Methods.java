@@ -1,7 +1,6 @@
 package Controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,7 +22,7 @@ import java.nio.file.Paths;
 public class Methods {
 
 
-    public final static String url = "http://localhost:8081/";
+    public final static String url = "http://localhost:8080/";
 
     public static JSONObject getJsonResponse(HttpURLConnection connection) throws IOException {
 

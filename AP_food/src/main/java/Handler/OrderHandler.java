@@ -210,7 +210,6 @@ public class OrderHandler implements HttpHandler {
             if (!JwtUtil.extractRole(token).equals("buyer")) {
                 throw new ForbiddenroleException();
             }
-
             User user = userDAO.getUserByPhone(JwtUtil.extractSubject(token));
             long item_id = Long.parseLong(paths[3]);
             Food food = foodDAO.getFood(item_id);
@@ -218,7 +217,6 @@ public class OrderHandler implements HttpHandler {
             if(basketDAO.getOpenBasket(food.getRestaurantId())==null) {
                 throw new NosuchItemException("Basket does not exist");
             }
-
             Basket basket = basketDAO.getOpenBasket(food.getRestaurantId());
             food.setSupply(food.getSupply() +basket.getItems().get(food.getId()));
             basket.removeItem(item_id);
@@ -290,7 +288,7 @@ public class OrderHandler implements HttpHandler {
             }
             response = basketsArray.toString();
         }
-        if(paths.length == 4 && paths[2].equals("orderitems")) {
+        else if(paths.length == 4 && paths[2].equals("orderitems")) {
             Long order_id = Long.valueOf(paths[3]);
             if(!basketDAO.existBasket(order_id)) {
                 throw new NosuchItemException("Basket does not exist");
@@ -306,20 +304,16 @@ public class OrderHandler implements HttpHandler {
             }
             response = foodsArray.toString();
         }
+
         else if(paths.length == 4 && paths[2].equals("item")){
             Long itemId = Long.valueOf(paths[3]);
             Food food = foodDAO.getFood(itemId);
             response = getFoodJsonObject(food).toString();
         }
+
         else if (paths.length == 3) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
-            }
-            if (!JwtUtil.extractRole(token).equals("buyer")) {
-                throw new ForbiddenroleException();
-            }
-            if (!paths[2].matches("\\d+")) {
-                throw new InvalidInputException("item id");
             }
             long itemId = Integer.parseInt(paths[2]);
 
@@ -331,7 +325,8 @@ public class OrderHandler implements HttpHandler {
             JSONArray itemIdsArray = new JSONArray(items.keySet());
 
             response = getBasketJsonObject(basket, itemIdsArray).toString();
-        } else {
+        }
+        else {
             throw new OrangeException("endpoint not supported", 404);
         }
         return response;
@@ -370,12 +365,10 @@ public class OrderHandler implements HttpHandler {
                 }
             }
 
-
             Object itemsObj = jsonObject.get("items");
             if (!(itemsObj instanceof JSONArray)) {
                 return "items";
             }
-
             JSONArray itemsArray = (JSONArray) itemsObj;
             for (int i = 0; i < itemsArray.length(); i++) {
                 Object itemObj = itemsArray.get(i);
@@ -384,23 +377,19 @@ public class OrderHandler implements HttpHandler {
                 }
 
                 JSONObject itemJson = (JSONObject) itemObj;
-
                 Object itemIdObj = itemJson.opt("item_id");
                 Object quantityObj = itemJson.opt("quantity");
 
                 if (!(itemIdObj instanceof Integer)) {
                     return "items[" + i + "].item_id";
                 }
-
                 if (!(quantityObj instanceof Integer)) {
                     return "items[" + i + "].quantity";
                 }
-
                 Long itemId = (itemIdObj != null) ? ((Integer) itemIdObj).longValue() : null;
                 if (foodDAO.getFood(itemId) == null) {
                     return "items[" + i + "].item_id";
                 }
-
             }
 
         } catch (Exception e) {
@@ -410,6 +399,7 @@ public class OrderHandler implements HttpHandler {
     }
 
     private static JSONObject getJsonObject(HttpExchange exchange) throws IOException {
+
         try (InputStream requestBody = exchange.getRequestBody();
              BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             StringBuilder body = new StringBuilder();

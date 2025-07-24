@@ -1,10 +1,11 @@
 package Controller.Vendor;
 
 
-import Controller.Vendor.OrderDetailController;
+import Controller.Buyer.OrderDetController;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Order;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -147,8 +148,10 @@ public class OrderController {
 
         vbox.getChildren().addAll(order_status, price_label, vendor_name, courier_name, user_name);
         vbox.setOnMousePressed( event -> {
-            OrderDetailController.setOrderId(order.getId());
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Vendor/OrderDetails-view.fxml"));
+
+            OrderDetController.setStatus(order.getStatus());
+            OrderDetController.setOrder_id(order.getId(), Role.seller);
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/OrderDetail-view.fxml"));
             try {
                 Methods.switch_page(users,event);
             } catch (IOException e) {

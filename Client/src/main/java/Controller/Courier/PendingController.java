@@ -97,17 +97,10 @@ public class PendingController {
                         receiveBtn.getStyleClass().add("view-button");
                         pane.setAlignment(Pos.CENTER);
                         deliverBtn.getStyleClass().add("view-button");
-                        Order order = getTableView().getItems().get(getIndex());
-                        if(order.getStatus().equals("acceptedbycourier")){
-                            deliverBtn.setVisible(false);
-                            receiveBtn.setVisible(true);
-                        }
-                        else if(order.getStatus().equals("received")){
-                            receiveBtn.setVisible(false);
-                            deliverBtn.setVisible(true);
-                        }
+
                         receiveBtn.setOnAction(event -> {
 
+                            Order order = getTableView().getItems().get(getIndex());
                             if(order.getStatus().equals("acceptedbycourier")) {
                                 try {
                                     handle_buttons(order,0);
@@ -121,6 +114,7 @@ public class PendingController {
                         });
 
                         deliverBtn.setOnAction(event -> {
+                            Order order = getTableView().getItems().get(getIndex());
                             if(order.getStatus().equals("received")) {
                                 try {
                                     handle_buttons(order,1);

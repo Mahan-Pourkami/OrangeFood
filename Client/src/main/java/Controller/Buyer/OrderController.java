@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Order;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -148,7 +149,7 @@ public class OrderController {
         vbox.getChildren().addAll(images_box, text_box);
         vbox.setOnMousePressed( event -> {
             OrderDetController.setStatus(order.getStatus());
-            OrderDetController.setOrder_id(order.getId());
+            OrderDetController.setOrder_id(order.getId(), Role.buyer);
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ OrderDetail-view.fxml"));
             try {
                 Methods.switch_page(users,event);

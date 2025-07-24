@@ -70,6 +70,8 @@ public class TransactionController {
             trans_table.getItems().addAll(transactions);
         }
     }
+
+
     @FXML
     void control_back(MouseEvent event) throws IOException {
         FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Admin/Admin-view.fxml"));
