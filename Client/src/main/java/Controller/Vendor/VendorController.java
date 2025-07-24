@@ -113,6 +113,16 @@ public class VendorController {
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/UpdateRestaurant-view.fxml"));
         Methods.switch_page(loader,event);
-
     }
+    @FXML
+    void handle_order (MouseEvent event) throws IOException {
+
+        if(Methods.get_restaurant_id() == null){
+            SceneManager.showErrorAlert("No Restaurant" , "First submit your restaurant ");
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Vendor/RestaurantOrder-view.fxml"));
+        Methods.switch_page(loader,event);
+    }
+
 }

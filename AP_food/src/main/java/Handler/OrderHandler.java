@@ -290,6 +290,27 @@ public class OrderHandler implements HttpHandler {
             }
             response = basketsArray.toString();
         }
+        if(paths.length == 4 && paths[2].equals("orderitems")) {
+            Long order_id = Long.valueOf(paths[3]);
+            if(!basketDAO.existBasket(order_id)) {
+                throw new NosuchItemException("Basket does not exist");
+            }
+            Basket basket = basketDAO.getBasket(order_id);
+            Map<Long,Integer> foods = basket.getItems();
+            JSONArray foodsArray = new JSONArray();
+            for(Long id : foods.keySet()) {
+                JSONObject food = new JSONObject();
+                food.put("id", id);
+                food.put("quantity", foods.get(id));
+                foodsArray.put(food);
+            }
+            response = foodsArray.toString();
+        }
+        else if(paths.length == 4 && paths[2].equals("item")){
+            Long itemId = Long.valueOf(paths[3]);
+            Food food = foodDAO.getFood(itemId);
+            response = getFoodJsonObject(food).toString();
+        }
         else if (paths.length == 3) {
             if (!JwtUtil.validateToken(token)) {
                 throw new InvalidTokenexception();
@@ -490,6 +511,16 @@ public class OrderHandler implements HttpHandler {
         basketJson.put("restaurant_prof" , restaurantDAO.get_restaurant(basket.getRes_id()).getLogoUrl());
         basketJson.put("updated_at", basket.getUpadated_at());
         return basketJson;
+    }
+
+    public JSONObject getFoodJsonObject(Food food) {
+        JSONObject foodJson = new JSONObject();
+        foodJson.put("id", food.getId());
+        foodJson.put("name", food.getName());
+        foodJson.put("price", food.getPrice());
+        foodJson.put("imageBase64",food.getPictureUrl());
+        foodJson.put("stockquantity",food.getSupply());
+        return foodJson;
     }
 
     private Map<String, String> parseQueryParams(String query) {

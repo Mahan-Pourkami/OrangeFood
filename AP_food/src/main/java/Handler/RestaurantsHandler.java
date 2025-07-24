@@ -27,9 +27,10 @@ public class RestaurantsHandler implements HttpHandler {
     private TransactionTDAO transactionTDAO;
     private BuyerDAO buyerDAO;
     private UserDAO userDAO;
+    private CourierDAO courierDAO;
 
 
-    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO, CouponDAO couponDAO, BasketDAO basketDAO, TransactionTDAO transactionTDAO, BuyerDAO buyerDAO, UserDAO userDAO) {
+    public RestaurantsHandler(SellerDAO sellerDAO, RestaurantDAO restaurantDAO, FoodDAO foodDAO, CouponDAO couponDAO, BasketDAO basketDAO, TransactionTDAO transactionTDAO, BuyerDAO buyerDAO, UserDAO userDAO,CourierDAO courierDAO) {
 
 
         this.sellerDAO = sellerDAO;
@@ -40,6 +41,7 @@ public class RestaurantsHandler implements HttpHandler {
         this.transactionTDAO = transactionTDAO;
         this.buyerDAO = buyerDAO;
         this.userDAO = userDAO;
+        this.courierDAO = courierDAO;
 
     }
 
@@ -142,7 +144,8 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(http_code, response.length());
 
             }
-        } else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("item")) {
+        }
+        else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("item")) {
 
             try {
 
@@ -186,7 +189,8 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(http_code, response.length());
             }
 
-        } else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
+        }
+        else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
 
             try {
 
@@ -239,7 +243,76 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(http_code, response.length());
             }
 
-        } else {
+        }
+        else if (paths.length == 4 && paths[1].equals("restaurants") && paths[2].equals("orders")) {
+
+            if (!JwtUtil.validateToken(token)) {
+                throw new InvalidTokenexception();
+            }
+            if (!JwtUtil.extractRole(token).equals("seller")) {
+                throw new ForbiddenroleException();
+            }
+            if (!paths[3].matches("\\d+")) {
+                throw new InvalidInputException("order_id");
+            }
+            try {
+                if (invalid_input_orders_id(jsonobject).isEmpty()) {
+                    String order_id = paths[3];
+                    Long orderIdLong = Long.valueOf(order_id);
+                    Basket basket = basketDAO.getBasket(orderIdLong);
+                    String statusString = jsonobject.get("status").toString();
+                    Buyer buyer = buyerDAO.getBuyer(basket.getBuyerPhone());
+                    Seller seller = sellerDAO.getSeller(JwtUtil.extractSubject(token));
+                    if (seller.getRestaurant().getId() != basket.getRes_id()) {
+                        throw new InvalidInputException("order_id");
+                    }
+                    if ((statusString.equals("accepted") || statusString.equals("rejected")) && basket.getStateofCart() != StateofCart.payed) {
+                        throw new InvalidInputException("order_id");
+                    }
+
+                    if (statusString.equals("served") && basket.getStateofCart() != StateofCart.accepted)
+                        throw new InvalidInputException("order_id");
+                    StateofCart state = StateofCart.valueOf(statusString);
+                    basket.setStateofCart(state);
+                    basketDAO.updateBasket(basket);
+
+                    /*
+                    if(statusString.equals("served")){
+                        foodDAO.getFood()
+                    }
+                    */
+
+                    if (statusString.equals("rejected")) {
+                        int price = basket.getPayPrice(restaurantDAO, foodDAO, couponDAO);
+                        buyer.charge(price);
+                        buyerDAO.updateBuyer(buyer);
+                        String seller_id = JwtUtil.extractSubject(token);
+                        TransactionT transaction = new TransactionT(orderIdLong, seller_id, "wallet", "success");
+                        transactionTDAO.saveTransaction(transaction);
+                        Map<Long,Integer> foods = basket.getItems();
+                        for(Long foodId : foods.keySet()) {
+                            Food food = foodDAO.getFood(foodId);
+                            food.setSupply(food.getSupply() + 1);
+                            foodDAO.updateFood(food);
+                        }
+
+                    }
+                    response = generate_msg(statusString);
+                } else {
+                    response = generate_error("Invalid " + invalid_input_orders_id(jsonobject));
+                    throw new OrangeException(response, 400);
+                }
+            } catch (OrangeException e) {
+                response = generate_error(e.getMessage());
+                http_code = e.http_code;
+            } finally {
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(http_code, response.length());
+            }
+        }
+
+        else {
             response = generate_error("Endpoint not found");
             Headers headers = exchange.getResponseHeaders();
             headers.add("Content-Type", "application/json");
@@ -268,7 +341,8 @@ public class RestaurantsHandler implements HttpHandler {
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
-            } else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("items")) {
+            }
+            else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("items")) {
 
                 try {
                     String token = JwtUtil.get_token_from_server(exchange);
@@ -304,7 +378,8 @@ public class RestaurantsHandler implements HttpHandler {
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(e.http_code, response.length());
                 }
-            } else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
+            }
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("item")) {
 
                 try {
                     long res_id = Long.parseLong(paths[2]);
@@ -340,7 +415,8 @@ public class RestaurantsHandler implements HttpHandler {
                     exchange.sendResponseHeaders(e.http_code, response.length());
                 }
 
-            } else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
+            }
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("menu")) {
 
                 try {
                     int http_code = 200;
@@ -380,7 +456,8 @@ public class RestaurantsHandler implements HttpHandler {
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(e.http_code, response.length());
                 }
-            } else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("notmenu")) {
+            }
+            else if (paths.length == 5 && paths[1].equals("restaurants") && paths[3].equals("notmenu")) {
 
                 try {
                     int http_code = 200;
@@ -420,7 +497,8 @@ public class RestaurantsHandler implements HttpHandler {
                     headers.add("Content-Type", "application/json");
                     exchange.sendResponseHeaders(e.http_code, response.length());
                 }
-            } else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("menu")) {
+            }
+            else if (paths.length == 3 && paths[1].equals("restaurants") && paths[2].equals("menu")) {
 
 
                 String token = JwtUtil.get_token_from_server(exchange);
@@ -444,7 +522,8 @@ public class RestaurantsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(200, response.getBytes().length);
 
 
-            } else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("orders")) {
+            }
+            else if (paths.length == 4 && paths[1].equals("restaurants") && paths[3].equals("orders")) {
                 String token = JwtUtil.get_token_from_server(exchange);
                 if (!JwtUtil.validateToken(token)) {
                     throw new InvalidTokenexception();
@@ -468,23 +547,29 @@ public class RestaurantsHandler implements HttpHandler {
                         boolean matches = true;
 
                         if (search != null && !search.isEmpty()) {
-                            matches &= basket.getAddress().contains(search);
+                            boolean foodMatches = false;
+
+                            Map<Long, Integer> foods = basket.getItems();
+                            for (Long foodId : foods.keySet()) {
+                                Food food = foodDAO.getFood(foodId);
+                                if (food != null && food.getName().toLowerCase().contains(search.toLowerCase())) {
+                                    foodMatches = true;
+                                    break;
+                                }
+                            }
+                            matches &= foodMatches;
                         }
 
+
                         if (status != null && !status.isEmpty()) {
-                            if (status.equals("accepted")) {
-                                matches &= basket.getStateofCart() == StateofCart.accepted
-                                        || basket.getStateofCart() == StateofCart.acceptedbycourier;
-                            } else {
-                                matches &= basket.getStateofCart().toString().equals(status);
-                            }
+                            matches &= basket.getStateofCart().toString().equals(status);
                         }
 
 
                         if (user != null && !user.isEmpty()) {
                             matches &= basket.getBuyerName().contains(user);
                         }
-                        if (courier != null && !courier.isEmpty()) {
+                        if (courier != null && !courier.isEmpty() && basket.getCourier_id()!=null) {
                             matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
                         }
 
@@ -499,7 +584,26 @@ public class RestaurantsHandler implements HttpHandler {
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, response.getBytes().length);
-            } else {
+            }
+            else if (paths.length == 4 && paths[1].equals("restaurants") && paths[2].equals("names")){
+                Long basket_id = Long.parseLong(paths[3]);
+                Basket basket = basketDAO.getBasket(basket_id);
+                String username = basket.getBuyerName();
+                String courier_id = basket.getCourier_id();
+                String courier_name = "";
+                if(courier_id!=null){
+                    courier_name = courierDAO.getCourier(courier_id).getfullname();
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("user_name", username);
+                jsonObject.put("courier_name", courier_name);
+                response = jsonObject.toString();
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+
+            }
+            else {
                 response = generate_error("Endpoint not found");
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
@@ -1024,10 +1128,6 @@ public class RestaurantsHandler implements HttpHandler {
         basketJson.put("vendor_id", basket.getRes_id());
         basketJson.put("coupon_id", basket.getCoupon_id() != null ? basket.getCoupon_id() : JSONObject.NULL);
         basketJson.put("item_ids", itemIdsArray);
-        basketJson.put("raw_price", basket.getRawPrice(foodDAO));
-        basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
-        basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
-        basketJson.put("courier_fee", basket.getCOURIER_FEE());
         JSONArray foods = new JSONArray();
         for (int i = 0; i < itemIdsArray.length(); i++) {
             Food food = foodDAO.getFood(itemIdsArray.getLong(i));
@@ -1037,13 +1137,20 @@ public class RestaurantsHandler implements HttpHandler {
             foodJson.put("name", food.getName());
             foodJson.put("price", food.getPrice());
             foodJson.put("imageBase64",food.getPictureUrl());
+            foodJson.put("quantity",basket.getItems().get(food.getId()));
             foods.put(foodJson);
         }
         basketJson.put("items", foods);
+        basketJson.put("raw_price", basket.getRawPrice(foodDAO));
+        basketJson.put("tax_fee", basket.getTaxFee(restaurantDAO));
+        basketJson.put("additional_fee", basket.getAdditionalFee(restaurantDAO));
+        basketJson.put("courier_fee", basket.getCOURIER_FEE());
         basketJson.put("pay_price", basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
         basketJson.put("courier_id", basket.getCourier_id());
+        basketJson.put("vendor_name", restaurantDAO.get_restaurant(basket.getRes_id()).getName());
         basketJson.put("status", basket.getStateofCart());
         basketJson.put("created_at", basket.getCreated_at());
+        basketJson.put("restaurant_prof" , restaurantDAO.get_restaurant(basket.getRes_id()).getLogoUrl());
         basketJson.put("updated_at", basket.getUpadated_at());
         return basketJson;
     }
