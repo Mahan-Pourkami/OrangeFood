@@ -166,7 +166,7 @@ public class ApprovalController {
     private void handleReject(Approvals approvals) throws IOException {
 
         String id = approvals.getId();
-        URL request = new URL("http://localhost:8080/admin/users/" + id + "/status");
+        URL request = new URL(Methods.url+"admin/users/" + id + "/status");
         HttpURLConnection connection = (HttpURLConnection) request.openConnection();
         connection.setRequestMethod("PUT");
         connection.setRequestProperty("Content-Type", "application/json");

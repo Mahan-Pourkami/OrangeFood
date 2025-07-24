@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -104,13 +105,16 @@ public class CouponDAO {
     }
 
     public Coupon findCouponByCode(String code) {
-        List<Coupon> coupons = getAllCoupons();
-        for (Coupon coupon : coupons) {
-            if (coupon.getCode().equals(code)) {
-                return coupon;
-            }
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "SELECT c FROM Coupon c WHERE c.code = :code";
+            Query query = session.createQuery(hql);
+            query.setParameter("code", code);
+            transaction.commit();
+            return (Coupon) query.uniqueResult();
         }
-        return null;
     }
 
     public void use_Coupon(long id) throws InvalidInputException {

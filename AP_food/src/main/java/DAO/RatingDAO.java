@@ -9,7 +9,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RatingDAO {
@@ -103,15 +102,24 @@ public class RatingDAO {
 
     public List<Rating> getRatingsByitemId(long itemId) {
 
-        List<Rating> ratings = getAllRatings();
-        List<Rating> results = new ArrayList<Rating>();
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
 
-        for (Rating rating : ratings) {
-            if (rating.getItem_id().equals(itemId)) {
-                results.add(rating);
+            String hql = "FROM Rating r WHERE r.item_id = :itemIdParam";
+
+            List<Rating> result = session.createQuery(hql, Rating.class)
+                    .setParameter("itemIdParam", itemId)
+                    .getResultList();
+
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw new RuntimeException("Failed to fetch ratings for item ID: " + itemId, e);
         }
-        return results;
     }
 
 
@@ -119,7 +127,9 @@ public class RatingDAO {
 
         List<Rating> ratings = getRatingsByitemId(item_id);
         double avg_rating = 0;
-
+        if(ratings.isEmpty()) {
+            return 0;
+        }
         for (Rating rating : ratings) {
             avg_rating += rating.getRating();
         }

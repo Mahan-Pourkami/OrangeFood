@@ -64,4 +64,10 @@ public class CourierHomeController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/PendingOrder-view.fxml"));
         Methods.switch_page(loader,event);
     }
+
+    @FXML
+    void handleHistory (MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/Courier/DeliveryHistory-view.fxml"));
+        Methods.switch_page(loader,event);
+    }
 }

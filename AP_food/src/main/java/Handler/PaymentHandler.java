@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 //فرض میکنیم همه پرداخت های موفق اند
@@ -85,19 +87,26 @@ public class PaymentHandler implements HttpHandler {
             if (invalidInputItems(jsonobject).isEmpty()) {
                 Long orderId = ((Number) jsonobject.get("order_id")).longValue();
 
-                //check if order exists
                 if (!basketDAO.existBasket(orderId)) {
                     throw new NosuchItemException();
                 }
                 Basket basket = basketDAO.getBasket(orderId);
-                if (!(basket.getStateofCart() == StateofCart.waiting)) {
+                if (basket==null || !(basket.getStateofCart() == StateofCart.waiting)) {
                     throw new NosuchItemException();
                 }
+
+                if(!basket.getBuyerPhone().equals(user_id)) {
+                    throw  new ForbiddenroleException();
+                }
+
                 if (jsonobject.get("method").equals("wallet")) {
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
                         buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
                         buyerDAO.updateBuyer(buyer);
+                        if(buyer.getchargevalue()-basket.getPayPrice(restaurantDAO,foodDAO,couponDAO)<-100) {
+                            throw new ArithmeticException();
+                        }
                     } catch (ArithmeticException e) {
                         throw new ArithmeticException();
                     }
@@ -112,6 +121,7 @@ public class PaymentHandler implements HttpHandler {
 
                 transactionTDAO.saveTransaction(transaction);
                 basket.setStateofCart(StateofCart.payed);
+                basket.setUpadated_at(LocalDateTime.now().toString());
                 basketDAO.updateBasket(basket);
                 response = getTransactionJsonObject(transaction).toString();
             } else {

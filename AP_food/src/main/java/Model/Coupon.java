@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -61,16 +62,16 @@ public class Coupon {
         if (start_time != null && end_time != null &&
                 !start_time.isEmpty() && !end_time.isEmpty()) {
             try {
-                LocalDateTime start = LocalDateTime.parse(start_time, DATE_FORMATTER);
-                LocalDateTime end = LocalDateTime.parse(end_time, DATE_FORMATTER);
-                LocalDateTime now = LocalDateTime.now();
+                LocalDate start = LocalDate.parse(start_time, DATE_FORMATTER);
+                LocalDate end = LocalDate.parse(end_time, DATE_FORMATTER);
+                LocalDate now = LocalDate.now();
                 return now.isAfter(start) && now.isBefore(end) &&
-                        this.user_counts >= 0 && price >= this.min_price;
+                        this.user_counts > 0 && price >= this.min_price;
             } catch (DateTimeParseException e) {
                 return false;
             }
         }
-        return this.user_counts >= 0 && price >= this.min_price;
+        return this.user_counts > 0 && price >= this.min_price;
     }
 
     public void set_start_time(String start_time) {

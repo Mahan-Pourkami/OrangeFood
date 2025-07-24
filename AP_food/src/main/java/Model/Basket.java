@@ -81,7 +81,13 @@ public class Basket {
 
 
     public void addItem(long id, int quantity) {
-        items.put(id, quantity);
+
+        if(items.containsKey(id)) {
+            items.put(id, items.get(id) + quantity);
+        }
+        else {
+            items.put(id, quantity);
+        }
     }
     public void removeItem(Long id) {
         items.remove(id);
@@ -186,6 +192,9 @@ public class Basket {
     public int getRawPrice(FoodDAO foodDAO){
         int rawPrice=0;
         for(Map.Entry<Long,Integer> item : items.entrySet()){
+            if(foodDAO.getFood(item.getKey())==null){
+                continue;
+            }
             rawPrice += foodDAO.getFood(item.getKey()).getPrice()*item.getValue();
         }
         return rawPrice;
@@ -215,7 +224,7 @@ public class Basket {
                     payPrice = getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE - (int) cp.getValue();
                 }
                 if (couponType == Coupontype.percent) {
-                    payPrice = (getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE) * ((100 - (int) cp.getValue()) / 100);
+                    payPrice = (int) ((getRawPrice(foodDAO) + additionalFee + taxFee + COURIER_FEE) * ((100 - (int)cp.getValue()) / 100.0));
                 }
             }
         }

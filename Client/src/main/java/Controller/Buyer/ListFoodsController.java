@@ -3,6 +3,7 @@ package Controller.Buyer;
 import Controller.Methods;
 import Controller.SceneManager;
 import Model.Food;
+import Model.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -32,7 +33,6 @@ public class ListFoodsController {
 
     private static long res_id = 0;
     private static String menu_title  = "";
-
 
 
    public static void set_Value(long res_id, String menu_title) {
@@ -82,7 +82,14 @@ public class ListFoodsController {
        HBox card = new HBox(10);
        card.setPadding(new Insets(18));
 
-       ImageView image = new ImageView(food.getLogo());
+       ImageView image ;
+       try{
+           image = new ImageView(food.getLogo());
+       }
+       catch(Exception e){
+           image = new ImageView(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
+       }
+
        image.setFitHeight(150);
        image.setFitWidth(150);
        Rectangle clip = new Rectangle(
@@ -116,7 +123,7 @@ public class ListFoodsController {
        card.getChildren().addAll(image, textVBox, spacer,vbox3);
        card.setSpacing(10);
        card.setOnMouseClicked((MouseEvent event) -> {
-           ItemDetailsController.setItemId(food.getId());
+           ItemDetailsController.setItemId(food.getId(), Role.buyer);
            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
            try {
                Methods.switch_page(users,event);

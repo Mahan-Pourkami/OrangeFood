@@ -2,10 +2,12 @@ package DTO;
 
 import DAO.FoodDAO;
 import DAO.RatingDAO;
+import DAO.UserDAO;
 import Exceptions.InvalidInputException;
 import Exceptions.NosuchItemException;
 import Exceptions.UnsupportedMediaException;
 import Model.Rating;
+import Model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ public class RatingDTO {
 
         private RatingDAO ratingDAO;
 
+
         private long item_id;
 
         private int rating;
@@ -34,6 +37,7 @@ public class RatingDTO {
 
         private String author_name;
 
+
         private List<String> imageBase64;
 
         public Submit_Rating(JSONObject jsonObject, String author_phone, String author_name, RatingDAO ratingDAO, FoodDAO foodDAO) throws IOException {
@@ -41,7 +45,7 @@ public class RatingDTO {
             String[] required = {"item_id", "rating", "comment"};
 
             for (String requiredItem : required) {
-                if (!jsonObject.has(requiredItem)) {
+                if (!jsonObject.has(requiredItem) || jsonObject.getString("comment").isEmpty()) {
                     throw new InvalidInputException(requiredItem);
                 }
             }
@@ -84,15 +88,17 @@ public class RatingDTO {
         private FoodDAO foodDAO;
         private RatingDAO ratingDAO;
         private String response;
+        private UserDAO userDAO;
 
-        public Get_Rating_for_item(long itemid, FoodDAO foodDAO, RatingDAO ratingDAO) {
+        public Get_Rating_for_item(long itemid, FoodDAO foodDAO, RatingDAO ratingDAO , UserDAO userDAO , String phone) {
 
             this.foodDAO = foodDAO;
             this.ratingDAO = ratingDAO;
+            this.userDAO = userDAO;
 
             List<Rating> ratings = ratingDAO.getRatingsByitemId(itemid);
 
-            double avg = ratingDAO.calculate_avg_rating(itemid);
+           Double avg = ratingDAO.calculate_avg_rating(itemid);
 
             JSONObject jsonObject = new JSONObject();
             JSONArray jsonArray = new JSONArray();
@@ -101,17 +107,20 @@ public class RatingDTO {
             for (Rating rating : ratings) {
 
                 JSONObject temp = new JSONObject();
-                temp.put("id", rating.getItem_id());
+                temp.put("id", rating.getId());
                 temp.put("item_id", rating.getItem_id());
                 temp.put("rating", rating.getRating());
                 temp.put("comment", rating.getComment());
+                temp.put("yours", rating.getAuthor_phone().equals(phone)?"yes":"no");
 
                 JSONArray array_temp = new JSONArray();
                 for (String photo : rating.getImageBase64()) {
                     array_temp.put(photo);
                 }
+
                 temp.put("imageBase64", array_temp);
-                temp.put("user_id", Long.parseLong(rating.getAuthor_phone().substring(2)));
+                temp.put("user_id", rating.getAuthor_name());
+                temp.put("profile" , userDAO.getUserByPhone(rating.getAuthor_phone()).getProfile());
                 temp.put("created_at", rating.getDate_added());
                 jsonArray.put(temp);
             }

@@ -41,7 +41,7 @@
             <Image url="@../../asset/images/star.png" />
          </image>
       </ImageView>
-      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" prefHeight="174.0" prefWidth="293.0" styleClass="dark-button" text="                       Orders">
+      <Button layoutX="583.0" layoutY="416.0" mnemonicParsing="false" onMousePressed="#handleOrderbutton" prefHeight="174.0" prefWidth="293.0" styleClass="dark-button" text="                       Orders">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -62,7 +62,7 @@
             <Image url="@../../asset/images/wallet.png" />
          </image>
       </ImageView>
-      <Button layoutX="728.0" layoutY="260.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="150.0" styleClass="dark-button">
+      <Button layoutX="728.0" layoutY="260.0" mnemonicParsing="false" onMousePressed="#handleTransaction" prefHeight="145.0" prefWidth="150.0" styleClass="dark-button">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -83,7 +83,6 @@
          </image>
       </ImageView>
       <TextField layoutX="495.0" layoutY="41.0" />
-      <TextField layoutX="569.0" layoutY="66.0" />
       <TextField layoutX="497.0" layoutY="31.0" onMousePressed="#handleSearchItem" prefHeight="35.0" prefWidth="280.0" promptText="Search items" styleClass="dark-button">
          <cursor>
             <Cursor fx:constant="DEFAULT" />

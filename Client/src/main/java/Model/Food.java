@@ -26,6 +26,13 @@ public class Food {
 
     }
 
+    public Food(long id , String name, int price, int quantity) {
+        this.setId(id);
+        this.setName(name);
+        this.setPrice(price);
+        this.setQuantity(quantity);
+    }
+
     public Food(long res_id, String name, String description, int price ) {
 
         this.setId(res_id);
@@ -40,6 +47,14 @@ public class Food {
         this.name = name;
         this.price=price;
         this.description = description;
+        this.setLogo(logo);
+    }
+
+    public Food(long id, String name, int quantity, int price, String logo) {
+        this.id = id;
+        this.name = name;
+        this.price=price;
+        this.quantity=quantity;
         this.setLogo(logo);
     }
 

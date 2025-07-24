@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class DeliveryHandler implements HttpHandler {
                     state = StateofCart.valueOf(statusString);
                 }
                 basket.setStateofCart(state);
+                basket.setUpadated_at(LocalDateTime.now().toString());
                 basketDAO.updateBasket(basket);
 
                 Map<Long, Integer> items = basket.getItems();
@@ -115,7 +117,6 @@ public class DeliveryHandler implements HttpHandler {
                 JSONObject responseJson = new JSONObject();
                 responseJson.put("message", statusString);
                 responseJson.put("order", getBasketJsonObject(basket, itemIdsArray));
-
                 response = responseJson.toString();
             } else {
                 response = generate_error("Invalid " + invalidInput(jsonobject).toString());
@@ -234,7 +235,7 @@ public class DeliveryHandler implements HttpHandler {
                             if (food == null) {
                                 break;
                             }
-                            if (food.getName().contains(search)) {
+                            if (food.getName().toLowerCase().contains(search.toLowerCase())) {
                                 match_food = true;
                                 break;
                             }
@@ -243,11 +244,11 @@ public class DeliveryHandler implements HttpHandler {
                     }
 
                     if (vendor != null && !vendor.isEmpty()) {
-                        matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().contains(vendor);
+                        matches &= restaurantDAO.get_restaurant(basket.getRes_id()).getName().toLowerCase().contains(vendor.toLowerCase());
                     }
 
                     if (user != null && !user.isEmpty()) {
-                        matches &= basket.getBuyerName().contains(user);
+                        matches &= basket.getBuyerName().toLowerCase().contains(user.toLowerCase());
                     }
 
                     if (matches) {
@@ -416,7 +417,7 @@ public class DeliveryHandler implements HttpHandler {
         if (query != null && !query.isEmpty()) {
             String[] pairs = query.split("&");
             for (String pair : pairs) {
-                String[] kv = pair.split("=", 2); // only split on first '='
+                String[] kv = pair.split("=", 2);
                 String key = kv[0];
                 String value = kv.length > 1 ? kv[1] : "";
                 params.put(key, value);

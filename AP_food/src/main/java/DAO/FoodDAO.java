@@ -104,6 +104,7 @@ public class FoodDAO {
 
 
     public List<Food> getAllFoods() {
+
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -149,7 +150,7 @@ public class FoodDAO {
 
     public List<Food> getFoodsByMenu(Long restaurantId, String menu_title) {
         List<Food> result = new ArrayList<>();
-        List<Food> foods = getAllFoods();
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
         for (Food food : foods) {
             if (food.getRestaurant().equals(restaurantId) && food.getMenuTitle().contains(menu_title)) {
                 result.add(food);
@@ -159,8 +160,9 @@ public class FoodDAO {
     }
 
     public List<Food> foodsnotinmenu(Long restaurantId, String menu_title) {
+
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
         List<Food> result = new ArrayList<>();
-        List<Food> foods = getAllFoods();
         for (Food food : foods) {
             if (food.getRestaurant().equals(restaurantId) && !food.getMenuTitle().contains(menu_title)) {
                 result.add(food);
@@ -171,7 +173,7 @@ public class FoodDAO {
 
 
     public Food findFoodByName(String name, long restaurantId) {
-        List<Food> foods = getAllFoods();
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
 
         for (Food food : foods) {
             if (food.getName().equals(name) && food.getRestaurantId().equals(restaurantId)) {
@@ -182,7 +184,7 @@ public class FoodDAO {
     }
 
     public void delet_from_menu(String menu_title, long restaurantId) {
-        List<Food> foods = getAllFoods();
+        List<Food> foods = getFoodsByRestaurantId(restaurantId);
         for (Food food : foods) {
             if (food.getMenuTitle() != null && food.getMenuTitle().contains(menu_title) && food.getRestaurantId().equals(restaurantId)) {
                 food.removeMenuTitle(menu_title);
@@ -203,12 +205,10 @@ public class FoodDAO {
         updateFood(food);
     }
 
-
     public void close() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
         }
     }
-
 
 }

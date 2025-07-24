@@ -193,12 +193,18 @@ public class EditfoodController {
 
     }
 
+    @FXML
+    void handleremove(MouseEvent event) {
+
+        prof_view.setImage(default_img);
+        URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
+        image_path = resourceUrl.getPath();
+
+    }
+
     public static void set_id(long res_id , long item_id) {
 
         EditfoodController.res_id = res_id;
         EditfoodController.item_id = item_id;
     }
-
-
-
 }

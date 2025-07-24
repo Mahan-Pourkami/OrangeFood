@@ -163,3 +163,79 @@
 .table-view .scroll-bar * {
     -fx-background-color: #1d1d1d;
 }
+
+.tab-pane {
+    -fx-tab-min-width: 120px;
+    -fx-tab-max-width: 120px;
+    -fx-background-color: -fx-background;
+    -fx-padding: 0 0 0 5px;
+}
+
+/* Tab header area background */
+.tab-pane > .tab-header-area {
+    -fx-background-color: #000d7d;
+    -fx-padding: 0 0 0 10px;
+}
+
+/* Individual tab styling */
+.tab {
+    -fx-background-color: linear-gradient(to bottom, #0d2a57, #2e2828);
+    -fx-background-insets: 0 1 0 1, 0, 0;
+    -fx-background-radius: 5 5 0 0;
+    -fx-padding: 5 15 5 15;
+    -fx-border-color: #1d1d1d;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-radius: 5 5 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 2, 0, 0, 1);
+}
+
+/* Selected tab styling */
+.tab:selected {
+    -fx-background-color: linear-gradient(to bottom, #4a5d75, #062737);
+    -fx-background-insets: 0, 0 1 0 1;
+    -fx-border-color: #46698f;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: -fx-focused-text-base-color;
+}
+
+/* Tab hover effect */
+.tab:hover {
+    -fx-background-color: linear-gradient(to bottom, #4a5d75, #0f3354);
+}
+
+/* Tab label text */
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #d0d0d0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Selected tab label text */
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab .tab-close-button:hover {
+    -fx-background-color: #e81123;
+}
+
+/* Tab content area */
+.tab-pane > .tab-content-area {
+    -fx-background-color: #001537;
+    -fx-border-color: #1d1d1d;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Tab header background */
+.tab-header-background {
+    -fx-background-color: #2b2b2b;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 10, 0, 0, 2);
+}
+
+/* Focused tab styling */
+.tab:selected:focused{
+    -fx-background-color: linear-gradient(to bottom, #46698f, #3a4a5f);
+    -fx-border-color: #5a7ea3;
+}

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Buyer.PostRatingController">
+   <children>
+      <Rectangle arcHeight="50.0" arcWidth="50.0" height="681.0" layoutX="460.0" layoutY="149.0" strokeType="INSIDE" strokeWidth="5.0" width="782.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.18481968343257904" green="0.3739684820175171" blue="0.5394737124443054" opacity="0.009999999776482582" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.5299999713897705" green="0.4918400049209595" blue="0.44519999623298645" opacity="0.6030534505844116" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+         <stroke>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9078947305679321" green="0.844776451587677" blue="0.6851242780685425" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke>
+      </Rectangle>
+      <Button layoutX="1097.0" layoutY="723.0" mnemonicParsing="false" onMousePressed="#handle_post_comment" prefHeight="40.0" prefWidth="111.0" styleClass="view-button" text="Post">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <TextArea fx:id="comment_area" layoutX="480.0" layoutY="463.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="239.0" prefWidth="733.0" promptText="Write Your Comment" styleClass="dark-button">
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font>
+      </TextArea>
+      <Button layoutX="864.0" layoutY="723.0" mnemonicParsing="false" onMousePressed="#handleClearImages" prefHeight="40.0" prefWidth="103.0" styleClass="dark-button" text="Clear" />
+      <ListView fx:id="images_list" layoutX="480.0" layoutY="171.0" onMousePressed="#handleSelectImage" orientation="HORIZONTAL" prefHeight="200.0" prefWidth="733.0">
+         <padding>
+            <Insets left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </ListView>
+      <Button layoutX="974.0" layoutY="723.0" mnemonicParsing="false" onMousePressed="#handleSelectImage" prefHeight="40.0" prefWidth="111.0" styleClass="send-button" text="Add Image">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <Slider fx:id="point_slider" layoutX="727.0" layoutY="401.0" prefHeight="40.0" prefWidth="189.0" styleClass="list-cell" />
+      <Rectangle arcHeight="20.0" arcWidth="20.0" height="565.0" layoutX="48.0" layoutY="148.0" strokeType="INSIDE" strokeWidth="5.0" width="393.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color opacity="0.22740457952022552" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+         <stroke>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9473684430122375" green="0.9473684430122375" blue="0.9473684430122375" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.9138888716697693" blue="0.7129629850387573" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke>
+      </Rectangle>
+      <ImageView fx:id="food_image" fitHeight="250.0" fitWidth="250.0" layoutX="78.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="name_label" layoutX="73.0" layoutY="443.0" prefHeight="64.0" prefWidth="343.0">
+         <font>
+            <Font name="System Bold" size="31.0" />
+         </font>
+      </Label>
+      <Label fx:id="key_label" layoutX="73.0" layoutY="579.0" prefHeight="51.0" prefWidth="343.0" textFill="#c3b6b6">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="price_label" layoutX="288.0" layoutY="587.0" prefHeight="35.0" prefWidth="124.0" textFill="#ff1573">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="cat_label" layoutX="78.0" layoutY="645.0" prefHeight="35.0" prefWidth="278.0" text="34yhhq" textFill="#51648c7f">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="39.0" fitWidth="35.0" layoutX="37.0" layoutY="29.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/backicon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="535.0" layoutY="47.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+         <image>
+            <Image url="@../../asset/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="596.0" layoutY="47.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
+         <font>
+            <Font name="System Bold" size="34.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="92.0" fitWidth="89.0" layoutX="1185.0" layoutY="26.0" opacity="0.21" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../asset/images/hambergur.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="des_label" layoutX="73.0" layoutY="515.0" prefHeight="35.0" prefWidth="343.0" textFill="#8a8181">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="click_label" layoutX="662.0" layoutY="258.0" onMousePressed="#handleSelectImage" prefHeight="26.0" prefWidth="343.0" text="Click here to Share the images of your Item" textFill="#b9b3b3">
+         <font>
+            <Font size="17.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label layoutX="508.0" layoutY="411.0" text="Your rating point to this item" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="924.0" layoutY="407.0" text="Your Rating :" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="rating_value" layoutX="1047.0" layoutY="409.0" text="1" textFill="RED">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

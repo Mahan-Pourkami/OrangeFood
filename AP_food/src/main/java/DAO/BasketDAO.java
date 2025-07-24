@@ -10,7 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -255,18 +254,33 @@ public class BasketDAO implements AutoCloseable {
 
     }
 
-    public List<Basket> getBasketforvendor(Long vendorId) {
+    public Basket getOpenBasket(long vendor_id){
 
-        List<Basket> baskets = getAllBasket();
-        List<Basket> result = new ArrayList<>();
-
-        for (Basket basket : baskets) {
-            if (basket.getRes_id() == vendorId && (basket.getStateofCart().equals(StateofCart.waiting) || basket.getStateofCart().equals(StateofCart.received) || basket.getStateofCart().equals(StateofCart.accepted))) {
-                result.add(basket);
-            }
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "SELECT b FROM Basket b WHERE b.res_id = :vendor_id AND b.stateofCart = :state";
+            Basket basket = session.createQuery(hql, Basket.class).setParameter("vendor_id", vendor_id).setParameter("state", StateofCart.waiting).uniqueResult();
+            transaction.commit();
+            return basket;
         }
-        return result;
+        catch (Exception e) {
+            return null;
+        }
+    }
 
+    public List<Basket> getbuyersbasket(String phone){
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "SELECT b FROM Basket b WHERE b.buyerPhone = :phone";
+            List<Basket> result = session.createQuery(hql, Basket.class).setParameter("phone", phone).list();
+            transaction.commit();
+            return result;
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
 

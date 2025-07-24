@@ -1,7 +1,6 @@
 package Controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,6 +13,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -54,12 +54,34 @@ public class Methods {
                 )
         )) {
 
+
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 response.append(line.trim());
             }
             return new JSONArray(response.toString());
+        }
+    }
+
+    public static String getStringResponse(HttpURLConnection connection) throws IOException {
+
+        boolean isSuccess = (connection.getResponseCode() >= 200 && connection.getResponseCode() < 300);
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        isSuccess ? connection.getInputStream() : connection.getErrorStream(),
+                        "utf-8"
+                )
+        )) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line.trim());
+            }
+
+            return response.toString();
         }
     }
 
@@ -77,6 +99,13 @@ public class Methods {
         Parent root = page.load();
         Scene scene = new Scene(root);
         SceneManager.fadeScene(stage, scene);
+    }
+
+    public static void send_data(HttpURLConnection connection , String request) throws IOException {
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = request.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
     }
 
 
