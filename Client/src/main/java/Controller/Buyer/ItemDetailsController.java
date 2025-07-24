@@ -66,6 +66,7 @@ public class ItemDetailsController {
     @FXML
     ImageView star ;
 
+
     private static long item_id = 0;
 
     private static Role role;
@@ -136,13 +137,25 @@ public class ItemDetailsController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
+
+        if(Role.seller.equals(role)){
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
+            Methods.switch_page(users, event);
+            return;
+        }
+        if(Role.search.equals(role)){
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Buyer/ItemSearch-view.fxml"));
+            Methods.switch_page(users, event);
+            return;
+
+        }
         if (Role.buyer.equals(role)) {
             FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
             Methods.switch_page(users, event);
-        } else {
-            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
-            Methods.switch_page(users, event);
+            return;
         }
+
+
     }
 
     @FXML

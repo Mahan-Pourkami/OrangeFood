@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.OrderController">
+<Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.OrderController">
    <children>
       <ListView fx:id="order_list" layoutX="391.0" layoutY="5.0" prefHeight="851.0" prefWidth="883.0" />
       <Rectangle arcHeight="50.0" arcWidth="50.0" height="330.0" layoutX="30.0" layoutY="371.0" stroke="WHITE" strokeType="INSIDE" width="339.0">
@@ -73,7 +80,7 @@
             <Image url="@../../asset/images/no_order.jpg" />
          </image>
       </ImageView>
-      <ChoiceBox fx:id="statusChoiceBox" layoutX="197.0" layoutY="596.0" prefWidth="150.0">
+      <ChoiceBox fx:id="statusChoiceBox" layoutX="181.0" layoutY="587.0" prefHeight="43.0" prefWidth="169.0" styleClass="dark-button">
          <items>
             <FXCollections fx:factory="observableArrayList">
                <String fx:value="all" />

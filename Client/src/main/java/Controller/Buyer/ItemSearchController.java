@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.event.MouseWheelEvent;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,6 +60,7 @@ public class ItemSearchController {
 
     @FXML
     void Search_refresh(MouseEvent event) throws IOException {
+
         String search = search_field.getText().trim();
         String keywordInput = keywords.getText().trim();
 
@@ -76,6 +78,7 @@ public class ItemSearchController {
     }
 
     private void loadItems(String search, JSONArray keywordsArray, int price) throws IOException {
+
         URL get_foods_url = new URL(Methods.url + "items");
         String token = Methods.Get_saved_token();
 
@@ -111,6 +114,10 @@ public class ItemSearchController {
             List<HBox> cards = convert_tocard(foods);
             food_list.getItems().setAll(cards);
             price_label.setText(Integer.toString(price));
+        }
+        else {
+            JSONObject obj = Methods.getJsonResponse(connection);
+            SceneManager.showErrorAlert("Error", obj.getString("error"));
         }
     }
 
@@ -168,7 +175,7 @@ public class ItemSearchController {
         card.getChildren().addAll(image, textVBox, spacer,vbox3);
         card.setSpacing(10);
         card.setOnMouseClicked((MouseEvent event) -> {
-            ItemDetailsController.setItemId(food.getId(), Role.buyer);
+            ItemDetailsController.setItemId(food.getId(), Role.search);
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/Itemdetails-view.fxml"));
             try {
                 Methods.switch_page(users,event);

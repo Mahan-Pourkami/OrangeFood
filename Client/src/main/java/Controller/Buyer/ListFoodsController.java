@@ -35,7 +35,6 @@ public class ListFoodsController {
     private static String menu_title  = "";
 
 
-
    public static void set_Value(long res_id, String menu_title) {
        ListFoodsController.res_id = res_id;
        ListFoodsController.menu_title = menu_title;
