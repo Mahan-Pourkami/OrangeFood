@@ -136,7 +136,7 @@
             <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="cat_label" layoutX="68.0" layoutY="635.0" prefHeight="35.0" prefWidth="278.0" textFill="#51648c7f">
+      <Label fx:id="cat_label" layoutX="71.0" layoutY="621.0" prefHeight="35.0" prefWidth="278.0" textFill="#51648c7f">
          <font>
             <Font size="16.0" />
          </font>
@@ -208,6 +208,11 @@
       <Label fx:id="warn_label" layoutX="700.0" layoutY="412.0" prefHeight="103.0" prefWidth="278.0" text="No Comment for this item" textFill="#cdb8b8">
          <font>
             <Font size="21.0" />
+         </font>
+      </Label>
+      <Label fx:id="ven_name" layoutX="77.0" layoutY="663.0" text="Label" textFill="#aea2a2">
+         <font>
+            <Font size="13.0" />
          </font>
       </Label>
    </children>

@@ -98,11 +98,12 @@ public class PaymentHandler implements HttpHandler {
                 if (jsonobject.get("method").equals("wallet")) {
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
-                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
-                        buyerDAO.updateBuyer(buyer);
+
                         if(buyer.getchargevalue()-basket.getPayPrice(restaurantDAO,foodDAO,couponDAO)<-100) {
                             throw new ArithmeticException();
                         }
+                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+                        buyerDAO.updateBuyer(buyer);
                     } catch (ArithmeticException e) {
                         throw new ArithmeticException();
                     }
