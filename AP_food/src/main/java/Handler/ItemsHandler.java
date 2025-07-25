@@ -2,6 +2,7 @@ package Handler;
 
 
 import DAO.FoodDAO;
+import DAO.RestaurantDAO;
 import Exceptions.*;
 import Model.Food;
 import Utils.JwtUtil;
@@ -18,10 +19,12 @@ import java.util.stream.Collectors;
 public class ItemsHandler implements HttpHandler {
 
     FoodDAO foodDAO;
+    RestaurantDAO restaurantDAO;
 
-    public ItemsHandler(FoodDAO foodDAO) {
+    public ItemsHandler(FoodDAO foodDAO, RestaurantDAO restaurantDAO) {
 
         this.foodDAO = foodDAO;
+        this.restaurantDAO = restaurantDAO;
     }
 
 
@@ -87,6 +90,7 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
             foodJson.put("vendor_id", food.getRestaurant());
+            foodJson.put("vendor_name" , restaurantDAO.get_restaurant(food.getRestaurant()).getName());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
             foodJson.put("keywords", food.getKeywords());

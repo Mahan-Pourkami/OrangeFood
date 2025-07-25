@@ -52,6 +52,9 @@ public class ItemDetailsController {
     Label warn_label;
 
     @FXML
+    Label ven_name;
+
+    @FXML
     ProgressBar rating_avg;
 
     @FXML
@@ -117,6 +120,7 @@ public class ItemDetailsController {
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
+            ven_name.setText(obj.getString("vendor_name"));
            try{
                food_image.setImage(new Image(obj.getString("imageBase64")));
            }
