@@ -30,8 +30,7 @@ public class Server {
             TransactionTDAO transactionTDAO = new TransactionTDAO();
 
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(8080
-            ), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
