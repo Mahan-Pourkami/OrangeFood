@@ -150,7 +150,7 @@ public class OrderController {
 
             OrderDetController.setStatus(order.getStatus());
             OrderDetController.setOrder_id(order.getId(), Role.seller);
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/OrderDetail-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/OrderDetailV-view.fxml"));
             try {
                 Methods.switch_page(users,event);
             } catch (IOException e) {

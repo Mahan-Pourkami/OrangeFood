@@ -78,6 +78,9 @@ public class OrderDetController {
     Label addfee_label;
 
     @FXML
+    Label cus_label;
+
+    @FXML
     Label tax_label;
 
     @FXML
@@ -237,6 +240,7 @@ public class OrderDetController {
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
             addfee_label.setText(String.valueOf(obj.getInt("additional_fee")));
             add_label.setText(obj.getString("delivery_address"));
+            cus_label.setText(obj.getString("customer_id"));
             tax_label.setText(String.valueOf(obj.getInt("tax_fee")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
             logo_view.setImage(new Image(obj.getString("restaurant_prof")));
