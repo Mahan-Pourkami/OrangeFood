@@ -234,13 +234,13 @@ public class OrderDetController {
         if(connection.getResponseCode() == 200){
 
             id_label.setText(String.valueOf(obj.getLong("id")));
-            create_label.setText(obj.getString("created_at"));
-            update_label.setText(obj.getString("updated_at"));
+            create_label.setText(obj.getString("created_at").substring(0,19));
+            update_label.setText(obj.getString("updated_at").substring(0,19));
             raw_label.setText(String.valueOf(obj.getInt("pay_price")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
             addfee_label.setText(String.valueOf(obj.getInt("additional_fee")));
             add_label.setText(obj.getString("delivery_address"));
-            cus_label.setText(obj.getString("customer_id"));
+            cus_label.setText("Customer Phone : " + obj.getString("customer_id"));
             tax_label.setText(String.valueOf(obj.getInt("tax_fee")));
             courier_label.setText(String.valueOf(obj.getInt("courier_fee")));
             logo_view.setImage(new Image(obj.getString("restaurant_prof")));

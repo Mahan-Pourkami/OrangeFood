@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -31,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ItemSearchController {
 
@@ -135,13 +137,15 @@ public class ItemSearchController {
     private HBox generate_card(Food food) {
         HBox card = new HBox(10);
         card.setPadding(new Insets(18));
-        ImageView image;
+        Image imagefile;
         try{
-            image = new ImageView(food.getLogo());
+            imagefile = new Image(food.getLogo());
         }
         catch(Exception e){
-            image = new ImageView(getClass().getResource("asset/images/vendoricon.png").toExternalForm());
+            imagefile = new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png"));
         }
+
+        ImageView image = new ImageView(imagefile);
         image.setFitHeight(150);
         image.setFitWidth(150);
         Rectangle clip = new Rectangle(

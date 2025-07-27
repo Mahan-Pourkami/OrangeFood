@@ -569,8 +569,12 @@ public class RestaurantsHandler implements HttpHandler {
                         if (user != null && !user.isEmpty()) {
                             matches &= basket.getBuyerName().contains(user);
                         }
-                        if (courier != null && !courier.isEmpty() && basket.getCourier_id()!=null) {
-                            matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                        if (courier != null && !courier.isEmpty() ) {
+                            if (basket.getCourier_id() == null || basket.getCourier_id().isEmpty()) {
+                                matches &= false;
+                            } else {
+                                matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                            }
                         }
 
                         if (matches) {

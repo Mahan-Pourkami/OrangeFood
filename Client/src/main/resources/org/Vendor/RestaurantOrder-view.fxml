@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -19,8 +20,8 @@
 
 <Pane prefHeight="860.0" prefWidth="1280.0" styleClass="bg" stylesheets="@../../asset/style_sheets/buyer.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Vendor.OrderController">
    <children>
-      <ListView fx:id="order_list" layoutX="391.0" layoutY="5.0" prefHeight="851.0" prefWidth="883.0" />
-      <Rectangle arcHeight="50.0" arcWidth="50.0" height="330.0" layoutX="30.0" layoutY="371.0" stroke="WHITE" strokeType="INSIDE" width="339.0">
+      <ListView fx:id="order_list" layoutX="388.0" layoutY="-1.0" prefHeight="860.0" prefWidth="892.0" />
+      <Rectangle arcHeight="50.0" arcWidth="50.0" height="415.0" layoutX="30.0" layoutY="371.0" strokeType="INSIDE" strokeWidth="5.0" width="339.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -29,34 +30,68 @@
                         <Color red="1.0" green="1.0" blue="1.0" opacity="0.4580152630805969" />
                      </color>
                   </Stop>
+                  <Stop offset="0.7181208053691275">
+                     <color>
+                        <Color red="0.9078947305679321" green="0.6313230991363525" blue="0.3152412176132202" opacity="0.46000000834465027" />
+                     </color>
+                  </Stop>
                   <Stop offset="1.0">
                      <color>
-                        <Color red="0.46000000834465027" green="0.4185999929904938" blue="0.4185999929904938" opacity="0.3358778655529022" />
+                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.46000000834465027" />
                      </color>
                   </Stop>
                </stops>
             </LinearGradient>
          </fill>
+         <stroke>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.817380964756012" blue="0.3499999940395355" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="1.0" green="0.817380964756012" blue="0.3499999940395355" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.46308724832214765">
+                     <color>
+                        <Color red="0.8552631735801697" green="0.20985624194145203" blue="0.20985624194145203" opacity="0.46000000834465027" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" green="0.7775341272354126" blue="0.7638888955116272" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke>
       </Rectangle>
-      <TextField fx:id="search_field" layoutX="187.0" layoutY="443.0" promptText="Items" styleClass="dark-button">
+      <TextField fx:id="search_field" layoutX="147.0" layoutY="443.0" promptText="Items" styleClass="dark-button">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></TextField>
-      <Label layoutX="65.0" layoutY="447.0" prefHeight="26.0" prefWidth="82.0" text="Search Item">
+      <Label layoutX="58.0" layoutY="448.0" prefHeight="26.0" prefWidth="82.0" text="Search Item" textFill="#f08000">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="65.0" layoutY="595.0" prefHeight="26.0" prefWidth="100.0" text="status">
+      <Label layoutX="65.0" layoutY="595.0" prefHeight="26.0" prefWidth="100.0" text="status" textFill="#f08000">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="user_field" layoutX="187.0" layoutY="488.0" promptText="user" styleClass="dark-button">
+      <TextField fx:id="user_field" layoutX="147.0" layoutY="489.0" promptText="user" styleClass="dark-button">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></TextField>
-      <Button layoutX="135.0" layoutY="650.0" mnemonicParsing="false" onMousePressed="#apply_filter" prefHeight="35.0" prefWidth="130.0" styleClass="edit-button" text="Apply Filters" />
+      <Button layoutX="135.0" layoutY="704.0" mnemonicParsing="false" onMousePressed="#apply_filter" prefHeight="35.0" prefWidth="130.0" styleClass="edit-button" text="Apply Filters">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Button>
       <ImageView fitHeight="39.0" fitWidth="35.0" layoutX="47.0" layoutY="39.0" onMousePressed="#control_back" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/backicon.png" />
@@ -65,22 +100,41 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="51.0" layoutX="48.0" layoutY="240.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
+      <ImageView fitHeight="132.0" fitWidth="122.0" layoutX="147.0" layoutY="101.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" styleClass="wobbly-image">
          <image>
             <Image url="@../../asset/images/logo.png" />
          </image>
+         <effect>
+            <ColorAdjust brightness="-0.02" />
+         </effect>
       </ImageView>
-      <Label layoutX="109.0" layoutY="240.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!" textFill="#f89640">
+      <Label layoutX="100.0" layoutY="237.0" prefHeight="50.0" prefWidth="237.0" text="Orange Food!">
          <font>
             <Font name="System Bold" size="34.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.8444444537162781" blue="0.3333333432674408" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.5333333611488342" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
       <ImageView fx:id="no_order" fitHeight="254.0" fitWidth="286.0" layoutX="693.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../asset/images/no_order.jpg" />
          </image>
       </ImageView>
-      <ChoiceBox fx:id="statusChoiceBox" layoutX="181.0" layoutY="587.0" prefHeight="43.0" prefWidth="169.0" styleClass="dark-button">
+      <ChoiceBox fx:id="statusChoiceBox" layoutX="140.0" layoutY="587.0" prefHeight="26.0" prefWidth="169.0" styleClass="dark-button">
          <items>
             <FXCollections fx:factory="observableArrayList">
                <String fx:value="all" />
@@ -94,17 +148,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ChoiceBox>
-      <Label layoutX="65.0" layoutY="493.0" prefHeight="26.0" prefWidth="82.0" text="User">
+      <Label layoutX="65.0" layoutY="493.0" prefHeight="26.0" prefWidth="82.0" text="User" textFill="#f08000">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="58.0" layoutY="545.0" prefHeight="26.0" prefWidth="82.0" text="courier">
+      <Label layoutX="58.0" layoutY="545.0" prefHeight="26.0" prefWidth="82.0" text="courier" textFill="#f08000">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="courier_field" layoutX="187.0" layoutY="540.0" promptText="courier" styleClass="dark-button">
+      <TextField fx:id="courier_field" layoutX="140.0" layoutY="541.0" promptText="courier" styleClass="dark-button">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
