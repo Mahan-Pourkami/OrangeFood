@@ -121,7 +121,7 @@ public class OrderController {
                 image = new Image(image_url);
             }
             catch(Exception e) {
-                image = new Image(getClass().getResourceAsStream("asset/images/vendoricon.png"));
+                image = new Image(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
             }
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(100);
