@@ -25,6 +25,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +101,7 @@ public class ItemDetailsController {
         }
 
         if(!comments_list.getItems().isEmpty()) warn_label.setVisible(false);
-        cat_label.setText("Category :" + ListFoodsController.get_menu_title());
+        cat_label.setText("Category :" + URLDecoder.decode(ListFoodsController.get_menu_title(), StandardCharsets.UTF_8));
         food_image.setFitHeight(250);
         food_image.setFitWidth(250);
         Rectangle clip = new Rectangle(

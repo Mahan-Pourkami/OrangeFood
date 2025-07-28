@@ -155,9 +155,8 @@ public class MenuManageController {
     @FXML
     void handle_delete_button(ActionEvent event , String title) throws IOException {
 
-        String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8.toString());
-        encodedTitle =encodedTitle.replace("%20", " ");
-        URL delete_url = new URL(Methods.url + "restaurants/" + Methods.get_restaurant_id() + "/menu/" + encodedTitle + "/");
+        title=URLEncoder.encode(title,StandardCharsets.UTF_8);
+        URL delete_url = new URL(Methods.url + "restaurants/" + Methods.get_restaurant_id() + "/menu/" + title + "/");
         HttpURLConnection connection = (HttpURLConnection) delete_url.openConnection();
         connection.setRequestMethod("DELETE");
         String token = Methods.Get_saved_token();

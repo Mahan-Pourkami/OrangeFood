@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +88,9 @@ public class AddFoodMenuController {
     @FXML
     void load_data_add() throws IOException{
 
+
         URL get_add_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id()+"/notmenu/"+menu_title);
+        System.out.println(get_add_url.toString());
         HttpURLConnection connection = (HttpURLConnection) get_add_url.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
@@ -188,6 +193,7 @@ public class AddFoodMenuController {
     @FXML
     void load_data_delete () throws IOException {
 
+
         URL get_add_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id()+"/menu/"+menu_title);
         HttpURLConnection connection = (HttpURLConnection) get_add_url.openConnection();
         connection.setRequestMethod("GET");
@@ -265,7 +271,9 @@ public class AddFoodMenuController {
 
 
     public static void SetMenu_title(String menu_title) {
-        AddFoodMenuController.menu_title = menu_title;
+
+        AddFoodMenuController.menu_title = URLEncoder.encode(menu_title, StandardCharsets.UTF_8);
+
     }
 
     @FXML

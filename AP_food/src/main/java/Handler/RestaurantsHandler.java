@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +53,9 @@ public class RestaurantsHandler implements HttpHandler {
 
         String request = exchange.getRequestMethod();
         String[] paths = exchange.getRequestURI().getPath().split("/");
+        for (int i = 0; i < paths.length; i++) {
+            paths[i] = URLDecoder.decode(paths[i], StandardCharsets.UTF_8);
+        }
         String response = "";
 
         try {
