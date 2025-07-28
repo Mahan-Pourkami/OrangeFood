@@ -51,7 +51,7 @@ public class VendorDTO {
                 Restaurant r = iterator.next();
                 List<Food> foods = foodDAO.getFoodsByRestaurantId(r.getId());
 
-                if (foods.isEmpty()) {
+                if (foods.isEmpty() || r.get_menu_titles().isEmpty()) {
                     iterator.remove();
                     continue;
                 }
@@ -61,6 +61,9 @@ public class VendorDTO {
 
                 for (Food f : foods) {
 
+                    if(f.getMenuTitle().isEmpty()){
+                        break;
+                    }
                     boolean containsAllKeywords = true;
                     for (String keyword : keywords) {
 
@@ -76,7 +79,7 @@ public class VendorDTO {
                     }
                 }
 
-                if (shouldRemoveRestaurant) {
+                if (shouldRemoveRestaurant ) {
                     iterator.remove();
                 }
             }
