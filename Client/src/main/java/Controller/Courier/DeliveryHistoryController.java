@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +83,13 @@ public class DeliveryHistoryController {
     void load_data() throws IOException {
 
        delivery_orders.clear();
-       URL data_url = new URL(Methods.url+"deliveries/history?search="+search_field.getText()+
-               "&vendor="+vendor_field.getText()+"&user="+user_field.getText());
+
+       String search = URLEncoder.encode(search_field.getText(), StandardCharsets.UTF_8);
+       String vendor = URLEncoder.encode(vendor_field.getText(), StandardCharsets.UTF_8);
+       String user = URLEncoder.encode(user_field.getText(), StandardCharsets.UTF_8);
+
+       URL data_url = new URL(Methods.url+"deliveries/history?search="+search+
+               "&vendor="+vendor+"&user="+user);
 
         HttpURLConnection connection = (HttpURLConnection) data_url.openConnection();
         connection.setRequestMethod("GET");

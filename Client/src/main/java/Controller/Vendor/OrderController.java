@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +76,11 @@ public class OrderController {
 
         orderlist.clear();
         String status = statusChoiceBox.getValue()==null?"":statusChoiceBox.getValue().equals("all")?"":statusChoiceBox.getValue();
-        URL get_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id() + "/orders?search="+search_field.getText()+"&status="+status
-        +"&user="+user_field.getText()+"&courier="+courier_field.getText());
+        String search = URLEncoder.encode(search_field.getText(), StandardCharsets.UTF_8);
+        String user = URLEncoder.encode(user_field.getText(), StandardCharsets.UTF_8);
+        String courier = URLEncoder.encode(courier_field.getText(), StandardCharsets.UTF_8);
+        URL get_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id() + "/orders?search="+search+"&status="+status
+        +"&user="+user+"&courier="+courier);
         HttpURLConnection connection = (HttpURLConnection) get_url.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();

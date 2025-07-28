@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,7 +213,7 @@ public class DeliveryHandler implements HttpHandler {
             if (!JwtUtil.extractRole(token).equals("courier")) {
                 throw new ForbiddenroleException();
             }
-            Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+            Map<String, String> queryParams = parseQueryParams(URLDecoder.decode(exchange.getRequestURI().getQuery(), StandardCharsets.UTF_8));
             String search = queryParams.getOrDefault("search", null);
             String vendor = queryParams.getOrDefault("vendor", null);
             String user = queryParams.getOrDefault("user", null);

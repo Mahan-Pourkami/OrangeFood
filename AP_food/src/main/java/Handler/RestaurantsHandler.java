@@ -541,7 +541,7 @@ public class RestaurantsHandler implements HttpHandler {
                 if (!paths[2].matches("\\d+")) {
                     throw new InvalidInputException("item id");
                 }
-                Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+                Map<String, String> queryParams = parseQueryParams(URLDecoder.decode(exchange.getRequestURI().getQuery(),StandardCharsets.UTF_8));
                 String status = queryParams.getOrDefault("status", null);
                 String search = queryParams.getOrDefault("search", null);
                 String user = queryParams.getOrDefault("user", null);

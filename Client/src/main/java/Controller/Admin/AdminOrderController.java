@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -102,9 +104,15 @@ public class AdminOrderController {
 
     void load_data () throws IOException {
 
-        URL fetch_url = new URL(Methods.url+"admin/orders?search="+search_field.getText()+
-                "&vendor="+vendor_field.getText()+"&customer="+customer_field.getText()+"&status="+(String)status_box.getValue()
-                +"&courier="+courier_field.getText() );
+        String customer = URLEncoder.encode(customer_field.getText(), StandardCharsets.UTF_8);
+        String courier = URLEncoder.encode(courier_field.getText(), StandardCharsets.UTF_8);
+        String search = URLEncoder.encode(search_field.getText(), StandardCharsets.UTF_8);
+        String vendor = URLEncoder.encode(vendor_field.getText(), StandardCharsets.UTF_8);
+
+
+        URL fetch_url = new URL(Methods.url+"admin/orders?search="+search+
+                "&vendor="+vendor+"&customer="+customer+"&status="+(String)status_box.getValue()
+                +"&courier="+courier);
 
         HttpURLConnection connection = (HttpURLConnection) fetch_url.openConnection();
         String token = Methods.Get_saved_token();
