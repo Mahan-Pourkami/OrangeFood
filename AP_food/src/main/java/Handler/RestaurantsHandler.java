@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,6 +280,7 @@ public class RestaurantsHandler implements HttpHandler {
                         throw new InvalidInputException("order_id");
                     StateofCart state = StateofCart.valueOf(statusString);
                     basket.setStateofCart(state);
+                    basket.setUpadated_at(LocalDateTime.now().toString());
                     basketDAO.updateBasket(basket);
 
                     /*
