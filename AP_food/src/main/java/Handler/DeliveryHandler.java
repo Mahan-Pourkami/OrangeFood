@@ -164,6 +164,7 @@ public class DeliveryHandler implements HttpHandler {
                     state = StateofCart.valueOf(statusString);
                 }
                 basket.setStateofCart(state);
+                basket.setUpadated_at(LocalDateTime.now().toString());
                 basketDAO.updateBasket(basket);
 
                 Map<Long, Integer> items = basket.getItems();
