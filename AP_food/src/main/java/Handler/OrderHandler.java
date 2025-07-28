@@ -176,7 +176,7 @@ public class OrderHandler implements HttpHandler {
             User user = userDAO.getUserByPhone(JwtUtil.extractSubject(token));
             long item_id = Long.parseLong(paths[3]);
             Food food = foodDAO.getFood(item_id);
-            if(basketDAO.getOpenBasket(food.getRestaurantId())==null) {
+            if(basketDAO.getOpenBasket(food.getRestaurantId(),JwtUtil.extractSubject(token))==null) {
 
                 Basket basket = new Basket(user,user.getAddress(), Math.toIntExact(food.getRestaurantId()),0);
                 basket.addItem(item_id, 1);
@@ -186,7 +186,7 @@ public class OrderHandler implements HttpHandler {
             }
             else {
 
-                Basket basket = basketDAO.getOpenBasket(food.getRestaurantId());
+                Basket basket = basketDAO.getOpenBasket(food.getRestaurantId(),JwtUtil.extractSubject(token));
                 basket.addItem(item_id, 1);
                 basketDAO.updateBasket(basket);
                 foodDAO.add_to_cart(item_id, 1);
@@ -214,10 +214,10 @@ public class OrderHandler implements HttpHandler {
             long item_id = Long.parseLong(paths[3]);
             Food food = foodDAO.getFood(item_id);
 
-            if(basketDAO.getOpenBasket(food.getRestaurantId())==null) {
+            if(basketDAO.getOpenBasket(food.getRestaurantId(),JwtUtil.extractSubject(token))==null) {
                 throw new NosuchItemException("Basket does not exist");
             }
-            Basket basket = basketDAO.getOpenBasket(food.getRestaurantId());
+            Basket basket = basketDAO.getOpenBasket(food.getRestaurantId(),JwtUtil.extractSubject(token));
             food.setSupply(food.getSupply() +basket.getItems().get(food.getId()));
             basket.removeItem(item_id);
 
