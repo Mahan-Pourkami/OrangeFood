@@ -2,9 +2,6 @@ package Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -209,5 +206,12 @@ public class SignupController {
             event.consume();
         });
 
+    }
+
+    @FXML
+    void handleremovephoto(MouseEvent event) {
+        profview.setImage(default_prof);
+        URL resourceUrl = getClass().getResource("/asset/images/contact.png");
+        selectedImagePath = resourceUrl.getPath();
     }
 }

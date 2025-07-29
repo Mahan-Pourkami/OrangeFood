@@ -476,5 +476,10 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
+      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="1047.0" layoutY="86.0" onMousePressed="#handleremovephoto" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/images/delete.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
