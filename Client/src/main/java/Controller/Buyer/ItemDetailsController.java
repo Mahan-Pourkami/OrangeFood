@@ -25,6 +25,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,9 @@ public class ItemDetailsController {
     Label warn_label;
 
     @FXML
+    Label ven_name;
+
+    @FXML
     ProgressBar rating_avg;
 
     @FXML
@@ -65,6 +70,7 @@ public class ItemDetailsController {
 
     @FXML
     ImageView star ;
+
 
     private static long item_id = 0;
 
@@ -95,7 +101,7 @@ public class ItemDetailsController {
         }
 
         if(!comments_list.getItems().isEmpty()) warn_label.setVisible(false);
-        cat_label.setText("Category :" + ListFoodsController.get_menu_title());
+        cat_label.setText("Category :" + URLDecoder.decode(ListFoodsController.get_menu_title(), StandardCharsets.UTF_8));
         food_image.setFitHeight(250);
         food_image.setFitWidth(250);
         Rectangle clip = new Rectangle(
@@ -116,6 +122,7 @@ public class ItemDetailsController {
             name_label.setText(obj.getString("name"));
             price_label.setText(String.valueOf(obj.getInt("price")+"$"));
             des_label.setText(obj.getString("description"));
+            ven_name.setText(obj.getString("vendor_name"));
            try{
                food_image.setImage(new Image(obj.getString("imageBase64")));
            }
@@ -136,13 +143,25 @@ public class ItemDetailsController {
     @FXML
     void control_back(MouseEvent event) throws IOException {
 
+
+        if(Role.seller.equals(role)){
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
+            Methods.switch_page(users, event);
+            return;
+        }
+        if(Role.search.equals(role)){
+            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Buyer/ItemSearch-view.fxml"));
+            Methods.switch_page(users, event);
+            return;
+
+        }
         if (Role.buyer.equals(role)) {
             FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
             Methods.switch_page(users, event);
-        } else {
-            FXMLLoader users = new FXMLLoader(this.getClass().getResource("/org/Vendor/FoodManage-view.fxml"));
-            Methods.switch_page(users, event);
+            return;
         }
+
+
     }
 
     @FXML

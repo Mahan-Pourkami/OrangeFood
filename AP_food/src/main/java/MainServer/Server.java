@@ -44,7 +44,7 @@ public class Server {
             server.createContext("/wallet", new WalletHandler(buyerDAO, transactionTDAO));
             server.createContext("/coupons", new CouponHandler(couponDAO));
             server.createContext("/vendors", new VendorHandler(restaurantDAO, foodDAO, buyerDAO));
-            server.createContext("/items", new ItemsHandler(foodDAO));
+            server.createContext("/items", new ItemsHandler(foodDAO,restaurantDAO));
             server.createContext("/orders", new OrderHandler(userDAO, couponDAO, basketDAO, restaurantDAO, foodDAO));
             server.createContext("/payment", new PaymentHandler(basketDAO, userDAO, foodDAO, restaurantDAO, transactionTDAO, buyerDAO, couponDAO));
             server.createContext("/transactions", new TransactionsHandler(transactionTDAO));

@@ -6,15 +6,11 @@ import Model.*;
 import Utils.JwtUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 
-//فرض میکنیم همه پرداخت های موفق اند
 public class PaymentHandler implements HttpHandler {
 
     BasketDAO basketDAO;
@@ -102,11 +98,12 @@ public class PaymentHandler implements HttpHandler {
                 if (jsonobject.get("method").equals("wallet")) {
                     try {
                         Buyer buyer = buyerDAO.getBuyer(user_id);
-                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
-                        buyerDAO.updateBuyer(buyer);
+
                         if(buyer.getchargevalue()-basket.getPayPrice(restaurantDAO,foodDAO,couponDAO)<-100) {
                             throw new ArithmeticException();
                         }
+                        buyer.discharge(basket.getPayPrice(restaurantDAO, foodDAO, couponDAO));
+                        buyerDAO.updateBuyer(buyer);
                     } catch (ArithmeticException e) {
                         throw new ArithmeticException();
                     }
@@ -122,6 +119,11 @@ public class PaymentHandler implements HttpHandler {
                 transactionTDAO.saveTransaction(transaction);
                 basket.setStateofCart(StateofCart.payed);
                 basket.setUpadated_at(LocalDateTime.now().toString());
+                if(basket.getCoupon_id()!=0 && basket.getCoupon_id()!=null) {
+                    Coupon coupon = couponDAO.getCoupon(basket.getCoupon_id());
+                    coupon.setUser_counts(coupon.getUser_counts() - 1);
+                    couponDAO.updateCoupon(coupon);
+                }
                 basketDAO.updateBasket(basket);
                 response = getTransactionJsonObject(transaction).toString();
             } else {

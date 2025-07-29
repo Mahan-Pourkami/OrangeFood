@@ -144,6 +144,7 @@
 }
 .view-button:hover {
 
+    -fx-background-color: #1a741e;
     -fx-text-fill: white;
     -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
@@ -163,6 +164,7 @@
     -fx-background-color: #b40f0f; /* Green */
     -fx-text-fill: white;
     -fx-padding: 5 10 5 10;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
 }
 .delete-button:hover {
@@ -171,12 +173,14 @@
     -fx-font-size: 12px;
     -fx-background-color: #880505;
     -fx-text-fill: white;
+    -fx-background-radius: 10px;
     -fx-padding: 5 10 5 10;
 }
 
 .delete-button:pressed {
 
     -fx-translate-y: 1px;
+    -fx-background-radius: 10px;
     -fx-translate-x: 1px;
 
 }

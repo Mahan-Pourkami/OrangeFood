@@ -2,6 +2,7 @@ package Handler;
 
 
 import DAO.FoodDAO;
+import DAO.RestaurantDAO;
 import Exceptions.*;
 import Model.Food;
 import Utils.JwtUtil;
@@ -11,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +20,15 @@ import java.util.stream.Collectors;
 public class ItemsHandler implements HttpHandler {
 
     FoodDAO foodDAO;
+    RestaurantDAO restaurantDAO;
 
-    public ItemsHandler(FoodDAO foodDAO) {
+    private static final int CHUNK_SIZE = 8192;
+    private static final int MAX_IN_MEMORY_SIZE = 1024*1024;
+
+    public ItemsHandler(FoodDAO foodDAO, RestaurantDAO restaurantDAO) {
 
         this.foodDAO = foodDAO;
+        this.restaurantDAO = restaurantDAO;
     }
 
 
@@ -87,6 +94,7 @@ public class ItemsHandler implements HttpHandler {
             foodJson.put("imageBase64", food.getPictureUrl());
             foodJson.put("description", food.getDescription());
             foodJson.put("vendor_id", food.getRestaurant());
+            foodJson.put("vendor_name" , restaurantDAO.get_restaurant(food.getRestaurant()).getName());
             foodJson.put("price", food.getPrice());
             foodJson.put("supply", food.getSupply());
             foodJson.put("keywords", food.getKeywords());
@@ -249,16 +257,24 @@ public class ItemsHandler implements HttpHandler {
     }
 
     public void send_Response(HttpExchange exchange, String response, int http_code) throws IOException {
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        long responseLength = (response == null || response.isEmpty()) ? -1 : response.getBytes().length;
-        exchange.sendResponseHeaders(http_code, responseLength);
+        byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
 
-        if (responseLength > 0) {
+        if (responseBytes.length <= MAX_IN_MEMORY_SIZE) {
+            exchange.sendResponseHeaders(http_code, responseBytes.length);
             try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
+                os.write(responseBytes);
             }
         } else {
-            exchange.getResponseBody().close();
+            exchange.sendResponseHeaders(http_code, 0);
+            try (OutputStream os = exchange.getResponseBody()) {
+                int offset = 0;
+                while (offset < responseBytes.length) {
+                    int length = Math.min(CHUNK_SIZE, responseBytes.length - offset);
+                    os.write(responseBytes, offset, length);
+                    offset += length;
+                }
+            }
         }
     }
 }

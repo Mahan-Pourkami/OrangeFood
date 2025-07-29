@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -364,7 +366,7 @@ public class AdminHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+                Map<String, String> queryParams = parseQueryParams(URLDecoder.decode(exchange.getRequestURI().getQuery(), StandardCharsets.UTF_8));
                 String search = queryParams.getOrDefault("search", null);
                 String vendor = queryParams.getOrDefault("vendor", null);
                 String courier = queryParams.getOrDefault("courier", null);

@@ -12,6 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,9 @@ public class RestaurantsHandler implements HttpHandler {
 
         String request = exchange.getRequestMethod();
         String[] paths = exchange.getRequestURI().getPath().split("/");
+        for (int i = 0; i < paths.length; i++) {
+            paths[i] = URLDecoder.decode(paths[i], StandardCharsets.UTF_8);
+        }
         String response = "";
 
         try {
@@ -274,6 +280,7 @@ public class RestaurantsHandler implements HttpHandler {
                         throw new InvalidInputException("order_id");
                     StateofCart state = StateofCart.valueOf(statusString);
                     basket.setStateofCart(state);
+                    basket.setUpadated_at(LocalDateTime.now().toString());
                     basketDAO.updateBasket(basket);
 
                     /*
@@ -534,7 +541,7 @@ public class RestaurantsHandler implements HttpHandler {
                 if (!paths[2].matches("\\d+")) {
                     throw new InvalidInputException("item id");
                 }
-                Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
+                Map<String, String> queryParams = parseQueryParams(URLDecoder.decode(exchange.getRequestURI().getQuery(),StandardCharsets.UTF_8));
                 String status = queryParams.getOrDefault("status", null);
                 String search = queryParams.getOrDefault("search", null);
                 String user = queryParams.getOrDefault("user", null);
@@ -569,8 +576,12 @@ public class RestaurantsHandler implements HttpHandler {
                         if (user != null && !user.isEmpty()) {
                             matches &= basket.getBuyerName().contains(user);
                         }
-                        if (courier != null && !courier.isEmpty() && basket.getCourier_id()!=null) {
-                            matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                        if (courier != null && !courier.isEmpty() ) {
+                            if (basket.getCourier_id() == null || basket.getCourier_id().isEmpty()) {
+                                matches &= false;
+                            } else {
+                                matches &= userDAO.getUserByPhone(basket.getCourier_id()).getfullname().contains(courier);
+                            }
                         }
 
                         if (matches) {

@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,9 +76,11 @@ public class OrderController {
 
         orderlist.clear();
         String status = statusChoiceBox.getValue()==null?"":statusChoiceBox.getValue().equals("all")?"":statusChoiceBox.getValue();
-        URL get_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id() + "/orders?search="+search_field.getText()+"&status="+status
-        +"&user="+user_field.getText()+"&courier="+courier_field.getText());
-        System.out.println(get_url);
+        String search = URLEncoder.encode(search_field.getText(), StandardCharsets.UTF_8);
+        String user = URLEncoder.encode(user_field.getText(), StandardCharsets.UTF_8);
+        String courier = URLEncoder.encode(courier_field.getText(), StandardCharsets.UTF_8);
+        URL get_url = new URL(Methods.url+"restaurants/"+Methods.get_restaurant_id() + "/orders?search="+search+"&status="+status
+        +"&user="+user+"&courier="+courier);
         HttpURLConnection connection = (HttpURLConnection) get_url.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
@@ -87,9 +91,9 @@ public class OrderController {
             JSONArray orders = Methods.getJsonArrayResponse(connection);
             for (int i = 0; i < orders.length(); i++) {
                 JSONObject obj = orders.getJSONObject(i);
-                if( ! ( obj.getString("status").equals("payed") || obj.getString("status").equals("accepted") ||
-                        obj.getString("status").equals("rejected") || obj.getString("status").equals("served") ) )
+                if(obj.getString("status").equals("waiting")) {
                     continue;
+                }
                 Order order = new Order(obj.getLong("id"),
                         obj.getLong("vendor_id"),
                         obj.getString("customer_id"),
@@ -150,7 +154,7 @@ public class OrderController {
 
             OrderDetController.setStatus(order.getStatus());
             OrderDetController.setOrder_id(order.getId(), Role.seller);
-            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/OrderDetail-view.fxml"));
+            FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/OrderDetailV-view.fxml"));
             try {
                 Methods.switch_page(users,event);
             } catch (IOException e) {
@@ -164,7 +168,7 @@ public class OrderController {
             try {
                 image = new Image(image_url);
             } catch (Exception e) {
-                image = new Image(getClass().getResourceAsStream("asset/images/vendoricon.png"));
+                image = new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png"));
             }
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(100);
@@ -206,6 +210,8 @@ public class OrderController {
         if ("payed".equals(status)) {
             Button acceptBtn = new Button("Accept");
             Button rejectBtn = new Button("Reject");
+            acceptBtn.getStyleClass().add("view-button");
+            rejectBtn.getStyleClass().add("delete-button");
             button_box.getChildren().addAll(acceptBtn, rejectBtn);
 
             acceptBtn.setOnAction(e -> handleStatusUpdate(order.getId(), "accepted"));
@@ -213,6 +219,7 @@ public class OrderController {
 
         } else if ("accepted".equals(status)) {
             Button serveBtn = new Button("Serve");
+            serveBtn.getStyleClass().add("edit-button");
             button_box.getChildren().add(serveBtn);
 
             serveBtn.setOnAction(e -> handleStatusUpdate(order.getId(), "served"));

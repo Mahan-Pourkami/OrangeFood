@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +124,7 @@ public class MenuManageController {
         obj.put("title", title_field.getText());
 
         try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = obj.toString().getBytes("utf-8");
+            byte[] input = obj.toString().getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         }
 
@@ -153,7 +155,8 @@ public class MenuManageController {
     @FXML
     void handle_delete_button(ActionEvent event , String title) throws IOException {
 
-        URL delete_url = new URL(Methods.url + "restaurants/" + Methods.get_restaurant_id() + "/menu/" + title);
+        title=URLEncoder.encode(title,StandardCharsets.UTF_8);
+        URL delete_url = new URL(Methods.url + "restaurants/" + Methods.get_restaurant_id() + "/menu/" + title + "/");
         HttpURLConnection connection = (HttpURLConnection) delete_url.openConnection();
         connection.setRequestMethod("DELETE");
         String token = Methods.Get_saved_token();

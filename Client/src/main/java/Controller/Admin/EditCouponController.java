@@ -102,7 +102,7 @@ public class EditCouponController {
             error_label.setText("Invalid Input");
         }
 
-        URL edit_url = new URL("http://localhost:8080/admin/coupons/"+couponID);
+        URL edit_url = new URL(Methods.url+"admin/coupons/"+couponID);
         HttpURLConnection connection = (HttpURLConnection) edit_url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setRequestProperty("Content-Type", "application/json");

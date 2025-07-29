@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +67,10 @@ public class OrderController {
     void get_orders() throws IOException {
 
         orderlist.clear();
-        URL get_url = new URL(Methods.url+"orders/history?search="+search_field.getText()+"&vendor="+vendor_field.getText());
+        String search = URLEncoder.encode(search_field.getText(), StandardCharsets.UTF_8);
+        String vendor = URLEncoder.encode(vendor_field.getText(), StandardCharsets.UTF_8);
+
+        URL get_url = new URL(Methods.url+"orders/history?search="+search+"&vendor="+vendor);
         HttpURLConnection connection = (HttpURLConnection) get_url.openConnection();
         connection.setRequestMethod("GET");
         String token = Methods.Get_saved_token();
@@ -121,7 +126,7 @@ public class OrderController {
                 image = new Image(image_url);
             }
             catch(Exception e) {
-                image = new Image(getClass().getResourceAsStream("asset/images/vendoricon.png"));
+                image = new Image(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
             }
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(100);

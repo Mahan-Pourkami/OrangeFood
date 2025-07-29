@@ -254,13 +254,13 @@ public class BasketDAO implements AutoCloseable {
 
     }
 
-    public Basket getOpenBasket(long vendor_id){
+    public Basket getOpenBasket(long vendor_id,String phone) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            String hql = "SELECT b FROM Basket b WHERE b.res_id = :vendor_id AND b.stateofCart = :state";
-            Basket basket = session.createQuery(hql, Basket.class).setParameter("vendor_id", vendor_id).setParameter("state", StateofCart.waiting).uniqueResult();
+            String hql = "SELECT b FROM Basket b WHERE b.res_id = :vendor_id AND b.stateofCart = :state AND b.buyerPhone = :phone";
+            Basket basket = session.createQuery(hql, Basket.class).setParameter("vendor_id", vendor_id).setParameter("state", StateofCart.waiting).setParameter("phone",phone).uniqueResult();
             transaction.commit();
             return basket;
         }

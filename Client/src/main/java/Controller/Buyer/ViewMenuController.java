@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class ViewMenuController {
         card.getChildren().add(title);
         card.setOnMouseClicked((MouseEvent event) -> {
 
-            ListFoodsController.set_Value(menu.getVendorId(),menu.getTitle());
+            ListFoodsController.set_Value(menu.getVendorId(), URLEncoder.encode(menu.getTitle(), StandardCharsets.UTF_8));
             FXMLLoader users = new FXMLLoader(getClass().getResource("/org/Buyer/ListFoods-view.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = null;
