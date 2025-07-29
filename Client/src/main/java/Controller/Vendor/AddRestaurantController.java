@@ -162,4 +162,10 @@ public class AddRestaurantController {
         Methods.switch_page(users, event);
     }
 
+    @FXML
+    void handleremovephoto(MouseEvent event) {
+        prof_view.setImage(default_logo);
+        prof = resourceUrl.getPath();
+    }
+
 }
