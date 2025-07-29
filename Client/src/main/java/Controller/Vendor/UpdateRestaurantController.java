@@ -53,7 +53,7 @@ public class UpdateRestaurantController {
     @FXML
     Label error_label ;
 
-    Image default_img = new Image(getClass().getResourceAsStream("/asset/images/vendoricon.png"));
+    Image default_img = new Image(getClass().getResource("/asset/images/vendoricon.png").toExternalForm());
 
     URL resourceUrl = getClass().getResource("/asset/images/vendoricon.png");
     String prof ="";
@@ -95,6 +95,7 @@ public class UpdateRestaurantController {
                 prof = image.getUrl();
             }
             catch (Exception e) {
+                prof_view.setImage(default_img);
                 prof = new File(resourceUrl.toURI()).getAbsolutePath();
             }
         }
@@ -189,6 +190,13 @@ public class UpdateRestaurantController {
                 System.err.println("Error loading image: " + e.getMessage());
             }
         }
+    }
+
+
+    @FXML
+    void handleremovephoto(MouseEvent event) {
+        prof_view.setImage(default_img);
+        prof = resourceUrl.getPath();
     }
 
 }
