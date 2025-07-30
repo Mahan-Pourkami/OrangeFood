@@ -93,3 +93,14 @@ Update hibernate.cfg.xml with your DB credentials.
 mvn clean install  
 java -jar target/orangefood-app.jar  
 ```
+and also you need to adjust the configuration of the hibernate configuration file by according to your db's setting
+
+```xml
+  <session-factory>
+    <!-- Required PostgreSQL connection settings -->
+    <property name="jakarta.persistence.jdbc.driver">org.DB NAME.Driver</property>
+    <property name="jakarta.persistence.jdbc.url">jdbc:postgresql://localhost:PORT/DB NAME</property>
+    <property name="jakarta.persistence.jdbc.user">USERNAME</property>
+    <property name="jakarta.persistence.jdbc.password">PASS</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.SQLDialect</property>
+```
