@@ -62,6 +62,7 @@ public class PostRatingController {
 
     List<String> image_urls = new ArrayList<>();
 
+
     @FXML
     void initialize() throws IOException {
 

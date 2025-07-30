@@ -92,7 +92,7 @@
                 <Font name="System Bold" size="38.0" />
             </font>
         </Label>
-        <Label fx:id="basketprice" alignment="CENTER" layoutX="65.0" layoutY="250.0" prefHeight="30.0" prefWidth="83.0" text="0" textFill="#00ad0c">
+        <Label fx:id="basketprice" alignment="CENTER" layoutX="14.0" layoutY="242.0" prefHeight="66.0" prefWidth="224.0" text="0" textFill="#00ad0c">
             <font>
                 <Font name="System Bold" size="45.0" />
             </font>
