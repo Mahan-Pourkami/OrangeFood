@@ -118,3 +118,6 @@ and also you need to adjust the configuration of the hibernate configuration fil
     <property name="jakarta.persistence.jdbc.password">PASS</property>
     <property name="hibernate.dialect">org.hibernate.dialect.SQLDialect</property>
 ```
+
+Run Server.java in MainServer package in AP_food folder 
+then Run OrangeApp.java file in org package in Client folder
