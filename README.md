@@ -64,7 +64,7 @@ Database: PostgreSQL
 
 <h3>Parsa Samareh Afsari
 
-<h1> Screenshot</h1>
+<h1> Screenshots</h1>
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180140" src="https://github.com/user-attachments/assets/b49cfa74-cb25-424a-9896-8f89680b50d1" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180149" src="https://github.com/user-attachments/assets/47a672bf-9161-44b0-bfe3-aa1027ee58e6" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 185724" src="https://github.com/user-attachments/assets/38cfdf9b-b82f-45bc-8bcc-c224b3856bef" />
