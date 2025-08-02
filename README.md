@@ -67,6 +67,7 @@ Database: PostgreSQL
 <h1> Screenshot</h1>
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180140" src="https://github.com/user-attachments/assets/b49cfa74-cb25-424a-9896-8f89680b50d1" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180149" src="https://github.com/user-attachments/assets/47a672bf-9161-44b0-bfe3-aa1027ee58e6" />
+<img width="1282" height="892" alt="Screenshot 2025-08-02 185724" src="https://github.com/user-attachments/assets/38cfdf9b-b82f-45bc-8bcc-c224b3856bef" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180155" src="https://github.com/user-attachments/assets/ea69d8ef-e573-480d-914b-2fd42cbfc7a7" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 181606" src="https://github.com/user-attachments/assets/95b38cf4-c21f-4a4b-95be-15f4cde8d71f" />
 <img width="1282" height="892" alt="Screenshot 2025-08-02 180252" src="https://github.com/user-attachments/assets/05d38136-e96a-4253-a9b3-cbb105920a23" />
