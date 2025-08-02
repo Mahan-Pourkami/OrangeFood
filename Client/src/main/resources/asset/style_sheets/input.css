@@ -24,17 +24,18 @@
 
 .glass-gradient-button {
 
-    -fx-background-color: linear-gradient(to bottom, 
-        rgba(255, 235, 214, 0.9), 
-        rgba(255, 216, 177, 0.9));
+    -fx-background-color: linear-gradient(to bottom,
+    rgba(255, 249, 242, 0.9),
+    rgba(251, 251, 251, 0.9));
+    -fx-border-color: orange;
     
 
-    -fx-text-fill: #8B4513;
+    -fx-text-fill: #ff7312;
     -fx-font-weight: bold;
     
 
     -fx-background-radius: 8;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-color: rgb(230, 225, 218);
     -fx-border-radius: 8;
     -fx-border-width: 1;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
@@ -43,18 +44,18 @@
     -fx-cursor: hand;
 }
 .glass-gradient-button:hover {
-    -fx-background-color: linear-gradient(to bottom, 
-        rgba(255, 216, 177, 0.95), 
-        rgba(255, 192, 141, 0.95));
+    -fx-background-color:
+    rgba(243, 125, 9, 0.95);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 3);
+    -fx-text-fill: white;
 }
 
 
 .glass-gradient-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, 
-        rgba(255, 192, 141, 0.9), 
-        rgba(255, 160, 122, 0.9));
+    -fx-background-color:
+    rgba(216, 102, 0, 0.9);
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 1);
+    -fx-text-fill: white;
 }
 
 .text-field:focused {

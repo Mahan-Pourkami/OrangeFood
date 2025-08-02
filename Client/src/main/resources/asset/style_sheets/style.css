@@ -1,3 +1,8 @@
+.bg {
+
+    -fx-border-color: white;
+}
+
 .glass-gradient-pane {
     /* Gradient background from peach to orange */
     -fx-background-color: linear-gradient(to right, #FFDAB9, #FFA07A, #FF8C00);
