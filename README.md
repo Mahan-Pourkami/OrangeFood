@@ -3,6 +3,10 @@
 Orange Food - Online Food Delivery & Shopping App</h1>
 Orange Food is a full-featured online food delivery and shopping application built with JavaFX (frontend), Hibernate (ORM), and PostgreSQL (database). It offers a seamless experience for buyers, sellers, couriers, and admins, each with a specialized dashboard.
 
+
+
+![ORANGE BANNER](https://github.com/user-attachments/assets/e7bf4ca1-67af-43f0-8f72-23f0d67c8b9c)
+
 <h1>Key Features</h1>
 
 <h2>🛒 Buyer Dashboard</h2>
