@@ -1,4 +1,4 @@
-package DTO;
+package Controller;
 
 import DAO.CouponDAO;
 import DAO.CourierDAO;
@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-public class AdminDTO {
+public class AdminController {
 
 
     public static class Getusersresponse {

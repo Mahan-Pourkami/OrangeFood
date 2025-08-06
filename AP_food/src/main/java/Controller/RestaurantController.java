@@ -1,4 +1,4 @@
-package DTO;
+package Controller;
 
 import DAO.*;
 import Exceptions.*;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantDTO {
+public class RestaurantController {
 
     public static class AddRestaurantDTO {
 

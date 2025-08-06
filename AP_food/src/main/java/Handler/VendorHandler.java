@@ -3,7 +3,7 @@ package Handler;
 import DAO.BuyerDAO;
 import DAO.FoodDAO;
 import DAO.RestaurantDAO;
-import DTO.VendorDTO;
+import Controller.VendorController;
 import Exceptions.ForbiddenroleException;
 import Exceptions.InvalidTokenexception;
 import Exceptions.NosuchRestaurantException;
@@ -88,7 +88,7 @@ public class VendorHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                VendorDTO.See_vendor_menu vendorMenu = new VendorDTO.See_vendor_menu(restaurantDAO, foodDAO, res_id);
+                VendorController.See_vendor_menu vendorMenu = new VendorController.See_vendor_menu(restaurantDAO, foodDAO, res_id);
                 ObjectMapper mapper = new ObjectMapper();
                 response = mapper.writeValueAsString(vendorMenu);
                 http_code = 200;
@@ -177,7 +177,7 @@ public class VendorHandler implements HttpHandler {
 
                 String phone = JwtUtil.extractSubject(token);
 
-                VendorDTO.Get_Vendors vendors = new VendorDTO.Get_Vendors(jsonObject, restaurantDAO ,foodDAO , buyerDAO ,phone);
+                VendorController.Get_Vendors vendors = new VendorController.Get_Vendors(jsonObject, restaurantDAO ,foodDAO , buyerDAO ,phone);
 
                 response = vendors.getResponse();
                 http_code = 200;

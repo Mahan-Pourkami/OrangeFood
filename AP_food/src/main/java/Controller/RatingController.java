@@ -1,4 +1,4 @@
-package DTO;
+package Controller;
 
 import DAO.FoodDAO;
 import DAO.RatingDAO;
@@ -7,7 +7,6 @@ import Exceptions.InvalidInputException;
 import Exceptions.NosuchItemException;
 import Exceptions.UnsupportedMediaException;
 import Model.Rating;
-import Model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingDTO {
+public class RatingController {
 
 
     public static class Submit_Rating {

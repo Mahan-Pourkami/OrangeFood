@@ -1,4 +1,4 @@
-package DTO;
+package Controller;
 
 import DAO.BuyerDAO;
 import DAO.FoodDAO;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-public class VendorDTO {
+public class VendorController {
 
 
     public static class Get_Vendors {
@@ -40,7 +40,7 @@ public class VendorDTO {
             List<String> keywords = new ArrayList<>();
 
             if (jsonObject.has("keywords")) {
-                keywords = RestaurantDTO.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
+                keywords = RestaurantController.convertjsonarraytolist(jsonObject.getJSONArray("keywords"));
             }
 
 

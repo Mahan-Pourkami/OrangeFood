@@ -1,7 +1,7 @@
 package Handler;
 
 import DAO.*;
-import DTO.RestaurantDTO;
+import Controller.RestaurantController;
 import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
@@ -128,10 +128,10 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                RestaurantDTO.AddRestaurantDTO restaurantDTO = new RestaurantDTO.AddRestaurantDTO(jsonobject, phone, sellerDAO, restaurantDAO);
+                RestaurantController.AddRestaurantDTO restaurantDTO = new RestaurantController.AddRestaurantDTO(jsonobject, phone, sellerDAO, restaurantDAO);
                 restaurantDTO.register();
                 System.out.println("Restaurant added");
-                RestaurantDTO.Addrestaurant_response restaurant_response = new RestaurantDTO.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
+                RestaurantController.Addrestaurant_response restaurant_response = new RestaurantController.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
                 response = restaurant_response.response();
                 http_code = 200;
 
@@ -175,9 +175,9 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
-                RestaurantDTO.Add_Item_request req = new RestaurantDTO.Add_Item_request(jsonobject, res_id, foodDAO);
+                RestaurantController.Add_Item_request req = new RestaurantController.Add_Item_request(jsonobject, res_id, foodDAO);
                 System.out.println("Item added");
-                RestaurantDTO.Get_item_response res = new RestaurantDTO.Get_item_response(jsonobject.getString("name"), res_id, foodDAO);
+                RestaurantController.Get_item_response res = new RestaurantController.Get_item_response(jsonobject.getString("name"), res_id, foodDAO);
                 System.out.println("Response received");
                 response = res.response();
                 http_code = 200;
@@ -342,7 +342,7 @@ public class RestaurantsHandler implements HttpHandler {
                 }
                 String phone = JwtUtil.extractSubject(token);
                 System.out.println(phone);
-                RestaurantDTO.Addrestaurant_response restaurantDTO = new RestaurantDTO.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
+                RestaurantController.Addrestaurant_response restaurantDTO = new RestaurantController.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
 
                 response = restaurantDTO.response();
                 Headers headers = exchange.getResponseHeaders();
@@ -374,7 +374,7 @@ public class RestaurantsHandler implements HttpHandler {
                     }
 
                     long res_id = restaurant.getId();
-                    RestaurantDTO.Get_Foods get_req = new RestaurantDTO.Get_Foods(foodDAO, res_id);
+                    RestaurantController.Get_Foods get_req = new RestaurantController.Get_Foods(foodDAO, res_id);
                     response = get_req.getResponse();
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
@@ -410,7 +410,7 @@ public class RestaurantsHandler implements HttpHandler {
                         throw new InvalidTokenexception();
                     }
 
-                    RestaurantDTO.Get_item_spcefic get_res = new RestaurantDTO.Get_item_spcefic(foodDAO, food_id);
+                    RestaurantController.Get_item_spcefic get_res = new RestaurantController.Get_item_spcefic(foodDAO, food_id);
                     response = get_res.getResponse();
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
@@ -671,8 +671,8 @@ public class RestaurantsHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
-                RestaurantDTO.UpdateRestaurant_request update_req = new RestaurantDTO.UpdateRestaurant_request(jsonobject, phone, sellerDAO, restaurantDAO);
-                RestaurantDTO.Addrestaurant_response update_response = new RestaurantDTO.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
+                RestaurantController.UpdateRestaurant_request update_req = new RestaurantController.UpdateRestaurant_request(jsonobject, phone, sellerDAO, restaurantDAO);
+                RestaurantController.Addrestaurant_response update_response = new RestaurantController.Addrestaurant_response(phone, restaurantDAO, sellerDAO);
                 response = update_response.response();
                 Headers headers = exchange.getResponseHeaders();
                 headers.add("Content-Type", "application/json");
@@ -736,8 +736,8 @@ public class RestaurantsHandler implements HttpHandler {
                 }
 
 
-                RestaurantDTO.Update_Item_request updateItemRequest = new RestaurantDTO.Update_Item_request(jsonObject, food_id, foodDAO);
-                RestaurantDTO.Get_item_response updateItemrepsonse = new RestaurantDTO.Get_item_response(jsonObject.getString("name"), res_id, foodDAO);
+                RestaurantController.Update_Item_request updateItemRequest = new RestaurantController.Update_Item_request(jsonObject, food_id, foodDAO);
+                RestaurantController.Get_item_response updateItemrepsonse = new RestaurantController.Get_item_response(jsonObject.getString("name"), res_id, foodDAO);
                 response = updateItemrepsonse.response();
                 http_code = 200;
 

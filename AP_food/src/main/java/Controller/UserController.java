@@ -1,4 +1,4 @@
-package DTO;
+package Controller;
 
 import Model.*;
 import Exceptions.*;
@@ -7,7 +7,7 @@ import Utils.JwtUtil;
 import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class UserDTO {
+public class UserController {
 
     public static class UserRegisterDTO {
 

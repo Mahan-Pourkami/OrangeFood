@@ -3,7 +3,7 @@ package Handler;
 import DAO.FoodDAO;
 import DAO.RatingDAO;
 import DAO.UserDAO;
-import DTO.RatingDTO;
+import Controller.RatingController;
 import Exceptions.*;
 import Model.Rating;
 import Utils.JwtUtil;
@@ -89,7 +89,7 @@ public class RatingHandler implements HttpHandler {
                 String phone = JwtUtil.extractSubject(token);
                 String name = userDAO.getUserByPhone(phone).getfullname();
 
-                RatingDTO.Submit_Rating sub_requestt = new RatingDTO.Submit_Rating(jsonObject, phone, name, ratingDAO, foodDAO);
+                RatingController.Submit_Rating sub_requestt = new RatingController.Submit_Rating(jsonObject, phone, name, ratingDAO, foodDAO);
                 http_code = 200;
                 response = generate_msg("Rating submitted");
             } catch (OrangeException e) {
@@ -133,8 +133,8 @@ public class RatingHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
-                RatingDTO.Update_Rating_Req update_req = new RatingDTO.Update_Rating_Req(jsonObject, ratingDAO, comment_id);
-                RatingDTO.Update_Rating_Response update_res = new RatingDTO.Update_Rating_Response(comment_id, ratingDAO);
+                RatingController.Update_Rating_Req update_req = new RatingController.Update_Rating_Req(jsonObject, ratingDAO, comment_id);
+                RatingController.Update_Rating_Response update_res = new RatingController.Update_Rating_Response(comment_id, ratingDAO);
                 response = update_res.getResponse();
                 http_code = 200;
             } catch (IllegalArgumentException e) {
@@ -165,7 +165,7 @@ public class RatingHandler implements HttpHandler {
                     throw new InvalidTokenexception();
                 }
 
-                RatingDTO.Get_Rating_for_item get_req = new RatingDTO.Get_Rating_for_item(item_id, foodDAO, ratingDAO,userDAO, JwtUtil.extractSubject(token));
+                RatingController.Get_Rating_for_item get_req = new RatingController.Get_Rating_for_item(item_id, foodDAO, ratingDAO,userDAO, JwtUtil.extractSubject(token));
                 response = get_req.getResponse();
                 http_code = 200;
 
@@ -184,7 +184,7 @@ public class RatingHandler implements HttpHandler {
                 }
 
 
-                RatingDTO.Get_Rating_by_id get_res = new RatingDTO.Get_Rating_by_id(item_id, ratingDAO);
+                RatingController.Get_Rating_by_id get_res = new RatingController.Get_Rating_by_id(item_id, ratingDAO);
                 response = get_res.getResponse();
                 http_code = 200;
             } catch (IllegalArgumentException e) {

@@ -3,13 +3,12 @@ package Handler;
 import DAO.*;
 import Model.*;
 import Utils.JwtUtil;
-import DTO.UserDTO;
+import Controller.UserController;
 import Exceptions.*;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.hibernate.Session;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -87,7 +86,7 @@ public class AuthHandler implements HttpHandler {
 
                     if (invalid_input_update(profilejson).isEmpty()) {
 
-                        UserDTO.Userupdateprof userdto = new UserDTO.Userupdateprof(JwtUtil.extractSubject(token), profilejson, userDAO);
+                        UserController.Userupdateprof userdto = new UserController.Userupdateprof(JwtUtil.extractSubject(token), profilejson, userDAO);
                         Headers headers = exchange.getResponseHeaders();
                         headers.add("Content-Type", "application/json");
                         JSONObject json = new JSONObject();
@@ -136,7 +135,7 @@ public class AuthHandler implements HttpHandler {
             if (JwtUtil.validateToken(token)) {
 
                 try {
-                    UserDTO.UserResponprofileDTO userdto = new UserDTO.UserResponprofileDTO(JwtUtil.extractSubject(token), userDAO);
+                    UserController.UserResponprofileDTO userdto = new UserController.UserResponprofileDTO(JwtUtil.extractSubject(token), userDAO);
                     response = userdto.response();
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
@@ -170,7 +169,7 @@ public class AuthHandler implements HttpHandler {
 
                     JSONObject bankobject = jsonobject.optJSONObject("bank_info");
 
-                    UserDTO.UserRegisterDTO userDTOreg = new UserDTO.UserRegisterDTO(
+                    UserController.UserRegisterDTO userDTOreg = new UserController.UserRegisterDTO(
                             jsonobject.getString("full_name"),
                             jsonobject.getString("phone"),
                             jsonobject.getString("password"),
@@ -187,7 +186,7 @@ public class AuthHandler implements HttpHandler {
                     }
 
                     userDTOreg.register();
-                    UserDTO.UserRegResponseDTO userRegResponseDTO = new UserDTO.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
+                    UserController.UserRegResponseDTO userRegResponseDTO = new UserController.UserRegResponseDTO("User registered successfully", jsonobject.getString("phone"), jsonobject.getString("role"));
                     Headers headers = exchange.getResponseHeaders();
                     headers.add("Content-Type", "application/json");
                     response = userRegResponseDTO.response();
@@ -231,7 +230,7 @@ public class AuthHandler implements HttpHandler {
 
                     if (!jsonobject.get("phone").equals("admin")) {
 
-                        UserDTO.UserLoginRequestDTO userDTOlogin = new UserDTO.UserLoginRequestDTO(
+                        UserController.UserLoginRequestDTO userDTOlogin = new UserController.UserLoginRequestDTO(
                                 jsonobject.getString("phone"),
                                 jsonobject.getString("password")
                                 , userDAO);

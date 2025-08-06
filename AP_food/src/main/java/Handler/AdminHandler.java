@@ -2,7 +2,7 @@ package Handler;
 
 
 import DAO.*;
-import DTO.AdminDTO;
+import Controller.AdminController;
 import Exceptions.*;
 import Model.*;
 import Utils.JwtUtil;
@@ -115,9 +115,9 @@ public class AdminHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                AdminDTO.Create_coupon_request req = new AdminDTO.Create_coupon_request(json, couponDAO);
+                AdminController.Create_coupon_request req = new AdminController.Create_coupon_request(json, couponDAO);
                 req.submit_coupon();
-                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, json.getString("coupon_code"));
+                AdminController.Create_coupon_response res = new AdminController.Create_coupon_response(couponDAO, json.getString("coupon_code"));
                 response = res.getResponse();
                 http_code = 201;
             } catch (IllegalArgumentException e) {
@@ -164,8 +164,8 @@ public class AdminHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                AdminDTO.Update_coupon_request update_req = new AdminDTO.Update_coupon_request(jsonObject, couponDAO, coupon_id);
-                AdminDTO.Create_coupon_response update_res = new AdminDTO.Create_coupon_response(couponDAO, couponDAO.getCoupon(coupon_id).getCode());
+                AdminController.Update_coupon_request update_req = new AdminController.Update_coupon_request(jsonObject, couponDAO, coupon_id);
+                AdminController.Create_coupon_response update_res = new AdminController.Create_coupon_response(couponDAO, couponDAO.getCoupon(coupon_id).getCode());
                 response = update_res.getResponse();
                 http_code = 200;
 
@@ -258,7 +258,7 @@ public class AdminHandler implements HttpHandler {
                 }
 
                 List<User> users = userDAO.getAllUsers();
-                AdminDTO.Getusersresponse getall = new AdminDTO.Getusersresponse(users);
+                AdminController.Getusersresponse getall = new AdminController.Getusersresponse(users);
                 response = getall.getResponse();
                 http_code = 200;
 
@@ -283,7 +283,7 @@ public class AdminHandler implements HttpHandler {
                 }
 
                 List<Coupon> coupons = couponDAO.getAllCoupons();
-                AdminDTO.Get_coupons_response getcoupons = new AdminDTO.Get_coupons_response(coupons);
+                AdminController.Get_coupons_response getcoupons = new AdminController.Get_coupons_response(coupons);
                 response = getcoupons.getResponse();
                 http_code = 200;
             } catch (InvalidTokenexception e) {
@@ -312,7 +312,7 @@ public class AdminHandler implements HttpHandler {
                     throw new NosuchItemException();
                 }
 
-                AdminDTO.Create_coupon_response res = new AdminDTO.Create_coupon_response(couponDAO, coupon.getCode());
+                AdminController.Create_coupon_response res = new AdminController.Create_coupon_response(couponDAO, coupon.getCode());
                 response = res.getResponse();
                 http_code = 200;
             } catch (IllegalArgumentException e) {
@@ -332,7 +332,7 @@ public class AdminHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                AdminDTO.Get_Restaurants_response res = new AdminDTO.Get_Restaurants_response(restaurantDAO);
+                AdminController.Get_Restaurants_response res = new AdminController.Get_Restaurants_response(restaurantDAO);
                 response = res.getResponse();
                 http_code = 200;
             } catch (OrangeException e) {
@@ -349,7 +349,7 @@ public class AdminHandler implements HttpHandler {
                     throw new ForbiddenroleException();
                 }
 
-                AdminDTO.Get_approval_request request = new AdminDTO.Get_approval_request(sellerDAO, courierDAO);
+                AdminController.Get_approval_request request = new AdminController.Get_approval_request(sellerDAO, courierDAO);
                 response = request.getResponse();
                 http_code = 200;
             } catch (OrangeException e) {
